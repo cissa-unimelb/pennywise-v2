@@ -7,7 +7,7 @@ import {checkUserExists, setUser} from "../database";
 
 
 export function Login(){
-    const {value, getUserStore, setUserStore} = useUserStore();
+    const {value, setUserStore} = useUserStore();
 
     const handleSuccess = async (user: User) => {
         setUserStore(user);
