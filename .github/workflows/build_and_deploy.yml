@@ -28,4 +28,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: build and deploy
         run: |
+          npm install
           npm run deploy
