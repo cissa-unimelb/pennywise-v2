@@ -2,7 +2,7 @@
   "name": "pennywise-v2",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://cissa-unimelb.github.io/pennywise-v2",
+  "homepage": "https://pennywise.cissa.org.au",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
