@@ -2,6 +2,7 @@
   "name": "pennywise-v2",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://cissa-unimelb.github.io/pennywise-v2",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -17,13 +18,16 @@
     "web-vitals": "^2.1.4",
     "eslint": "^8.35.0",
     "react-router-dom": "^6.8.2",
-    "firebase": "^9.17.2"
+    "firebase": "^9.17.2",
+    "gh-pages": "^5.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
