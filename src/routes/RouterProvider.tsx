@@ -1,16 +1,16 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomeScreen from "../pages/HomeScreen";
-import DashBoard from "../pages/DashBoard";
-import Login from "../pages/Login";
+import Dashboard from "../pages/Dashboard/";
+import Login from "../pages/Login/";
+import Home from "../pages/Home/";
 
 function RouterProvider() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route index element={<HomeScreen />} />
-          <Route path="dashboard" element={<DashBoard />} />
+          <Route index element={<Home />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="login" element={<Login />} />
         </Route>
       </Routes>

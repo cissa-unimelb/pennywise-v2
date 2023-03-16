@@ -1,5 +1,3 @@
-export default function PageTwo(){
-    return (
-        <h1>Page two</h1>
-    )
+export default function Dashboard() {
+  return <h1>Page two</h1>;
 }

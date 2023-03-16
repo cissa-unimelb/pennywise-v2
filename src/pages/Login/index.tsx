@@ -1,12 +1,13 @@
-import { googleSignIn } from "../auth";
-import { User } from "../auth/types";
-import { useUserStore } from "../stores/user";
+import { googleSignIn } from "../../auth";
+import { User } from "../../auth/types";
+import { useUserStore } from "../../stores/user";
 import { Navigate } from "react-router-dom";
-import { Button } from "../components/Button";
-import { checkUserExists, setUser } from "../database";
-
+import { checkUserExists, setUser } from "../../database";
+import { LoginForm } from "../../components/LoginForm";
+import { useTheme } from "@mui/joy/styles";
 export default function Login() {
   const { value, setUserStore } = useUserStore();
+  const theme = useTheme();
   console.log(value);
   const handleSuccess = async (user: User) => {
     console.log(user);
@@ -17,17 +18,27 @@ export default function Login() {
   };
 
   return (
-    <div>
-      {value !== undefined && <Navigate to={"/pagetwo"} replace={true} />}
-      <h1>Login</h1>
-      <Button
-        text={"Login"}
-        onClick={() => {
-          googleSignIn(handleSuccess, (err: any) => {
-            console.log(err);
-          });
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+          height: "100vh",
+          backgroundColor: theme.palette.background.level1,
+          paddingBottom: 100,
         }}
-      />
-    </div>
+      >
+        {value !== undefined && <Navigate to={"/dashboard"} replace={true} />}
+        <LoginForm
+          onClickLogin={() => {
+            googleSignIn(handleSuccess, (err: any) => {
+              console.log(err);
+            });
+          }}
+        />
+      </div>
+    </>
   );
 }
