@@ -5,10 +5,10 @@ import Breadcrumbs from "../../components/Breadcrumbs";
 import ExpenseCard from "../../components/ExpenseCard";
 import Box from "@mui/material/Box";
 import Grid from "@mui/joy/Grid";
-import Add from "@mui/icons-material/Add";
 import Button from "@mui/joy/Button";
 import ThumbUp from "@mui/icons-material/ThumbUp";
 import CreateButton from "../../components/CreateButton";
+import SideMenu from "../../components/SideMenu";
 export default function Dashboard() {
   const { value } = useUserStore();
   const theme = useTheme();
@@ -37,10 +37,10 @@ export default function Dashboard() {
           }}
         >
           <Grid container spacing={2}>
-            <Grid xs={8} md={3}>
+            <Grid xs={12} md={3}>
               <CreateButton></CreateButton>
             </Grid>
-            <Grid xs={8} md={3}>
+            <Grid xs={12} md={3}>
               <ExpenseCard
                 event="Industry Connect"
                 amount={100}
@@ -49,7 +49,7 @@ export default function Dashboard() {
                 onClick={() => {}}
               />
             </Grid>
-            <Grid xs={8} md={3}>
+            <Grid xs={12} md={3}>
               <ExpenseCard
                 event="Industry Connect"
                 amount={100}
@@ -58,7 +58,7 @@ export default function Dashboard() {
                 onClick={() => {}}
               />
             </Grid>
-            <Grid xs={8} md={3}>
+            <Grid xs={12} md={3}>
               <ExpenseCard
                 event="Industry Connect"
                 amount={100}

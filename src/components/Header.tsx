@@ -35,8 +35,8 @@ export function Header({ user }: Props) {
             marginRight: 15,
           }}
         />
-        <Typography level="h2" fontSize="md" sx={{ mb: 0.5 }}>
-          Hello {user?.name}
+        <Typography level="h3" fontSize="md" sx={{ mb: 0.5 }}>
+          Hello {user?.name}, Welcome to PennyWise!
         </Typography>
       </div>
       <Button color="danger" onClick={function () {}} variant="soft">

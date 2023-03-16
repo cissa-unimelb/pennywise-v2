@@ -26,7 +26,7 @@ export default function ExpenseCard({
         minHeight: 150,
         flex: 1,
         "&:hover": {
-          boxShadow: "sm",
+          boxShadow: "md",
           borderColor: "neutral.outlinedHoverBorder",
         },
       }}

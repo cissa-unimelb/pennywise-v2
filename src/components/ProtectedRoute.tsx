@@ -1,14 +1,14 @@
 import { Navigate } from "react-router-dom";
 import { useUserStore } from "../stores/user";
 type Props = {
-  children: string | JSX.Element | JSX.Element[];
+  children: JSX.Element | JSX.Element[];
 };
 
-export const ProtectedRoute = ({ children }: Props) => {
+export default function ProtectedRoute({ children }: Props) {
   const { value } = useUserStore();
   if (!value) {
     // user is not authenticated
-    return <Navigate to="/" />;
+    return <Navigate to="/login" replace={true} />;
   }
-  return children;
-};
+  return <>{children}</>;
+}
