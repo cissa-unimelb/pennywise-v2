@@ -1,8 +1,17 @@
-interface Props{
-    text: string
-    onClick: Function
+import { default as MButton } from "@mui/joy/Button";
+interface Props {
+  text: string;
+  onClick: Function;
 }
 
-export function Button(props: Props){
-    return <button onClick={() => {props.onClick()}}>{props.text}</button>
+export function Button(props: Props) {
+  return (
+    <MButton
+      onClick={() => {
+        props.onClick();
+      }}
+    >
+      {props.text}
+    </MButton>
+  );
 }
