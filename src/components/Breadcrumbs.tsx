@@ -6,7 +6,7 @@ import Typography from "@mui/joy/Typography";
 export default function Breadcrumbs() {
   return (
     <MBreadcrumb aria-label="breadcrumbs">
-      {["PennyWise", "Dashboard"].map((item: string) => (
+      {["Pennywise", "Dashboard"].map((item: string) => (
         <Link
           // `preventDefault` is for demo purposes
           // and is generally not needed in your app

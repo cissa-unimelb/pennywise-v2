@@ -17,7 +17,6 @@ const auth = getAuth(app);
 export function googleSignIn(onSuccess: AuthCallback, onError: Function): void {
   signInWithPopup(auth, provider)
     .then((result: UserCredential) => {
-      console.log(result);
       onSuccess({
         id: result.user.uid,
         name: result.user.displayName ?? "",

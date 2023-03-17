@@ -9,9 +9,21 @@ import Button from "@mui/joy/Button";
 import ThumbUp from "@mui/icons-material/ThumbUp";
 import CreateButton from "../../components/CreateButton";
 import SideMenu from "../../components/SideMenu";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 export default function Dashboard() {
   const { value } = useUserStore();
   const theme = useTheme();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    console.log("logout");
+    navigate("/login");
+  };
+
+  const Test = styled.div`
+    display: flex;
+    flex-direction: row;
+  `;
 
   return (
     <>
@@ -26,8 +38,8 @@ export default function Dashboard() {
           backgroundColor: theme.palette.background.level1,
         }}
       >
-        <Header user={value} />
-
+        <Header user={value} onClickLogout={() => handleLogout()} />
+        <Test />
         <Box
           style={{
             marginTop: 30,

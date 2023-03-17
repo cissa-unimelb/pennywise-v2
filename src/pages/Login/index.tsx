@@ -8,9 +8,7 @@ import { useTheme } from "@mui/joy/styles";
 export default function Login() {
   const { value, setUserStore } = useUserStore();
   const theme = useTheme();
-  console.log(value);
   const handleSuccess = async (user: User) => {
-    console.log(user);
     setUserStore(user);
     if (!(await checkUserExists(user.id))) {
       await setUser(user);

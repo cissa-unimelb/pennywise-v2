@@ -7,8 +7,9 @@ import Button from "@mui/joy/Button";
 import Avatar from "@mui/joy/Avatar";
 type Props = {
   user: User | undefined;
+  onClickLogout: () => void;
 };
-export function Header({ user }: Props) {
+export function Header({ user, onClickLogout }: Props) {
   return (
     <Card
       variant="outlined"
@@ -36,10 +37,10 @@ export function Header({ user }: Props) {
           }}
         />
         <Typography level="h3" fontSize="md" sx={{ mb: 0.5 }}>
-          Hello {user?.name}, Welcome to PennyWise!
+          Hello {user?.name}, Welcome to Pennywise!
         </Typography>
       </div>
-      <Button color="danger" onClick={function () {}} variant="soft">
+      <Button color="danger" onClick={() => onClickLogout()} variant="soft">
         Logout
       </Button>
     </Card>

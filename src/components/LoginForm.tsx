@@ -15,7 +15,7 @@ export function LoginForm({ onClickLogin }: Props) {
     >
       <Box style={{}}>
         <Typography level="h2" fontSize="md" sx={{ mb: 0.5 }}>
-          Welcome to PennyWise V2!
+          Welcome to Pennywise V2!
         </Typography>
 
         <Typography level="body2">Log in to continue</Typography>
