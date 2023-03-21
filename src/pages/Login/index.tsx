@@ -4,10 +4,8 @@ import { useUserStore } from "../../stores/user";
 import { Navigate } from "react-router-dom";
 import { checkUserExists, setUser } from "../../database";
 import { LoginForm } from "../../components/LoginForm";
-import { useTheme } from "@mui/joy/styles";
 export default function Login() {
   const { value, setUserStore } = useUserStore();
-  const theme = useTheme();
   const handleSuccess = async (user: User) => {
     setUserStore(user);
     if (!(await checkUserExists(user.id))) {
@@ -17,17 +15,7 @@ export default function Login() {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flex: 1,
-          height: "100vh",
-          backgroundColor: theme.palette.background.level1,
-          paddingBottom: 100,
-        }}
-      >
+      <div className="App-login-master-container">
         {value !== undefined && <Navigate to={"/dashboard"} replace={true} />}
         <LoginForm
           onClickLogin={() => {

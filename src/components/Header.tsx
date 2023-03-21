@@ -11,38 +11,15 @@ type Props = {
 };
 export function Header({ user, onClickLogout }: Props) {
   return (
-    <Card
-      variant="outlined"
-      sx={{
-        width: "80%",
-        height: 50,
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexDirection: "row",
-        paddingHorizontal: 5,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <Avatar
-          alt={user?.name}
-          src={user?.photoURL}
-          style={{
-            marginRight: 15,
-          }}
-        />
-        <Typography level="h3" fontSize="md" sx={{ mb: 0.5 }}>
-          Hello {user?.name}, Welcome to Pennywise!
-        </Typography>
-      </div>
-      <Button color="danger" onClick={() => onClickLogout()} variant="soft">
-        Logout
-      </Button>
+    <Card variant="outlined" className="Component-header-container">
+      <Avatar
+        alt={user?.name}
+        src={user?.photoURL}
+        className="Component-header-avatar"
+      />
+      <Typography level="h3" fontSize="md" sx={{ mb: 0.5 }}>
+        Hello {user?.name}, Welcome to Pennywise!
+      </Typography>
     </Card>
   );
 }

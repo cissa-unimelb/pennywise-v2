@@ -21,17 +21,7 @@ export default function ExpenseCard({
   onClick,
 }: Props) {
   return (
-    <Card
-      sx={{
-        minHeight: 150,
-        flex: 1,
-        "&:hover": {
-          boxShadow: "md",
-          borderColor: "neutral.outlinedHoverBorder",
-        },
-      }}
-      //   onClick={onClick}
-    >
+    <Card className="Component-expense-card-container">
       <CardCover>
         <img
           src="https://images.unsplash.com/photo-1542773998-9325f0a098d7?auto=format&fit=crop&w=320"
@@ -40,12 +30,7 @@ export default function ExpenseCard({
           alt=""
         />
       </CardCover>
-      <CardCover
-        sx={{
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
-        }}
-      />
+      <CardCover className="Component-expense-cover" />
       <CardContent sx={{ justifyContent: "flex-end" }}>
         <Typography level="h2" fontSize="lg" textColor="#fff" mb={1}>
           {event}

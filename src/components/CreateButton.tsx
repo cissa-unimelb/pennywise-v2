@@ -8,18 +8,7 @@ import Typography from "@mui/joy/Typography";
 import Add from "@mui/icons-material/Add";
 export default function CreateButton() {
   return (
-    <Card
-      variant="outlined"
-      sx={{
-        minHeight: 150,
-        alignItems: "center",
-        justifyContent: "center",
-        "&:hover": {
-          boxShadow: "md",
-          borderColor: "neutral.outlinedHoverBorder",
-        },
-      }}
-    >
+    <Card variant="outlined" className="Component-createbutton-container">
       <Add />
       <Link
         overlay

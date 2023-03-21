@@ -1,12 +1,12 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "../pages/Dashboard/";
 import Login from "../pages/Login/";
 import Home from "../pages/Home/";
 import ProtectedRoute from "../components/ProtectedRoute";
 function RouterProvider() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/">
           <Route
@@ -21,7 +21,7 @@ function RouterProvider() {
           <Route path="login" element={<Login />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

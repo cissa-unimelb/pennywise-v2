@@ -9,10 +9,7 @@ type Props = {
 };
 export function LoginForm({ onClickLogin }: Props) {
   return (
-    <Card
-      variant="outlined"
-      sx={{ width: 320, height: 120, justifyContent: "space-between" }}
-    >
+    <Card variant="outlined" className="Componnet-login-container">
       <Box style={{}}>
         <Typography level="h2" fontSize="md" sx={{ mb: 0.5 }}>
           Welcome to Pennywise V2!

@@ -8,9 +8,7 @@ import Grid from "@mui/joy/Grid";
 import Button from "@mui/joy/Button";
 import ThumbUp from "@mui/icons-material/ThumbUp";
 import CreateButton from "../../components/CreateButton";
-import SideMenu from "../../components/SideMenu";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 export default function Dashboard() {
   const { value } = useUserStore();
   const theme = useTheme();
@@ -20,34 +18,11 @@ export default function Dashboard() {
     navigate("/login");
   };
 
-  const Test = styled.div`
-    display: flex;
-    flex-direction: row;
-  `;
-
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          flex: 1,
-          height: "100vh",
-          padding: 30,
-          backgroundColor: theme.palette.background.level1,
-        }}
-      >
+      <div className="App-master-container">
         <Header user={value} onClickLogout={() => handleLogout()} />
-        <Test />
-        <Box
-          style={{
-            marginTop: 30,
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            width: "80%",
-          }}
-        >
+        <Box className="App-dashboard-container">
           <Grid container spacing={2}>
             <Grid xs={12} md={3}>
               <CreateButton></CreateButton>
