@@ -36,3 +36,67 @@
     transform: rotate(360deg);
   }
 }
+
+.App-master-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100vh;
+  padding: 30;
+  background-color: #F7F7F8;
+  
+}
+.App-dashboard-container{
+  margin-top: 30px;
+flex-direction: row;
+justify-content: flex-start;
+width: 80%;
+
+}
+.App-login-master-container{
+  display: flex;
+justify-content: center;
+align-items: center;
+flex: 1;
+height: 100vh;
+background-color: #F7F7F8;
+padding-bottom: 100px;
+}
+.Component-createbutton-container{
+min-height: 150px;
+align-items: center;
+justify-content: center;
+
+}
+.Component-header-container{
+  width: 80%;
+height: 50px;
+justify-content: space-between;
+align-items: center;
+flex-direction: row;
+padding-left: 5px;
+padding-right: 5px;
+margin-top: 20px;
+
+display: "flex";
+align-items: "center";
+
+}
+.Component-header-avatar{
+
+  margin-right: 15px,
+}
+.Component-expense-cover{
+  background:
+  linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px);
+}
+.Component-expense-cover:hover{
+  background:
+  linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px);
+}
+.Componnet-login-container{
+  width: 320px; height: 120px; justify-content: space-between}
+.Component-expense-card-container{
+  min-height:150px;
+}
