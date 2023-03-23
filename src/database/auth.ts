@@ -6,7 +6,8 @@ import {User} from "../auth/types";
 const db = getFirestore(app);
 
 export async function setUser(user: User){
-    return await setDoc(doc(db, "users", user.id), user);
+   const res = await setDoc(doc(db, "users", user.id), user);
+   return res;
 }
 
 export async function checkUserExists(userId: string): Promise<boolean>{

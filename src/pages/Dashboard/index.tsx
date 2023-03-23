@@ -52,7 +52,7 @@ export default function Dashboard() {
             </Grid>
           </Grid>
         </Box>
-        <BankForm></BankForm>
+        <BankForm/>
       </div>
     </>
   );

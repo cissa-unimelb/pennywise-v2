@@ -1,25 +1,32 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Circles } from 'react-loader-spinner';
 
 import Button from '@mui/joy/Button';
 import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
 import Typography from '@mui/joy/Typography';
+import CircularProgress from '@mui/joy/CircularProgress';
 import Sheet from '@mui/joy/Sheet';
 import Input from '@mui/joy/Input';
+
+import { checkUserExists, setUser } from "../database";
+import { useUserStore } from "../stores/user";
 
 import './bankform.css'
 
 
-export function BankForm(){
-  const navigate = useNavigate();
-  const [error, setError] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
 
-  const [open, setOpen] = React.useState<boolean>(true);
+export function BankForm(){
+  const [error, setError] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const { value, setUserStore } = useUserStore();
+  const user = value;
+
+  const [open, setOpen] = React.useState<boolean>(!user.hasOwnProperty('accountNum'));
+
+  console.log(user);
+  // console.log(value);
 
   const formik = useFormik({
     initialValues: {
@@ -35,8 +42,26 @@ export function BankForm(){
     }),
     onSubmit: async (values) => {
       setIsUploading(true);
-      // console.log(values);
-      alert(JSON.stringify(values, null, 2));
+        // console.log(values);
+        user.accountNum = values.accountNumber;
+        user.bsb = values.bsb;
+
+        setUser(user)
+        .then(()=>{
+          
+          setError('');
+          setUserStore(user);
+          console.log('successful');
+          console.log(user);
+
+        }).catch((err)=>{
+          setIsUploading(false);
+          console.log(err);
+          setError(err.message);
+        })
+          
+
+      alert(JSON.stringify(value, null, 2));
 
       ///
       // call update user bank details api and handle error here
@@ -130,20 +155,8 @@ export function BankForm(){
               )}
             </div>
             {error && <p className="submit-error">{error}</p>}
-            <div className="loadingIcon">
-              {/* <p style={{visibility: isUploading  ? "visible" : "hidden"}}>Loading...</p> */}
-              <Circles
-                height="80"
-                width="80"
-                color="#4fa94d"
-                ariaLabel="circles-loading"
-                wrapperStyle={{}}
-                wrapperClass=""
-                visible={isUploading}
-              />
-            </div>
             <div className="button-container">
-              <Button type="submit" id="login" className="solid-buttton">
+              <Button type="submit" id="login" className="solid-buttton" loading = {isUploading}>
                 Submit
               </Button>
               <br />

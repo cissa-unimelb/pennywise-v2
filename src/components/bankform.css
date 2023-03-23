@@ -1,5 +1,4 @@
 form{
-  margin: 3rem 3rem 3rem 3rem;
   display: flex;
   flex-direction: column;
 }
@@ -7,5 +6,16 @@ form{
 .mt3{
   padding-bottom: 1rem;
   outline: 2;
+  width: 30rem;
+}
+
+.input-error{
+  color: brown;
+  padding-left: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.submit-error{
+  color: brown;
 }
 
