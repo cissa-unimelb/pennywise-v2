@@ -10,6 +10,10 @@ import CircularProgress from '@mui/joy/CircularProgress';
 import Sheet from '@mui/joy/Sheet';
 import Input from '@mui/joy/Input';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 import { checkUserExists, setUser } from "../database";
 import { useUserStore } from "../stores/user";
 
@@ -48,25 +52,27 @@ export function BankForm(){
 
         setUser(user)
         .then(()=>{
-          
+
           setError('');
           setUserStore(user);
           console.log('successful');
           console.log(user);
+          toast("Bank details successfully saved!");
+          setOpen(false);
+
 
         }).catch((err)=>{
           setIsUploading(false);
           console.log(err);
           setError(err.message);
         })
-          
-
-      alert(JSON.stringify(value, null, 2));
 
       ///
       // call update user bank details api and handle error here
       ///
       setIsUploading(false);
+      
+
     }
   });
     return (
@@ -74,6 +80,7 @@ export function BankForm(){
       {/* <Button variant="outlined" color="neutral" onClick={() => setOpen(true)}>
         Open modal
       </Button> */}
+      <ToastContainer />
       <Modal
         aria-labelledby="modal-title"
         aria-describedby="modal-desc"
