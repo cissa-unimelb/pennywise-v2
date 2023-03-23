@@ -4,11 +4,22 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Circles } from 'react-loader-spinner';
 
+import Button from '@mui/joy/Button';
+import Modal from '@mui/joy/Modal';
+import ModalClose from '@mui/joy/ModalClose';
+import Typography from '@mui/joy/Typography';
+import Sheet from '@mui/joy/Sheet';
+import Input from '@mui/joy/Input';
+
+import './bankform.css'
+
 
 export function BankForm(){
   const navigate = useNavigate();
   const [error, setError] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+
+  const [open, setOpen] = React.useState<boolean>(true);
 
   const formik = useFormik({
     initialValues: {
@@ -35,69 +46,112 @@ export function BankForm(){
   });
     return (
     <div>
-      <form onSubmit={formik.handleSubmit}>
-        <div className="mt3">
-          <label className="black">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            placeholder="Enter the name of the bank account owner"
-            className="input-box-container input-reset"
+      {/* <Button variant="outlined" color="neutral" onClick={() => setOpen(true)}>
+        Open modal
+      </Button> */}
+      <Modal
+        aria-labelledby="modal-title"
+        aria-describedby="modal-desc"
+        open={open}
+        onClose={() => setOpen(false)}
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
+        <Sheet
+          variant="outlined"
+          sx={{
+            maxWidth: 500,
+            borderRadius: 'md',
+            p: 3,
+            boxShadow: 'lg',
+          }}
+        >
+          <ModalClose
+            variant="outlined"
+            sx={{
+              top: 'calc(-1/4 * var(--IconButton-size))',
+              right: 'calc(-1/4 * var(--IconButton-size))',
+              boxShadow: '0 2px 12px 0 rgba(0 0 0 / 0.2)',
+              borderRadius: '50%',
+              bgcolor: 'background.body',
+            }}
           />
-          {formik.errors.name && formik.touched.name && (
-            <p className="input-error">{formik.errors.name}</p>
-          )}
-        </div>
-        <div className="mt3">
-          <label className="black">Account Number</label>
-          <input
-            type="text"
-            name="accountNumber"
-            value={formik.values.accountNumber}
-            onChange={formik.handleChange}
-            placeholder="Enter a accountNumber"
-            className="input-box-container input-reset"
-          />
-          {formik.errors.accountNumber && formik.touched.accountNumber && (
-            <p className="input-error">{formik.errors.accountNumber}</p>
-          )}
-        </div>
-        <div className="mt3">
-          <label className="black">BSB</label>
-          <input
-            type="text"
-            name="bsb"
-            value={formik.values.bsb}
-            onChange={formik.handleChange}
-            placeholder="Enter BSB"
-            className="input-box-container input-reset"
-          />
-          {formik.errors.bsb && formik.touched.bsb && (
-            <p className="input-error">{formik.errors.bsb}</p>
-          )}
-        </div>
-        {error && <p className="submit-error">{error}</p>}
-        <div className="loadingIcon">
-          {/* <p style={{visibility: isUploading  ? "visible" : "hidden"}}>Loading...</p> */}
-          <Circles
-            height="80"
-            width="80"
-            color="#4fa94d"
-            ariaLabel="circles-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={isUploading}
-          />
-        </div>
-        <div className="button-container">
-          <button type="submit" id="login" className="solid-buttton">
-            Submit
-          </button>
-          <br />
-        </div>
-      </form>
+          <Typography
+            component="h2"
+            id="modal-title"
+            level="h4"
+            textColor="inherit"
+            fontWeight="lg"
+            justifyContent="center"
+            mb={1}
+          >
+            Bank Form
+          </Typography>
+          <form onSubmit={formik.handleSubmit}>
+            <div className="mt3">
+              <label className="black">Name</label>
+              <Input
+                type="text"
+                name="name"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                placeholder="Enter the name of the bank account owner"
+                className="input-box-container input-reset"
+              />
+              {formik.errors.name && formik.touched.name && (
+                <p className="input-error">{formik.errors.name}</p>
+              )}
+            </div>
+            <div className="mt3">
+              <label className="black">Account Number</label>
+              <Input
+                type="text"
+                name="accountNumber"
+                value={formik.values.accountNumber}
+                onChange={formik.handleChange}
+                placeholder="Enter a accountNumber"
+                className="input-box-container input-reset"
+              />
+              {formik.errors.accountNumber && formik.touched.accountNumber && (
+                <p className="input-error">{formik.errors.accountNumber}</p>
+              )}
+            </div>
+            <div className="mt3">
+              <label className="black">BSB</label>
+              <Input
+                type="text"
+                name="bsb"
+                value={formik.values.bsb}
+                onChange={formik.handleChange}
+                placeholder="Enter BSB"
+                className="input-box-container input-reset"
+              />
+              {formik.errors.bsb && formik.touched.bsb && (
+                <p className="input-error">{formik.errors.bsb}</p>
+              )}
+            </div>
+            {error && <p className="submit-error">{error}</p>}
+            <div className="loadingIcon">
+              {/* <p style={{visibility: isUploading  ? "visible" : "hidden"}}>Loading...</p> */}
+              <Circles
+                height="80"
+                width="80"
+                color="#4fa94d"
+                ariaLabel="circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={isUploading}
+              />
+            </div>
+            <div className="button-container">
+              <Button type="submit" id="login" className="solid-buttton">
+                Submit
+              </Button>
+              <br />
+            </div>
+          </form>
+        </Sheet>
+      </Modal>
+
     </div>
   );
 }

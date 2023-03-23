@@ -10,8 +10,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@material-ui/icons//Adb';
-import MenuIcon  from '@material-ui/icons/Menu';
+// import AdbIcon from '@material-ui/icons//Adb';
+// import MenuIcon  from '@material-ui/icons/Menu';
 
 const pages = ['NewExpense', 'MyInvoices', 'ExecView', 'Treasurer'];
 const settings = ['Profile', 'Account', 'Logout'];
@@ -68,7 +68,7 @@ function ResponsiveAppBar() {
               onClick={handleOpenNavMenu}
               color="inherit"
             >
-              <MenuIcon />
+              {/* <MenuIcon /> */}
             </IconButton>
             <Menu
               id="menu-appbar"

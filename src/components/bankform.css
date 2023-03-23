@@ -1,0 +1,11 @@
+form{
+  margin: 3rem 3rem 3rem 3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.mt3{
+  padding-bottom: 1rem;
+  outline: 2;
+}
+
