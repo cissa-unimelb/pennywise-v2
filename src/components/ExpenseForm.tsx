@@ -18,16 +18,16 @@ import './bankform.css'
 
 interface Props {
   formId: string;
-  onClick: Function;
+  display: boolean;
 }
 
-export function ExpenseForm(){
+export function ExpenseForm({ formId, display }: Props){
   const [error, setError] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const { value, setUserStore } = useUserStore();
   const user = value;
 
-  const [open, setOpen] = React.useState<boolean>(!user.hasOwnProperty('accountNum'));
+  const [open, setOpen] = React.useState<boolean>(display);
 
   console.log(user);
   // console.log(value);
@@ -113,17 +113,17 @@ export function ExpenseForm(){
             justifyContent="center"
             mb={1}
           >
-            Bank Form
+            Expense Form
           </Typography>
           <form onSubmit={formik.handleSubmit}>
             <div className="mt3">
-              <label className="black">Name</label>
+              <label className="black">Item 1</label>
               <Input
                 type="text"
                 name="name"
                 value={formik.values.name}
                 onChange={formik.handleChange}
-                placeholder="Enter the name of the bank account owner"
+                placeholder="item 1"
                 className="input-box-container input-reset"
               />
               {formik.errors.name && formik.touched.name && (
@@ -131,13 +131,13 @@ export function ExpenseForm(){
               )}
             </div>
             <div className="mt3">
-              <label className="black">Account Number</label>
+              <label className="black">Item 2</label>
               <Input
                 type="text"
                 name="accountNumber"
                 value={formik.values.accountNumber}
                 onChange={formik.handleChange}
-                placeholder="Enter a accountNumber"
+                placeholder="Item 2"
                 className="input-box-container input-reset"
               />
               {formik.errors.accountNumber && formik.touched.accountNumber && (
@@ -145,13 +145,13 @@ export function ExpenseForm(){
               )}
             </div>
             <div className="mt3">
-              <label className="black">BSB</label>
+              <label className="black">Item 3</label>
               <Input
                 type="text"
                 name="bsb"
                 value={formik.values.bsb}
                 onChange={formik.handleChange}
-                placeholder="Enter BSB"
+                placeholder="Item 3"
                 className="input-box-container input-reset"
               />
               {formik.errors.bsb && formik.touched.bsb && (
