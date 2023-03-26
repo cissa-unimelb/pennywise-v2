@@ -1,4 +1,3 @@
-import { BankForm } from "../components/BankForm"
 // import ResponsiveAppBar from "../components/ResponsiveAppBar"
 
 export default function PageOne(){

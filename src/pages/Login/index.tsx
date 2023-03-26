@@ -2,7 +2,7 @@ import { googleSignIn } from "../../auth";
 import { User } from "../../auth/types";
 import { useUserStore } from "../../stores/user";
 import { Navigate } from "react-router-dom";
-import { checkUserExists, setUser, getUser } from "../../database";
+import { setUser, getUser } from "../../database";
 import { LoginForm } from "../../components/LoginForm";
 export default function Login() {
   const { value, setUserStore } = useUserStore();
