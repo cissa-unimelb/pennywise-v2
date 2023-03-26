@@ -6,7 +6,6 @@ import Button from '@mui/joy/Button';
 import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
 import Typography from '@mui/joy/Typography';
-import CircularProgress from '@mui/joy/CircularProgress';
 import Sheet from '@mui/joy/Sheet';
 import Input from '@mui/joy/Input';
 
@@ -14,7 +13,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-import { checkUserExists, setUser } from "../database";
+import { setUser } from "../database";
 import { useUserStore } from "../stores/user";
 
 import './bankform.css'
@@ -29,8 +28,9 @@ export function BankForm(){
 
   const [open, setOpen] = React.useState<boolean>(!user.hasOwnProperty('accountNum'));
 
-  console.log(user);
+  // console.log(user);
   // console.log(value);
+
 
   const formik = useFormik({
     initialValues: {
@@ -56,7 +56,7 @@ export function BankForm(){
           setError('');
           setUserStore(user);
           console.log('successful');
-          console.log(user);
+          // console.log(user);
           toast("Bank details successfully saved!");
           setOpen(false);
 
@@ -90,6 +90,7 @@ export function BankForm(){
       >
         <Sheet
           variant="outlined"
+          className = 'sheet'
           sx={{
             maxWidth: 500,
             borderRadius: 'md',

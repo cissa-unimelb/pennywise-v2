@@ -19,3 +19,9 @@ form{
   color: brown;
 }
 
+.sheet{
+  max-width: 500;
+  border-radius: md;
+  padding: 3;
+  box-shadow: lightblue;
+}
