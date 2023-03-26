@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/joy/Grid";
 import CreateButton from "../../components/CreateButton";
 import { useNavigate } from "react-router-dom";
+import { BankForm } from "../../components/BankForm";
 export default function Dashboard() {
   const { value } = useUserStore();
   const navigate = useNavigate();
@@ -51,6 +52,7 @@ export default function Dashboard() {
             </Grid>
           </Grid>
         </Box>
+        <BankForm/>
       </div>
     </>
   );

@@ -24,6 +24,7 @@ export function googleSignIn(onSuccess: AuthCallback, onError: Function): void {
         isAuthorizer: false,
         isTreasurer: false,
         photoURL: result.user.photoURL ?? "",
+        // accountNum: result.user.accountNum ?? "",
       });
     })
     .catch((error) => {

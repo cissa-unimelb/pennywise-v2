@@ -1,1 +1,1 @@
-export {setUser, checkUserExists} from "./auth";
+export {setUser, checkUserExists, getUser} from "./auth";
