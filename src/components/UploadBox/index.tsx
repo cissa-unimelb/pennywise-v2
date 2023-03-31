@@ -6,10 +6,11 @@ import Button from "@mui/joy/Button";
 import LinearProgress from "@mui/joy/LinearProgress";
 type Props = {
   onCompleteUploadFile: (url: string) => void;
+  onUploadFile: (file: any) => void;
 };
-function UploadBox({ onCompleteUploadFile }: Props) {
+function UploadBox({ onUploadFile, onCompleteUploadFile }: Props) {
   const [progressPercent, setProgressPercent] = useState(0);
-  const onUploadFile = (file: any) => {
+  const onUploadFile1 = (file: any) => {
     const storageRef = ref(storage, `files/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
     const onChangeProgress = (snapshot: any) => {

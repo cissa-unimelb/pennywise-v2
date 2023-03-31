@@ -20,6 +20,7 @@ export default function Login() {
         <LoginForm
           onClickLogin={() => {
             googleSignIn(handleSuccess, (err: any) => {
+              alert(err);
               console.log(err);
             });
           }}

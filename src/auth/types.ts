@@ -7,4 +7,5 @@ export interface User {
   bsb?: string;
   accountNum?: string;
   photoURL: string;
+  token?: string;
 }
