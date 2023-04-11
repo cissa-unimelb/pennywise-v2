@@ -22,6 +22,7 @@ export default function Dashboard() {
   const handleShowForm = () =>{
     setFormId('');
     setIsFormDisplay(true);
+    alert("display");
   }
 
   return (

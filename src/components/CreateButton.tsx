@@ -5,23 +5,26 @@ import Card from "@mui/joy/Card";
 import Add from "@mui/icons-material/Add";
 
 interface Props {
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 export default function CreateButton({
   onClick,
 }: Props) {
   return (
-    <Card variant="outlined" className="Component-createbutton-container">
-      <Add />
-      <span
-        // overlay
-        // underline="none"
-        onClick = {onClick}
-        // sx={{ color: "text.tertiary" }}
-      >
-        Add expenses
-      </span>
-    </Card>
+    <div onClick={onClick}>
+      <Card variant="outlined" className="Component-createbutton-container">
+        <Add />
+        <span
+          // overlay
+          // underline="none"
+          
+          // sx={{ color: "text.tertiary" }}
+        >
+          Add expenses
+        </span>
+      </Card>
+    </div>
+
   );
 }
