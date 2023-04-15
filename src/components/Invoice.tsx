@@ -414,9 +414,6 @@ export default function Invoice(props: InvoiceProps) {
       totalAmout: '',
       items: [
         { description: '', amount: '0.00' },
-        // { description: '2022 Diamond Sponsorship Package', amount: '3000.00' },
-        // { description: '2021 Diamond Sponsorship Package', amount: '2000.00' },
-        // { description: '2020 Diamond Sponsorship Package', amount: '1000.00' },
       ],
     },
     PaymentInfo: {
@@ -461,13 +458,13 @@ export default function Invoice(props: InvoiceProps) {
   props.items.forEach((item) => {
     invoiceData.Details.items.push({
       description: item.description,
-      // amount: Number.parseFloat(item.amount).toFixed(2),
+
       amount: item.amount,
     });
-    // totalAmount = totalAmount + Number.parseFloat(item.amount);
+
   });
   // amount round to the nearest hundredth
-  // invoiceData.Details.totalAmout = totalAmount.toFixed(2);
+
   invoiceData.Details.totalAmout = props.total_amount;
 
   return (

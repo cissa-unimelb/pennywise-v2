@@ -14,7 +14,6 @@ import Input from '@mui/joy/Input';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import List from '@mui/joy/List';
-import ListDivider from '@mui/joy/ListDivider';
 import ListItem from '@mui/joy/ListItem';
 import IconButton from '@mui/joy/IconButton';
 import Star from '@mui/icons-material/Star';
@@ -45,15 +44,8 @@ export const PdfGenerator = () => {
     }[]
   >([]);
 
-  const [valueDescription, setValueDescription] = useState('');
-  const [valueAmount, setValueAmount] = useState('');
   const [valueAbn, setValueAbn] = useState('');
-  const [index, setIndex] = React.useState(0);
-  // const { value, setUserStore } = useUserStore();
-  // const user = value;
 
-  // console.log(user);
-  // console.log(value);
 
   const formik = useFormik({
     initialValues: {
@@ -78,17 +70,7 @@ export const PdfGenerator = () => {
       recipientAddress: Yup.string().required(
         'Must enter invoice recipient address'
       ),
-      /*
-      description: Yup.string().required('Must enter invoice description'),
-      amount: Yup.string()
-        .required('Must enter amount of money that invoice request')
-        .matches(
-          // /^(([1-9]{1}\d*)|(0{1}))(\.\d{1,2})?$/,
-          /^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/,
-          // 'Must be only digits and round to the nearest hundredth'
-          'Must be only digits'
-        ),
-        */
+
     }),
 
     onSubmit: async (values) => {
@@ -96,15 +78,11 @@ export const PdfGenerator = () => {
         invoice_id,
         recipient,
         recipientAddress,
-        // description,
-        // amount,
         abn,
       } = values;
       setValueInvoiceId(invoice_id);
       setValueRecipient(recipient);
       setValueRecipientAddress(recipientAddress);
-      // setValueDescription(description);
-      // setValueAmount(amount);
       setValueAbn(abn);
 
       setIsSubmit(true);
