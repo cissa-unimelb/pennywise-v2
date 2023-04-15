@@ -1,15 +1,15 @@
 import React from 'react';
-import {
-  Page,
-  Text,
-  View,
-  Document,
-  StyleSheet,
-  PDFDownloadLink,
-} from '@react-pdf/renderer';
-import { PDFViewer } from '@react-pdf/renderer';
-import ReactPDF from '@react-pdf/renderer';
-import Invoice from '../../components/Invoice';
+// import {
+//   Page,
+//   Text,
+//   View,
+//   Document,
+//   StyleSheet,
+//   PDFDownloadLink,
+// } from '@react-pdf/renderer';
+// import { PDFViewer } from '@react-pdf/renderer';
+// import ReactPDF from '@react-pdf/renderer';
+// import Invoice from '../../components/Invoice';
 import { PdfGenerator } from '../../components/PdfGenerator';
 // Create styles
 

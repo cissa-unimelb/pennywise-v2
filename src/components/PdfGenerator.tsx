@@ -1,16 +1,8 @@
-import React, { useState } from 'react';
-import {
-  PDFViewer,
-  PDFDownloadLink,
-  Document,
-  Page,
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  Link,
-} from '@react-pdf/renderer';
-import ReactPDF from '@react-pdf/renderer';
+import React, { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
+// import { StyleSheet } from '@react-pdf/renderer';
+// import ReactPDF from '@react-pdf/renderer';
 // import { useUserStore } from "../stores/user";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -19,27 +11,24 @@ import Button from '@mui/joy/Button';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import Input from '@mui/joy/Input';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import List from '@mui/joy/List';
+import ListDivider from '@mui/joy/ListDivider';
+import ListItem from '@mui/joy/ListItem';
+import IconButton from '@mui/joy/IconButton';
+import Star from '@mui/icons-material/Star';
+import Delete from '@mui/icons-material/Delete';
+import ListItemDecorator, {
+  listItemDecoratorClasses,
+} from '@mui/joy/ListItemDecorator';
+import Box from '@mui/joy/Box';
+import ListItemContent from '@mui/joy/ListItemContent';
+import ListItemButton from '@mui/joy/ListItemButton';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Invoice from './Invoice';
-
-// Create styles
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: 'row',
-    backgroundColor: '#E4E4E4',
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1,
-  },
-  img: {
-    width: 100,
-    height: 50,
-  },
-});
 
 export const PdfGenerator = () => {
   const [error, setError] = useState('');
@@ -48,9 +37,18 @@ export const PdfGenerator = () => {
   const [valueInvoiceId, setValueInvoiceId] = useState('');
   const [valueRecipient, setValueRecipient] = useState('');
   const [valueRecipientAddress, setValueRecipientAddress] = useState('');
+  const [valueTotalAmount, setValueTotalAmount] = useState('0.00');
+  const [valueItems, setValueItems] = useState<
+    {
+      description: string;
+      amount: string;
+    }[]
+  >([]);
+
   const [valueDescription, setValueDescription] = useState('');
   const [valueAmount, setValueAmount] = useState('');
   const [valueAbn, setValueAbn] = useState('');
+  const [index, setIndex] = React.useState(0);
   // const { value, setUserStore } = useUserStore();
   // const user = value;
 
@@ -66,6 +64,7 @@ export const PdfGenerator = () => {
       amount: '',
       abn: '',
     },
+    validate(values) {},
     enableReinitialize: true,
     validationSchema: Yup.object({
       abn: Yup.string()
@@ -79,171 +78,596 @@ export const PdfGenerator = () => {
       recipientAddress: Yup.string().required(
         'Must enter invoice recipient address'
       ),
+      /*
       description: Yup.string().required('Must enter invoice description'),
       amount: Yup.string()
-        .required('Must enter amount of money that invoice request ')
-        .matches(/^[0-9]+$/, 'Must be only digits'),
+        .required('Must enter amount of money that invoice request')
+        .matches(
+          // /^(([1-9]{1}\d*)|(0{1}))(\.\d{1,2})?$/,
+          /^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/,
+          // 'Must be only digits and round to the nearest hundredth'
+          'Must be only digits'
+        ),
+        */
     }),
+
     onSubmit: async (values) => {
       const {
         invoice_id,
         recipient,
         recipientAddress,
-        description,
-        amount,
+        // description,
+        // amount,
         abn,
       } = values;
       setValueInvoiceId(invoice_id);
       setValueRecipient(recipient);
       setValueRecipientAddress(recipientAddress);
-      setValueDescription(description);
-      setValueAmount(amount);
+      // setValueDescription(description);
+      // setValueAmount(amount);
       setValueAbn(abn);
-      console.log(values);
-      // somehow put it in <Invoice> component
 
-      // window.open(await ReactPDF.renderToString(pdfContent));
       setIsSubmit(true);
     },
   });
+
+  const calcTotalAmount = () => {
+    let totalAmount = 0;
+    for (let i = 0; i < valueItems.length; i++) {
+      if (isNaN(Number.parseFloat(valueItems[i].amount))) continue;
+      totalAmount += Number.parseFloat(valueItems[i].amount);
+    }
+    setValueTotalAmount(totalAmount.toFixed(2));
+  };
+
+  useEffect(() => {
+    calcTotalAmount();
+    console.log(`TotalAmount:  ${valueTotalAmount} `);
+  }, [valueItems]);
+
+  const addItemHandle = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    // alert(123);
+    // formik.validateField('description');
+    // formik.validateField('amount');
+    let validatePass = true;
+    if (formik.values.amount.trim().length === 0) {
+      validatePass = false;
+      formik.errors.amount = 'Must enter amount of money that invoice request';
+      console.log(formik.errors.amount);
+      formik.setTouched({ amount: true });
+    } else if (
+      !/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(formik.values.amount)
+    ) {
+      formik.errors.amount = 'Must be only digits';
+      console.log(formik.errors.amount);
+      validatePass = false;
+      formik.setTouched({ amount: true });
+    }
+    if (formik.values.description.trim().length === 0) {
+      validatePass = false;
+      formik.errors.description = 'Must enter invoice description';
+      console.log(formik.errors.description);
+
+      formik.setTouched({ description: true });
+    }
+
+    if (!validatePass) {
+      return;
+    }
+    formik.errors.description = '';
+    formik.errors.amount = '';
+    formik.setTouched({ description: false, amount: false });
+    let newItems: {
+      description: string;
+      amount: string;
+    }[] = [...valueItems] || [];
+    newItems.push({
+      description: formik.values.description,
+      amount: Number.parseFloat(formik.values.amount).toFixed(2),
+    });
+    setValueItems(newItems);
+
+    formik.setFieldValue('description', '');
+    formik.setFieldValue('amount', '');
+  };
+  const deleteItemHandle = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    let target = e.target;
+    let button;
+    if (target instanceof SVGPathElement) {
+      button = target.ownerSVGElement?.parentElement;
+    } else if (target instanceof SVGSVGElement) {
+      button = target.parentElement;
+    } else if (target instanceof HTMLButtonElement) {
+      button = target;
+    } else {
+      return;
+    }
+
+    let li: ParentNode | HTMLElement | undefined | null =
+      button?.parentNode?.parentNode;
+    if (li instanceof HTMLLIElement) {
+      let ul: ParentNode | HTMLElement | undefined | null = li.parentNode;
+      if (ul instanceof HTMLUListElement) {
+        for (var i = 0; i < ul.childNodes.length; i++) {
+          if (li === ul.childNodes[i]) {
+            console.log('delete item index is ' + i);
+            let newItems: {
+              description: string;
+              amount: string;
+            }[] = [...valueItems];
+            newItems.splice(i, 1);
+            setValueItems(newItems);
+            break;
+          }
+        }
+      }
+    }
+  };
+
   return (
     <>
       {!isSubmit && (
-        <div>
-          <ToastContainer />
-          <Sheet
-            variant="outlined"
-            className="sheet"
-            sx={{
-              maxWidth: 500,
-              borderRadius: 'md',
-              p: 3,
-              boxShadow: 'lg',
-            }}
-          >
-            <Typography
-              component="h2"
-              id="modal-title"
-              level="h4"
-              textColor="inherit"
-              fontWeight="lg"
-              justifyContent="center"
-              mb={1}
+        <form onSubmit={formik.handleSubmit}>
+          <div style={{ backgroundColor: '#fff' }}>
+            <ToastContainer />
+
+            <Sheet
+              variant="outlined"
+              className="sheet"
+              sx={{
+                width: 800,
+                // borderRadius: 'md',
+                // p: 3,
+                // boxShadow: 'lg',
+                // marginLeft: 'auto',
+                // marginRight: 'auto',
+                // marginTop: '30px',
+                mx: 'auto', // margin left & right
+                my: 4, // margin top & bottom
+                py: 4, // padding top & bottom
+                px: 6, // padding left & right
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                // gap: 2,
+                borderRadius: 'sm',
+                boxShadow: 'md',
+              }}
             >
-              Invoice Generation
-            </Typography>
-            <form onSubmit={formik.handleSubmit}>
-              <div className="mt3">
-                <label className="black">Invoice ID/Number</label>
-                <Input
-                  type="text"
-                  name="invoice_id"
-                  value={formik.values.invoice_id}
-                  onChange={formik.handleChange}
-                  placeholder="Enter the ID of the invoice"
-                  className="input-box-container input-reset"
-                />
-                {formik.errors.invoice_id && formik.touched.invoice_id && (
-                  <p className="input-error">{formik.errors.invoice_id}</p>
-                )}
+              <div
+                style={{
+                  width: '100vw',
+                  marginBottom: '20px',
+                  // backgroundColor: '#ccc',
+                }}
+              >
+                <Typography
+                  component="h2"
+                  id="modal-title"
+                  level="h4"
+                  textColor="inherit"
+                  fontWeight="lg"
+                  textAlign="center"
+                  mb={1}
+                >
+                  Invoice
+                </Typography>
               </div>
-              <div className="mt3">
-                <label className="black">Recipient</label>
-                <Input
-                  type="text"
-                  name="recipient"
-                  value={formik.values.recipient}
-                  onChange={formik.handleChange}
-                  placeholder="Enter the name of the invoice recipient"
-                  className="input-box-container input-reset"
-                />
-                {formik.errors.recipient && formik.touched.recipient && (
-                  <p className="input-error">{formik.errors.recipient}</p>
-                )}
-              </div>
-              <div className="mt3">
-                <label className="black">recipient ABN</label>
-                <Input
-                  type="text"
-                  name="abn"
-                  value={formik.values.abn}
-                  onChange={formik.handleChange}
-                  placeholder="Enter a recipient ABN"
-                  className="input-box-container input-reset"
-                />
-                {formik.errors.abn && formik.touched.abn && (
-                  <p className="input-error">{formik.errors.abn}</p>
-                )}
-              </div>
-              <div className="mt3">
-                <label className="black">recipient Address</label>
-                <Input
-                  type="text"
-                  name="recipientAddress"
-                  value={formik.values.recipientAddress}
-                  onChange={formik.handleChange}
-                  placeholder="Enter a recipientAddress"
-                  className="input-box-container input-reset"
-                />
-                {formik.errors.recipientAddress &&
-                  formik.touched.recipientAddress && (
-                    <p className="input-error">
-                      {formik.errors.recipientAddress}
-                    </p>
+
+              <div
+                style={{
+                  width: '800px',
+                  // backgroundColor: '#eee',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'flex-start',
+                  gap: 2,
+                }}
+              >
+                <FormControl
+                  className=""
+                  style={{
+                    width: '800px',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: '10px',
+                  }}
+                >
+                  <FormLabel
+                    className=""
+                    style={{ width: '130px', lineHeight: '38px' }}
+                  >
+                    Invoice ID/Number
+                  </FormLabel>
+                  <Input
+                    type="text"
+                    name="invoice_id"
+                    value={formik.values.invoice_id}
+                    onChange={formik.handleChange}
+                    placeholder="Enter the ID of the invoice"
+                    className="input-box-container input-reset"
+                    style={{ width: '300px' }}
+                  />
+                  {formik.errors.invoice_id && formik.touched.invoice_id && (
+                    <p className="input-error">{formik.errors.invoice_id}</p>
                   )}
+                </FormControl>
+                <div
+                  style={{
+                    width: '100vw',
+                    marginBottom: '20px',
+                    borderBottomWidth: '1px',
+                    borderBottomColor: '#ddd',
+                    borderBottomStyle: 'solid',
+                    // backgroundColor: '#ccc',
+                  }}
+                >
+                  <Typography
+                    component="h2"
+                    id="recipient-title"
+                    level="h6"
+                    textColor="inherit"
+                    fontWeight="lg"
+                    textAlign="left"
+                    mb={1}
+                  >
+                    Recipient Information
+                  </Typography>
+                </div>
+                <FormControl
+                  className=""
+                  style={{
+                    width: '800px',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: '10px',
+                  }}
+                >
+                  <FormLabel
+                    className=""
+                    style={{ width: '130px', lineHeight: '38px' }}
+                  >
+                    Recipient ABN
+                  </FormLabel>
+                  <Input
+                    type="text"
+                    name="abn"
+                    value={formik.values.abn}
+                    onChange={formik.handleChange}
+                    placeholder="Enter a recipient ABN"
+                    className="input-box-container input-reset"
+                    style={{ width: '300px' }}
+                  />
+                  {formik.errors.abn && formik.touched.abn && (
+                    <p className="input-error">{formik.errors.abn}</p>
+                  )}
+                </FormControl>
+                <FormControl
+                  className=""
+                  style={{
+                    width: '100vw',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: '10px',
+                    // backgroundColor: '#ccc',
+                  }}
+                >
+                  <FormLabel
+                    className=""
+                    style={{ width: '130px', lineHeight: '38px' }}
+                  >
+                    Recipient
+                  </FormLabel>
+                  <Input
+                    type="text"
+                    name="recipient"
+                    value={formik.values.recipient}
+                    onChange={formik.handleChange}
+                    placeholder="Enter the name of the invoice recipient"
+                    className="input-box-container input-reset"
+                    style={{ width: '450px' }}
+                  />
+                  {formik.errors.recipient && formik.touched.recipient && (
+                    <p className="input-error">{formik.errors.recipient}</p>
+                  )}
+                </FormControl>
+
+                <FormControl
+                  className=""
+                  style={{
+                    width: '100vw',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    marginBottom: '10px',
+                  }}
+                >
+                  <FormLabel
+                    className=""
+                    style={{ width: '130px', lineHeight: '38px' }}
+                  >
+                    Recipient Address
+                  </FormLabel>
+                  <Input
+                    type="text"
+                    name="recipientAddress"
+                    value={formik.values.recipientAddress}
+                    onChange={formik.handleChange}
+                    placeholder="Enter a recipientAddress"
+                    className="input-box-container input-reset"
+                    style={{ width: '650px' }}
+                  />
+                  {formik.errors.recipientAddress &&
+                    formik.touched.recipientAddress && (
+                      <p
+                        className="input-error"
+                        style={{ width: '100vw', paddingLeft: '140px' }}
+                      >
+                        {formik.errors.recipientAddress}
+                      </p>
+                    )}
+                </FormControl>
+                {error && <p className="submit-error">{error}</p>}
               </div>
-              <div className="mt3">
-                <label className="black">description</label>
-                <Input
-                  type="text"
-                  name="description"
-                  value={formik.values.description}
-                  onChange={formik.handleChange}
-                  placeholder="Enter description"
-                  className="input-box-container input-reset"
-                />
-                {formik.errors.description && formik.touched.description && (
-                  <p className="input-error">{formik.errors.description}</p>
-                )}
+              <div
+                style={{
+                  width: '800px',
+                  // backgroundColor: '#eee',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  // borderTopWidth: '1px',
+                  // borderTopColor: '#ccc',
+                  // borderTopStyle: 'solid',
+                  borderBottomWidth: '1px',
+                  borderBottomColor: '#ddd',
+                  borderBottomStyle: 'solid',
+                  marginTop: '20px',
+                  // paddingTop: '20px',
+                  paddingBottom: '20px',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100vw',
+                    marginBottom: '20px',
+                    borderBottomWidth: '1px',
+                    borderBottomColor: '#ddd',
+                    borderBottomStyle: 'solid',
+                  }}
+                >
+                  <Typography
+                    component="h2"
+                    id="items-title"
+                    level="h6"
+                    textColor="inherit"
+                    fontWeight="large"
+                    textAlign="left"
+                    mb={1}
+                  >
+                    Invoice Items
+                  </Typography>
+                </div>
+                <FormControl
+                  className=""
+                  style={{
+                    width: '100vw',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: '10px',
+                  }}
+                >
+                  <FormLabel
+                    className=""
+                    style={{ width: '80px', lineHeight: '38px' }}
+                  >
+                    Description
+                  </FormLabel>
+                  <Input
+                    id="text_item_description"
+                    type="text"
+                    name="description"
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                    // validate={validateDescription}
+                    placeholder="Enter description"
+                    className="input-box-container input-reset"
+                    style={{ width: '500px' }}
+                  />
+                  {formik.errors.description && formik.touched.description && (
+                    <p className="input-error">{formik.errors.description}</p>
+                  )}
+                </FormControl>
+                <FormControl
+                  className=""
+                  style={{
+                    width: '450px',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                >
+                  <FormLabel
+                    className=""
+                    style={{
+                      width: '80px',
+                      lineHeight: '38px',
+                      // fontSize: '0.8rem',
+                    }}
+                  >
+                    Amount
+                  </FormLabel>
+                  <Input
+                    id="text_item_amount"
+                    type="text"
+                    name="amount"
+                    value={formik.values.amount}
+                    onChange={formik.handleChange}
+                    // validate={validateAmont}
+                    placeholder="Enter amount"
+                    className="input-box-container input-reset"
+                    // style={{ width: '200px' }}
+                  />
+                  {formik.errors.amount && formik.touched.amount && (
+                    <p className="input-error">{formik.errors.amount}</p>
+                  )}
+                </FormControl>
+                <div
+                  className=""
+                  style={{
+                    textAlign: 'left',
+                    // width: '180px',
+                  }}
+                >
+                  <Button
+                    type="button"
+                    id="btnAdd"
+                    // className="soft-buttton"
+                    color="warning"
+                    variant="solid"
+                    onClick={addItemHandle}
+                  >
+                    Add
+                  </Button>
+                </div>
               </div>
-              <div className="mt3">
-                <label className="black">amount</label>
-                <Input
-                  type="text"
-                  name="amount"
-                  value={formik.values.amount}
-                  onChange={formik.handleChange}
-                  placeholder="Enter amount"
-                  className="input-box-container input-reset"
-                />
-                {formik.errors.amount && formik.touched.amount && (
-                  <p className="input-error">{formik.errors.amount}</p>
-                )}
+              <div
+                style={{
+                  width: '800px',
+                }}
+              >
+                <Box sx={{ py: 2, pr: 0, width: 520, backgroundColor: '#fff' }}>
+                  <List
+                    aria-label="Sidebar"
+                    variant="outlined"
+                    sx={{
+                      // ...applyRadiusOnEdges({ target: 'deepest' | 'nested' }),
+                      '--ListItem-paddingLeft': '0px',
+                      '--ListItemDecorator-size': '48px',
+                      '--ListItemDecorator-color': (theme) =>
+                        theme.vars.palette.text.secondary,
+                      '--ListItem-minHeight': '36px',
+                      '--List-nestedInsetStart': '13px',
+                      [`& .${listItemDecoratorClasses.root}`]: {
+                        justifyContent: 'flex-end',
+                        pl: '10px',
+                        pr: '10px',
+                      },
+                      '& [role="button"]': {
+                        // borderRadius: '0 20px 20px 0',
+                      },
+                      bgcolor: 'background.body',
+                      borderRadius: 'sm',
+                      boxShadow: 'sm',
+                      minHeight: 50,
+                      py: 2,
+                    }}
+                  >
+                    {valueItems.map((item) => {
+                      return (
+                        <ListItem
+                          key={uuidv4()}
+                          endAction={
+                            <IconButton
+                              aria-label="Delete"
+                              size="sm"
+                              color="danger"
+                              onClick={deleteItemHandle}
+                            >
+                              <Delete />
+                            </IconButton>
+                          }
+                          sx={{
+                            marginBottom: '0px',
+                            paddingBottom: '10px',
+                            // borderBottomWidth: '0.5px',
+                            // borderBottomColor: '#ddd',
+                            // borderBottomStyle: 'dashed',
+                          }}
+                        >
+                          <ListItemButton onClick={() => {}}>
+                            <ListItemDecorator>
+                              <Star fontSize="small" />
+                            </ListItemDecorator>
+                            <ListItemContent sx={{ pl: 0 }}>
+                              {item.description}
+                            </ListItemContent>
+                            <Typography
+                              level="body2"
+                              sx={{
+                                fontWeight: 'bold',
+                                color: 'inherit',
+                                pr: 2,
+                              }}
+                            >
+                              {item.amount}
+                            </Typography>
+                          </ListItemButton>
+                        </ListItem>
+                      );
+                    })}
+                  </List>
+                </Box>
               </div>
-              {error && <p className="submit-error">{error}</p>}
-              <div className="button-container">
+              <div
+                className=""
+                style={{
+                  textAlign: 'right',
+                  // paddingRight: '20px',
+                  marginTop: '30px',
+                  marginBottom: '20px',
+                  width: '100vw',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  borderTopWidth: '1.5px',
+                  borderTopColor: '#ccc',
+                  borderTopStyle: 'solid',
+                  paddingTop: '20px',
+                }}
+              >
+                <div style={{ width: '400px', textAlign: 'left' }}>
+                  <label>
+                    <b>Total Amount:</b>
+                  </label>
+                  <label style={{ marginLeft: '10px' }}>
+                    {valueTotalAmount}
+                  </label>
+                </div>
                 <Button
                   type="submit"
-                  id="login"
-                  className="solid-buttton"
+                  id="btnLogin"
+                  // className="solid-buttton"
                   loading={isUploading}
+                  color="primary"
+                  variant="solid"
                 >
                   Generate
                 </Button>
-                <br />
               </div>
-            </form>
-          </Sheet>
-        </div>
+            </Sheet>
+          </div>
+        </form>
       )}
       {isSubmit && (
         <Invoice
           invoice_id={valueInvoiceId}
           recipient={valueRecipient}
-          recipientAbn={valueAbn}
-          recipientAddress={valueRecipientAddress}
-          description={valueDescription}
-          amount={valueAmount}
+          recipient_abn={valueAbn}
+          recipient_address={valueRecipientAddress}
+          items={valueItems}
+          total_amount={valueTotalAmount}
         ></Invoice>
       )}
     </>

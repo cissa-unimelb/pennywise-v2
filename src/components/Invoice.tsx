@@ -1,4 +1,5 @@
 import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import {
   PDFViewer,
   Page,
@@ -369,10 +370,13 @@ const styles = StyleSheet.create({
 interface InvoiceProps {
   invoice_id: string;
   recipient: string;
-  recipientAbn: string;
-  recipientAddress: string;
-  description: string;
-  amount: string;
+  recipient_abn: string;
+  recipient_address: string;
+  items: {
+    description: string;
+    amount: string;
+  }[];
+  total_amount: string;
 }
 
 export default function Invoice(props: InvoiceProps) {
@@ -382,7 +386,7 @@ export default function Invoice(props: InvoiceProps) {
     Logo: const_images.logo,
     Seller: {
       name: 'Computing and Information Systems Students Association (CISSA)',
-      taxNo: 'ABN 80 ABN 80 988 105 064',
+      abn: 'ABN 80 ABN 80 988 105 064',
       address1: 'Level 8, Doug McDonell Building',
       address2: 'The University of Melbourne, VIC 3010, Australia',
       // province: 'VIC',
@@ -398,7 +402,7 @@ export default function Invoice(props: InvoiceProps) {
     },
     Buyer: {
       name: 'ANZ Banking Group Ltd (Aust)',
-      taxNo: 'ABN 11 005 357 522',
+      abn: 'ABN 11 005 357 522',
       address1: 'Level 12, 839 Collins Street, Docklands ',
       address2: 'VIC 3008',
       // province: 'VIC',
@@ -444,17 +448,27 @@ export default function Invoice(props: InvoiceProps) {
       },
     },
   };
-  var now = new Date();
+  const now = new Date();
   invoiceData.InvoiceHeader.id = props.invoice_id;
   invoiceData.InvoiceHeader.issuedOn =
     now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
   invoiceData.InvoiceHeader.issuedTo = props.recipient;
   invoiceData.Buyer.name = props.recipient;
-  invoiceData.Buyer.taxNo = props.recipientAbn;
-  invoiceData.Buyer.address1 = props.recipientAddress;
-  invoiceData.Details.totalAmout = props.amount;
-  invoiceData.Details.items[0].amount = props.amount;
-  invoiceData.Details.items[0].description = props.description;
+  invoiceData.Buyer.abn = props.recipient_abn;
+  invoiceData.Buyer.address1 = props.recipient_address;
+  invoiceData.Details.items.length = 0;
+  let totalAmount = 0;
+  props.items.forEach((item) => {
+    invoiceData.Details.items.push({
+      description: item.description,
+      // amount: Number.parseFloat(item.amount).toFixed(2),
+      amount: item.amount,
+    });
+    // totalAmount = totalAmount + Number.parseFloat(item.amount);
+  });
+  // amount round to the nearest hundredth
+  // invoiceData.Details.totalAmout = totalAmount.toFixed(2);
+  invoiceData.Details.totalAmout = props.total_amount;
 
   return (
     <PDFViewer style={styles.pdfViewer}>
@@ -467,7 +481,7 @@ export default function Invoice(props: InvoiceProps) {
               </View>
               <View style={styles.sectionHeader_address}>
                 <Text>{invoiceData.Seller.name}</Text>
-                <Text>{invoiceData.Seller.taxNo}</Text>
+                <Text>{invoiceData.Seller.abn}</Text>
                 <Text>&nbsp;</Text>
                 <Text>{invoiceData.Seller.address1}</Text>
                 <Text>{invoiceData.Seller.address2}</Text>
@@ -487,9 +501,9 @@ export default function Invoice(props: InvoiceProps) {
                 <Text>{invoiceData.InvoiceHeader.issuedOn}</Text>
                 <Text>{invoiceData.Buyer.name}</Text>
                 <Text style={styles.sectionInvoiceHeader_value_text_italic}>
-                  {invoiceData.Buyer.address1}
-                  {invoiceData.Buyer.address2} (ABN&nbsp;
-                  {invoiceData.Buyer.taxNo} )
+                  {invoiceData.Buyer.address1}&nbsp;
+                  {invoiceData.Buyer.address2}&nbsp;(ABN &nbsp;
+                  {invoiceData.Buyer.abn} )
                 </Text>
               </View>
             </View>
@@ -501,7 +515,7 @@ export default function Invoice(props: InvoiceProps) {
 
               <View style={styles.itemsContainer}>
                 {invoiceData.Details.items.map((item) => (
-                  <View style={styles.itemBox}>
+                  <View style={styles.itemBox} key={uuidv4()}>
                     <Text style={styles.itemDescription}>
                       {item.description}
                     </Text>
