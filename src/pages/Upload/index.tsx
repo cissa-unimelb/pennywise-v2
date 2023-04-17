@@ -12,37 +12,38 @@ export default function Dashboard() {
     navigate("/login");
   };
   const uploadFile = async (file: any) => {
-    const metadata = {
-      name: file.name,
-      mimeType: file.type,
+    var fileContent = "sample text"; // As a sample, upload a text file.
+    var uploadfile = new Blob([fileContent], { type: file.type });
+    var metadata = {
+      name: file.name, // Filename at Google Drive
+      mimeType: file.type, // mimeType at Google Drive
+      parents: ["10HGvWmY5D7zbM_BHiosFjQ-TWHQfQaox"], // Folder ID at Google Drive
     };
-    const form = new FormData();
+
+    // var accessToken = gapi.auth.getToken().access_token; // Here gapi is used for retrieving the access token.
+    var form = new FormData();
     form.append(
       "metadata",
       new Blob([JSON.stringify(metadata)], { type: "application/json" })
     );
     form.append("file", file);
 
-    try {
-      console.log(value.token);
-      const response = await fetch(
-        "https://www.googleapis.com/upload/drive/v3/files?uploadType=media",
-        {
-          method: "POST",
-          headers: new Headers({ Authorization: "Bearer " + value.token }),
-          body: form,
-        }
-      );
-
-      if (response.ok) {
-        alert("File uploaded successfully");
-      } else {
-        alert("Error uploading file");
+    fetch(
+      "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id&supportsAllDrives=true",
+      {
+        method: "POST",
+        headers: new Headers({ Authorization: "Bearer " + value.token }),
+        body: form,
       }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error uploading file");
-    }
+    )
+      .then((res) => {
+        alert("success");
+        console.log(res);
+        return res.json();
+      })
+      .then(function (val) {
+        console.log(val);
+      });
   };
   const [downloadURL, setDownloadURL] = useState<string | null>(null);
 
