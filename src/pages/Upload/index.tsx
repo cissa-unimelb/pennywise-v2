@@ -12,8 +12,8 @@ export default function Dashboard() {
     navigate("/login");
   };
   const uploadFile = async (file: any) => {
-    var fileContent = "sample text"; // As a sample, upload a text file.
-    var uploadfile = new Blob([fileContent], { type: file.type });
+    // var fileContent = "sample text"; // As a sample, upload a text file.
+    // var uploadfile = new Blob([fileContent], { type: file.type });
     var metadata = {
       name: file.name, // Filename at Google Drive
       mimeType: file.type, // mimeType at Google Drive
