@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // import { StyleSheet } from '@react-pdf/renderer';
@@ -25,13 +25,13 @@ import Box from '@mui/joy/Box';
 import ListItemContent from '@mui/joy/ListItemContent';
 import ListItemButton from '@mui/joy/ListItemButton';
 
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Invoice from './Invoice';
 
 export const PdfGenerator = () => {
-  const [error, setError] = useState('');
-  const [isUploading, setIsUploading] = useState(false);
+  const [error] = useState('');
+  const [isUploading] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [valueInvoiceId, setValueInvoiceId] = useState('');
   const [valueRecipient, setValueRecipient] = useState('');
@@ -89,19 +89,19 @@ export const PdfGenerator = () => {
     },
   });
 
-  const calcTotalAmount = () => {
+  const calcTotalAmount = useCallback(() => {
     let totalAmount = 0;
     for (let i = 0; i < valueItems.length; i++) {
       if (isNaN(Number.parseFloat(valueItems[i].amount))) continue;
       totalAmount += Number.parseFloat(valueItems[i].amount);
     }
     setValueTotalAmount(totalAmount.toFixed(2));
-  };
+  }, [valueItems]);
 
   useEffect(() => {
     calcTotalAmount();
     console.log(`TotalAmount:  ${valueTotalAmount} `);
-  }, [valueItems]);
+  }, [calcTotalAmount, valueItems, valueTotalAmount]);
 
   const addItemHandle = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -198,12 +198,6 @@ export const PdfGenerator = () => {
               className="sheet"
               sx={{
                 width: 800,
-                // borderRadius: 'md',
-                // p: 3,
-                // boxShadow: 'lg',
-                // marginLeft: 'auto',
-                // marginRight: 'auto',
-                // marginTop: '30px',
                 mx: 'auto', // margin left & right
                 my: 4, // margin top & bottom
                 py: 4, // padding top & bottom
@@ -221,7 +215,6 @@ export const PdfGenerator = () => {
                 style={{
                   width: '100vw',
                   marginBottom: '20px',
-                  // backgroundColor: '#ccc',
                 }}
               >
                 <Typography
@@ -284,7 +277,6 @@ export const PdfGenerator = () => {
                     borderBottomWidth: '1px',
                     borderBottomColor: '#ddd',
                     borderBottomStyle: 'solid',
-                    // backgroundColor: '#ccc',
                   }}
                 >
                   <Typography
@@ -336,7 +328,6 @@ export const PdfGenerator = () => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     marginBottom: '10px',
-                    // backgroundColor: '#ccc',
                   }}
                 >
                   <FormLabel
@@ -646,7 +637,7 @@ export const PdfGenerator = () => {
           recipient_address={valueRecipientAddress}
           items={valueItems}
           total_amount={valueTotalAmount}
-        ></Invoice>
+        />
       )}
     </>
   );

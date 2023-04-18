@@ -454,7 +454,6 @@ export default function Invoice(props: InvoiceProps) {
   invoiceData.Buyer.abn = props.recipient_abn;
   invoiceData.Buyer.address1 = props.recipient_address;
   invoiceData.Details.items.length = 0;
-  let totalAmount = 0;
   props.items.forEach((item) => {
     invoiceData.Details.items.push({
       description: item.description,
@@ -474,7 +473,7 @@ export default function Invoice(props: InvoiceProps) {
           <View style={styles.sectionPage}>
             <View style={styles.sectionHeader}>
               <View style={styles.sectionHeader_icon}>
-                <Image source={invoiceData.Logo}></Image>
+                <Image source={invoiceData.Logo} />
               </View>
               <View style={styles.sectionHeader_address}>
                 <Text>{invoiceData.Seller.name}</Text>
@@ -594,7 +593,7 @@ export default function Invoice(props: InvoiceProps) {
                   <Image
                     src={const_images.icons.email}
                     style={styles.contactIcon}
-                  ></Image>
+                  />
                   <Link
                     src={'mailto:' + invoiceData.ContactInfo.contact1.email}
                   >
@@ -606,7 +605,7 @@ export default function Invoice(props: InvoiceProps) {
                   <Image
                     src={const_images.icons.worktel}
                     style={styles.contactIcon}
-                  ></Image>
+                  />
                   <Text>{invoiceData.ContactInfo.contact1.worktel}</Text>
                 </View>
               </View>
@@ -621,7 +620,7 @@ export default function Invoice(props: InvoiceProps) {
                   <Image
                     src={const_images.icons.email}
                     style={styles.contactIcon}
-                  ></Image>
+                  />
                   <Link
                     src={'mailto:' + invoiceData.ContactInfo.contact2.email}
                   >
@@ -632,7 +631,7 @@ export default function Invoice(props: InvoiceProps) {
                   <Image
                     src={const_images.icons.worktel}
                     style={styles.contactIcon}
-                  ></Image>
+                  />
                   <Text>{invoiceData.ContactInfo.contact2.worktel}</Text>
                 </View>
               </View>
@@ -643,11 +642,11 @@ export default function Invoice(props: InvoiceProps) {
                 <Image
                   src={const_images.club}
                   style={styles.sectionFootImage}
-                ></Image>
+                />
                 <Image
                   src={const_images.charity}
                   style={styles.sectionFootImage}
-                ></Image>
+                />
               </View>
             </View>
           </View>
