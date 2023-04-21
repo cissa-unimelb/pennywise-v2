@@ -26,7 +26,7 @@ Font.register({
   family: 'Dosis',
   fonts: [
     { src: "https://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7MV3BkFTq4EPw.ttf" },
-    { src: "https://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7QV3BkFTq4EPw.ttf", fontWeight: 'bold' },
+    { src: "https://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7QV3BkFTq4EPw.ttf", fontWeight: 'bold' }
   ],
 });
 
@@ -126,8 +126,8 @@ const styles = StyleSheet.create({
   sectionInvoiceHeader_value_text_italic: {
     fontSize: 9,
     textAlign: 'left',
-    fontFamily: 'Times-Italic',
-    fontStyle: 'italic',
+    fontFamily: 'Dosis',
+    //fontStyle: 'italic',
   },
   sectionItems: {
     width: '500px',
