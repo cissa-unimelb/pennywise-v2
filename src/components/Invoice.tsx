@@ -25,17 +25,19 @@ const const_images = {
 Font.register({
   family: 'Dosis',
   fonts: [
-    { src: '/fonts/Dosis-ExtraLight.ttf' },
-    { src: '/fonts/Dosis-bold.ttf', fontWeight: 'bold' },
+    { src: "http://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7MV3BkFTq4EPw.ttf" },
+    { src: "http://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7QV3BkFTq4EPw.ttf", fontWeight: 'bold' },
   ],
 });
+
 Font.register({
   family: 'Arial',
   fonts: [
-    { src: '/fonts/ARIAL.TTF' },
-    { src: '/fonts/ARIALBD.TTF', fontWeight: 'bold' },
+    { src: "http://fonts.gstatic.com/s/arimo/v27/P5sfzZCDf9_T_3cV7NCUECyoxNk37cxsBxDAVQI4aA.ttf" },
+    { src: "http://fonts.gstatic.com/s/arimo/v27/P5sfzZCDf9_T_3cV7NCUECyoxNk37cxsBxDAVQI4aA.ttf", fontWeight: 'bold' },
   ],
 });
+
 
 // Create styles
 const styles = StyleSheet.create({
