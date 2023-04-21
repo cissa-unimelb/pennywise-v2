@@ -5,7 +5,6 @@ import UploadBox from "../../components/UploadBox/";
 import { uploadFile } from "../../utils";
 export default function Dashboard() {
   const { value } = useUserStore();
-
   return (
     <>
       <div className="App-master-container">
