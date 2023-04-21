@@ -100,3 +100,6 @@ align-items: "center";
 .Component-expense-card-container{
   min-height:150px;
 }
+.Component-upload-progress{
+  margin-top: 5px;
+}
