@@ -2,8 +2,6 @@ import * as React from "react";
 import type { User } from "../auth/types";
 import Card from "@mui/joy/Card";
 import Typography from "@mui/joy/Typography";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
 import Avatar from "@mui/joy/Avatar";
 type Props = {
   user: User | undefined;

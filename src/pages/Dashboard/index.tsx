@@ -1,17 +1,13 @@
 import { useUserStore } from "../../stores/user";
 import { Header } from "../../components/Header";
-import { useTheme } from "@mui/joy/styles";
-import Breadcrumbs from "../../components/Breadcrumbs";
 import ExpenseCard from "../../components/ExpenseCard";
 import Box from "@mui/material/Box";
 import Grid from "@mui/joy/Grid";
-import Button from "@mui/joy/Button";
-import ThumbUp from "@mui/icons-material/ThumbUp";
 import CreateButton from "../../components/CreateButton";
 import { useNavigate } from "react-router-dom";
+import { BankForm } from "../../components/BankForm";
 export default function Dashboard() {
   const { value } = useUserStore();
-  const theme = useTheme();
   const navigate = useNavigate();
   const handleLogout = () => {
     console.log("logout");
@@ -56,6 +52,7 @@ export default function Dashboard() {
             </Grid>
           </Grid>
         </Box>
+        <BankForm/>
       </div>
     </>
   );
