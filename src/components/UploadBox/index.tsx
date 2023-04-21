@@ -5,36 +5,10 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import Button from "@mui/joy/Button";
 import LinearProgress from "@mui/joy/LinearProgress";
 type Props = {
-  onCompleteUploadFile: (url: string) => void;
   onUploadFile: (file: any) => void;
+  progress: number;
 };
-function UploadBox({ onUploadFile, onCompleteUploadFile }: Props) {
-  const [progressPercent, setProgressPercent] = useState(0);
-  const onUploadFile1 = (file: any) => {
-    const storageRef = ref(storage, `files/${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    const onChangeProgress = (snapshot: any) => {
-      const progress = Math.round(
-        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-      );
-      setProgressPercent(progress);
-    };
-    const handleError = (error: any) => {
-      alert(error);
-    };
-    const onCompleteUpload = () => {
-      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL: string) => {
-        onCompleteUploadFile(downloadURL);
-      });
-    };
-    uploadTask.on(
-      "state_changed",
-      onChangeProgress,
-      handleError,
-      onCompleteUpload
-    );
-  };
-
+function UploadBox({ onUploadFile, progress }: Props) {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     const files = e.target.files;
@@ -58,11 +32,11 @@ function UploadBox({ onUploadFile, onCompleteUploadFile }: Props) {
           multiple
         />
       </Button>
-      <p>{progressPercent} %</p>
+      <p>{progress} %</p>
       <LinearProgress
         className="Component-upload-progress"
         determinate
-        value={progressPercent}
+        value={progress}
       />
     </>
   );
