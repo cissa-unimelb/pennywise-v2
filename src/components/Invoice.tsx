@@ -21,21 +21,20 @@ const const_images = {
     worktel: '/tel.png',
   },
 };
-
+/*
 Font.register({
   family: 'Dosis',
-  fonts: [
-    { src: '/fonts/Dosis-ExtraLight.ttf' },
-    { src: '/fonts/Dosis-bold.ttf', fontWeight: 'bold' },
-  ],
+  src: "https://fonts.googleapis.com/css2?family=Dosis:wght@200&display=swap",
 });
+*/
 Font.register({
   family: 'Arial',
   fonts: [
-    { src: '/fonts/ARIAL.TTF' },
-    { src: '/fonts/ARIALBD.TTF', fontWeight: 'bold' },
+    { src: "https://fonts.gstatic.com/s/questrial/v13/QdVUSTchPBm7nuUeVf7EuStkm20oJA.ttf" },
+    { src: "https://fonts.gstatic.com/s/questrial/v13/QdVUSTchPBm7nuUeVf7EuStkm20oJA.ttf", fontWeight: 'bold' },
   ],
 });
+
 
 // Create styles
 const styles = StyleSheet.create({
@@ -91,7 +90,7 @@ const styles = StyleSheet.create({
   sectionHeader_address: {
     width: '250px',
     lineHeight: 1.5,
-    fontFamily: 'Dosis',
+    // fontFamily: 'Dosis',
     fontSize: '8.2px',
     textAlign: 'right',
   },
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
     width: '80px',
     height: '65px',
     lineHeight: 1.5,
-    fontFamily: 'Dosis',
+    // fontFamily: 'Dosis',
     fontSize: '9px',
     fontWeight: 'bold',
   },
@@ -142,7 +141,7 @@ const styles = StyleSheet.create({
     paddingTop: '10px',
     borderTopWidth: 0.5,
     borderColor: '#ccc',
-    fontFamily: 'Dosis',
+    // fontFamily: 'Dosis',
     fontSize: '9px',
     display: 'flex',
     flexDirection: 'row',
@@ -156,7 +155,7 @@ const styles = StyleSheet.create({
     paddingTop: '10px',
     borderTopWidth: 0.5,
     borderColor: '#ccc',
-    fontFamily: 'Dosis',
+    // fontFamily: 'Dosis',
     fontSize: '9px',
     display: 'flex',
     flexDirection: 'row',
@@ -178,7 +177,7 @@ const styles = StyleSheet.create({
   },
   itemDescriptionLabel: {
     width: '350px',
-    fontFamily: 'Dosis',
+    // fontFamily: 'Dosis',
     fontSize: '9px',
     fontWeight: 'bold',
     paddingLeft: '5px',
@@ -186,7 +185,7 @@ const styles = StyleSheet.create({
   },
   itemAmountLabel: {
     width: '150px',
-    fontFamily: 'Dosis',
+    // fontFamily: 'Dosis',
     fontSize: '9px',
     fontWeight: 'bold',
     // backgroundColor: '#ddd',
@@ -232,7 +231,7 @@ const styles = StyleSheet.create({
   itemTotalLabel: {
     width: '350px',
     height: '20px',
-    fontFamily: 'Dosis',
+    // fontFamily: 'Dosis',
     fontSize: '9px',
     fontWeight: 'bold',
     paddingRight: '15px',
@@ -246,7 +245,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   itemGstBox: {
-    fontFamily: 'Dosis',
+    // fontFamily: 'Dosis',
     fontSize: '9px',
   },
   contactContainerTitle: {
@@ -259,7 +258,7 @@ const styles = StyleSheet.create({
     flexBasis: '155px',
     width: '155px',
     height: '70px',
-    fontFamily: 'Dosis',
+    // fontFamily: 'Dosis',
     fontSize: '9px',
     textAlign: 'left',
     border: '0.4',
@@ -329,7 +328,7 @@ const styles = StyleSheet.create({
     flexBasis: '240px',
     width: '240px',
     height: '115px',
-    fontFamily: 'Dosis',
+    // fontFamily: 'Dosis',
     fontSize: '9px',
     textAlign: 'left',
     borderWidth: '0.4px',
