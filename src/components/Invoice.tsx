@@ -25,16 +25,16 @@ const const_images = {
 Font.register({
   family: 'Dosis',
   fonts: [
-    { src: "http://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7MV3BkFTq4EPw.ttf" },
-    { src: "http://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7QV3BkFTq4EPw.ttf", fontWeight: 'bold' },
+    { src: "https://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7MV3BkFTq4EPw.ttf" },
+    { src: "https://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7QV3BkFTq4EPw.ttf", fontWeight: 'bold' },
   ],
 });
 
 Font.register({
   family: 'Arial',
   fonts: [
-    { src: "http://fonts.gstatic.com/s/arimo/v27/P5sfzZCDf9_T_3cV7NCUECyoxNk37cxsBxDAVQI4aA.ttf" },
-    { src: "http://fonts.gstatic.com/s/arimo/v27/P5sfzZCDf9_T_3cV7NCUECyoxNk37cxsBxDAVQI4aA.ttf", fontWeight: 'bold' },
+    { src: "https://fonts.gstatic.com/s/arimo/v27/P5sfzZCDf9_T_3cV7NCUECyoxNk37cxsBxDAVQI4aA.ttf" },
+    { src: "https://fonts.gstatic.com/s/arimo/v27/P5sfzZCDf9_T_3cV7NCUECyoxNk37cxsBxDAVQI4aA.ttf", fontWeight: 'bold' },
   ],
 });
 
