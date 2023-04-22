@@ -25,19 +25,28 @@ const const_images = {
 Font.register({
   family: 'Dosis',
   fonts: [
-    { src: "https://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7MV3BkFTq4EPw.ttf" },
-    { src: "https://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7QV3BkFTq4EPw.ttf", fontWeight: 'bold' }
+    {
+      src: 'https://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7MV3BkFTq4EPw.ttf',
+    },
+    {
+      src: 'https://fonts.gstatic.com/s/dosis/v27/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7QV3BkFTq4EPw.ttf',
+      fontWeight: 'bold',
+    },
   ],
 });
 
 Font.register({
   family: 'Arial',
   fonts: [
-    { src: "https://fonts.gstatic.com/s/arimo/v27/P5sfzZCDf9_T_3cV7NCUECyoxNk37cxsBxDAVQI4aA.ttf" },
-    { src: "https://fonts.gstatic.com/s/arimo/v27/P5sfzZCDf9_T_3cV7NCUECyoxNk37cxsBxDAVQI4aA.ttf", fontWeight: 'bold' },
+    {
+      src: 'https://fonts.gstatic.com/s/arimo/v27/P5sfzZCDf9_T_3cV7NCUECyoxNk37cxsBxDAVQI4aA.ttf',
+    },
+    {
+      src: 'https://fonts.gstatic.com/s/arimo/v27/P5sfzZCDf9_T_3cV7NCUECyoxNk37cxsBxDAVQI4aA.ttf',
+      fontWeight: 'bold',
+    },
   ],
 });
-
 
 // Create styles
 const styles = StyleSheet.create({
@@ -414,9 +423,7 @@ export default function Invoice(props: InvoiceProps) {
     ShipTo: {},
     Details: {
       totalAmout: '',
-      items: [
-        { description: '', amount: '0.00' },
-      ],
+      items: [{ description: '', amount: '0.00' }],
     },
     PaymentInfo: {
       onlinePayment: [
@@ -453,7 +460,9 @@ export default function Invoice(props: InvoiceProps) {
     now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
   invoiceData.InvoiceHeader.issuedTo = props.recipient;
   invoiceData.Buyer.name = props.recipient;
-  invoiceData.Buyer.abn = props.recipient_abn;
+  invoiceData.Buyer.abn = props.recipient_abn
+    ? '(ABN ' + props.recipient_abn + ')'
+    : '';
   invoiceData.Buyer.address1 = props.recipient_address;
   invoiceData.Details.items.length = 0;
   props.items.forEach((item) => {
@@ -462,7 +471,6 @@ export default function Invoice(props: InvoiceProps) {
 
       amount: item.amount,
     });
-
   });
   // amount round to the nearest hundredth
 
@@ -501,7 +509,6 @@ export default function Invoice(props: InvoiceProps) {
                 <Text style={styles.sectionInvoiceHeader_value_text_italic}>
                   {invoiceData.Buyer.address1}&nbsp;
                   {invoiceData.Buyer.abn}
-                  (ABN &nbsp;{invoiceData.Buyer.abn} )
                 </Text>
               </View>
             </View>

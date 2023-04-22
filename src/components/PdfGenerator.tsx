@@ -1,10 +1,10 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // import { StyleSheet } from '@react-pdf/renderer';
 // import ReactPDF from '@react-pdf/renderer';
 // import { useUserStore } from "../stores/user";
-import { useFormik } from 'formik';
+import { FormikErrors, useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import Button from '@mui/joy/Button';
@@ -29,6 +29,14 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Invoice from './Invoice';
 
+interface FormValues {
+  invoice_id: string;
+  recipient: string;
+  recipientAddress: string;
+  description: string;
+  amount: string;
+  abn: string;
+}
 export const PdfGenerator = () => {
   const [error] = useState('');
   const [isUploading] = useState(false);
@@ -46,7 +54,6 @@ export const PdfGenerator = () => {
 
   const [valueAbn, setValueAbn] = useState('');
 
-
   const formik = useFormik({
     initialValues: {
       invoice_id: '',
@@ -56,38 +63,57 @@ export const PdfGenerator = () => {
       amount: '',
       abn: '',
     },
-    validate(values) {},
+    validate: (values: FormValues) => {
+      let errors: FormikErrors<FormValues> = {};
+      try {
+        if (valueItems.length === 0 || values.amount) {
+          errors.amount = 'Must enter amount';
+          if (!/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(values.amount))
+            errors.amount = 'Must be only digits';
+        }
+        if (
+          valueItems.length === 0 ||
+          (values.description && values.description.trim().length === 0)
+        ) {
+          errors.description = 'Must enter invoice description';
+        }
+        return errors;
+      } catch (e) {}
+      return errors;
+    },
     enableReinitialize: true,
     validationSchema: Yup.object({
-      abn: Yup.string()
-        // .required('Must enter ABN')
-        .matches(/^[0-9]+$/, 'Must be only digits')
-        .min(11, 'Must be exactly 11 digits')
-        .max(11, 'Must be exactly 11 digits'),
+      abn: Yup.string(),
+      // .required('Must enter ABN')
+      // .matches(/^[0-9]+$/, 'Must be only digits')
+      // .min(11, 'Must be exactly 11 digits')
+      // .max(11, 'Must be exactly 11 digits'),
 
       invoice_id: Yup.string().required('Must enter invoice id/number'),
       recipient: Yup.string().required('Must enter invoice recipient'),
-      recipientAddress: Yup.string()
+      recipientAddress: Yup.string(),
       // .required(
       //   'Must enter invoice recipient address'
       // )
-      ,
-
+      description: Yup.string(),
+      amount: Yup.string(),
     }),
 
     onSubmit: async (values) => {
-      const {
-        invoice_id,
-        recipient,
-        recipientAddress,
-        abn,
-      } = values;
+      if (Number.parseFloat(valueTotalAmount) === 0) {
+        formik.setTouched({ amount: true, description: true });
+        formik.errors.amount = 'Must enter amount';
+        formik.errors.description = 'Must enter invoice description';
+        setIsSubmit(false);
+        return;
+      } else {
+        setIsSubmit(true);
+      }
+      const { invoice_id, recipient, recipientAddress, abn } = values;
       setValueInvoiceId(invoice_id);
       setValueRecipient(recipient);
       setValueRecipientAddress(recipientAddress);
       setValueAbn(abn);
-
-      setIsSubmit(true);
     },
   });
 
@@ -105,40 +131,40 @@ export const PdfGenerator = () => {
     console.log(`TotalAmount:  ${valueTotalAmount} `);
   }, [calcTotalAmount, valueItems, valueTotalAmount]);
 
+  const cancelItemHandle = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    formik.errors.description = '';
+    formik.errors.amount = '';
+    formik.values.description = '';
+    formik.values.amount = '';
+    formik.setTouched({ description: false, amount: false });
+  };
+
   const addItemHandle = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
-    // alert(123);
-    // formik.validateField('description');
-    // formik.validateField('amount');
     let validatePass = true;
     if (formik.values.amount.trim().length === 0) {
-      validatePass = false;
-      formik.errors.amount = 'Must enter amount of money that invoice request';
-      console.log(formik.errors.amount);
       formik.setTouched({ amount: true });
+      validatePass = false;
     } else if (
       !/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(formik.values.amount)
     ) {
-      formik.errors.amount = 'Must be only digits';
-      console.log(formik.errors.amount);
-      validatePass = false;
       formik.setTouched({ amount: true });
+      validatePass = false;
     }
     if (formik.values.description.trim().length === 0) {
-      validatePass = false;
-      formik.errors.description = 'Must enter invoice description';
-      console.log(formik.errors.description);
-
       formik.setTouched({ description: true });
+      validatePass = false;
     }
 
     if (!validatePass) {
       return;
     }
+    formik.setTouched({});
     formik.errors.description = '';
     formik.errors.amount = '';
-    formik.setTouched({ description: false, amount: false });
     let newItems: {
       description: string;
       amount: string;
@@ -172,7 +198,7 @@ export const PdfGenerator = () => {
     if (li instanceof HTMLLIElement) {
       let ul: ParentNode | HTMLElement | undefined | null = li.parentNode;
       if (ul instanceof HTMLUListElement) {
-        for (var i = 0; i < ul.childNodes.length; i++) {
+        for (let i = 0; i < ul.childNodes.length; i++) {
           if (li === ul.childNodes[i]) {
             console.log('delete item index is ' + i);
             let newItems: {
@@ -488,7 +514,7 @@ export const PdfGenerator = () => {
                     // validate={validateAmont}
                     placeholder="Enter amount"
                     className="input-box-container input-reset"
-                    // style={{ width: '200px' }}
+                    // style={{ width: '100px' }}
                   />
                   {formik.errors.amount && formik.touched.amount && (
                     <p className="input-error">{formik.errors.amount}</p>
@@ -510,6 +536,17 @@ export const PdfGenerator = () => {
                     onClick={addItemHandle}
                   >
                     Add
+                  </Button>
+                  <Button
+                    type="button"
+                    id="btnCancel"
+                    // className="soft-buttton"
+                    // color="warning"
+                    variant="solid"
+                    onClick={cancelItemHandle}
+                    style={{ marginLeft: '5px' }}
+                  >
+                    Cancel
                   </Button>
                 </div>
               </div>
