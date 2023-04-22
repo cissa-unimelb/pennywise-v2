@@ -60,16 +60,18 @@ export const PdfGenerator = () => {
     enableReinitialize: true,
     validationSchema: Yup.object({
       abn: Yup.string()
-        .required('Must enter ABN')
+        // .required('Must enter ABN')
         .matches(/^[0-9]+$/, 'Must be only digits')
         .min(11, 'Must be exactly 11 digits')
         .max(11, 'Must be exactly 11 digits'),
 
       invoice_id: Yup.string().required('Must enter invoice id/number'),
       recipient: Yup.string().required('Must enter invoice recipient'),
-      recipientAddress: Yup.string().required(
-        'Must enter invoice recipient address'
-      ),
+      recipientAddress: Yup.string()
+      // .required(
+      //   'Must enter invoice recipient address'
+      // )
+      ,
 
     }),
 

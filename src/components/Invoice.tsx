@@ -406,7 +406,7 @@ export default function Invoice(props: InvoiceProps) {
       name: 'ANZ Banking Group Ltd (Aust)',
       abn: 'ABN 11 005 357 522',
       address1: 'Level 12, 839 Collins Street, Docklands ',
-      address2: 'VIC 3008',
+      // address2: 'VIC 3008',
       // province: 'VIC',
       // postCode: '3008',
       // country: 'Australia',
@@ -500,8 +500,8 @@ export default function Invoice(props: InvoiceProps) {
                 <Text>{invoiceData.Buyer.name}</Text>
                 <Text style={styles.sectionInvoiceHeader_value_text_italic}>
                   {invoiceData.Buyer.address1}&nbsp;
-                  {invoiceData.Buyer.address2}&nbsp;(ABN &nbsp;
-                  {invoiceData.Buyer.abn} )
+                  {invoiceData.Buyer.abn}
+                  (ABN &nbsp;{invoiceData.Buyer.abn} )
                 </Text>
               </View>
             </View>
