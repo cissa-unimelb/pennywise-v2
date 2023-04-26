@@ -21,17 +21,21 @@ export const uploadFile = async (
     new Blob([JSON.stringify(metadata)], { type: "application/json" })
   );
   form.append("file", file);
-
-  const returnData = await axios.post(GOOGLE_DRIVE_UPLOAD_URL, form, {
-    headers: { Authorization: "Bearer " + token },
-    onUploadProgress: function (progressEvent: any) {
-      var percentCompleted = Math.round(
-        (progressEvent.loaded * 100) / progressEvent.total
-      );
-      onUpdateProgress(percentCompleted);
-    },
-  });
-  const jsonData = returnData.data;
-  console.log(jsonData);
-  return JSON.stringify(jsonData);
+  try {
+    const returnData = await axios.post(GOOGLE_DRIVE_UPLOAD_URL, form, {
+      headers: { Authorization: "Bearer " + token },
+      onUploadProgress: function (progressEvent: any) {
+        var percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        onUpdateProgress(percentCompleted);
+      },
+    });
+    const jsonData = returnData.data;
+    console.log(jsonData);
+    return JSON.stringify(jsonData);
+  } catch (e) {
+    console.log(e);
+    return "";
+  }
 };
