@@ -401,9 +401,7 @@ export default function Invoice(props: InvoiceProps) {
   const { value } = useUserStore();
   const upload = () => {
     if (instance) {
-      uploadFile(instance.blob, GOOGLE_DRIVE_FOLDER_ID, value.token, (e) => {
-        console.log(e);
-      });
+      uploadFile(instance.blob, value.token);
     }
   };
   return (

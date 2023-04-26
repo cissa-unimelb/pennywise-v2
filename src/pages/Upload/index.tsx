@@ -8,12 +8,7 @@ export default function Dashboard() {
   const { value } = useUserStore();
   const [uploadProgress, setUploadProgress] = useState(0);
   const onUploadFile = (file: any) => {
-    uploadFile(
-      file,
-      GOOGLE_DRIVE_FOLDER_ID,
-      value.token,
-      onUpdateProgress
-    ).then(onCompleteUploadFile);
+    uploadFile(file, value.token).then(onCompleteUploadFile);
   };
   const onCompleteUploadFile = (url: string) => {
     alert("successfully uploaded the doc. URL:" + url);
@@ -25,7 +20,11 @@ export default function Dashboard() {
     <>
       <div className="App-master-container">
         <Box className="App-dashboard-container">
-          <UploadBox progress={uploadProgress} onUploadFile={onUploadFile} />
+          <UploadBox
+            progress={uploadProgress}
+            onUploadFile={onUploadFile}
+            token={value.token}
+          />
         </Box>
       </div>
     </>
