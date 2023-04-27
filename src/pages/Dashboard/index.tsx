@@ -13,6 +13,9 @@ export default function Dashboard() {
     console.log("logout");
     navigate("/login");
   };
+  const generateInvoice = () => {
+    navigate("/invoice");
+  };
 
   return (
     <>
@@ -21,7 +24,7 @@ export default function Dashboard() {
         <Box className="App-dashboard-container">
           <Grid container spacing={2}>
             <Grid xs={12} md={3}>
-              <CreateButton></CreateButton>
+              <CreateButton link="#/invoice"></CreateButton>
             </Grid>
             <Grid xs={12} md={3}>
               <ExpenseCard
@@ -52,7 +55,7 @@ export default function Dashboard() {
             </Grid>
           </Grid>
         </Box>
-        <BankForm/>
+        <BankForm />
       </div>
     </>
   );
