@@ -103,3 +103,8 @@ align-items: "center";
 .Component-upload-progress{
   margin-top: 5px;
 }
+.Component-pdfupload-container{
+  position:absolute;
+  margin-top: 65px;
+  margin-left:10px;
+}

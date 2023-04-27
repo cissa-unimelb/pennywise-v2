@@ -10,12 +10,15 @@ import {
   StyleSheet,
   Font,
   Link,
-  usePDF,
+  pdf,
 } from "@react-pdf/renderer";
 import { uploadFile } from "../utils/upload";
 import { GOOGLE_DRIVE_FOLDER_ID } from "../constants/API";
 import { useUserStore } from "../stores/user";
 import { Button } from "@mui/joy";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../App.css";
 const const_images = {
   logo: "/cissa.png",
   club: "/cissa-affiliated-club.jpg",
@@ -394,22 +397,42 @@ interface InvoiceProps {
   total_amount: string;
 }
 export default function Invoice(props: InvoiceProps) {
-  const [instance, update] = usePDF({
-    document: <InvoiceDocument {...props} />,
-  });
-
+  // const [instance, update] = usePDF({
+  //   document: <InvoiceDocument {...props} />,
+  // });
   const { value } = useUserStore();
-  const upload = () => {
-    if (instance) {
-      uploadFile(instance.blob, value.token);
-    }
+  const [isUploading, setIsUploading] = useState(false);
+  console.log("user:", value);
+  const upload = async () => {
+    setIsUploading(true);
+    const blob = await pdf(<InvoiceDocument {...props} />).toBlob();
+    console.log(blob);
+    var file = new File([blob], props.invoice_id + ".pdf", {
+      lastModified: new Date().getTime(),
+    });
+    uploadFile(file, value.token, onUploadComplete);
+  };
+  const onUploadComplete = (url: string) => {
+    console.log(url);
+    toast("Successfully uploaded to Google Drive!");
+    window.open(url, "file");
+    setIsUploading(false);
   };
   return (
     <>
-      <Button onClick={upload}>Upload</Button>
-      {/* <PDFViewer style={styles.pdfViewer}> */}
-      {/* <InvoiceDocument {...props}></InvoiceDocument> */}
-      {/* </PDFViewer> */}
+      <>
+        <div className="Component-pdfupload-container">
+          <Button size="lg" loading={isUploading} onClick={upload}>
+            Upload
+          </Button>
+        </div>
+
+        <PDFViewer style={styles.pdfViewer}>
+          <InvoiceDocument {...props}></InvoiceDocument>
+        </PDFViewer>
+      </>
+
+      <ToastContainer />
     </>
   );
 }

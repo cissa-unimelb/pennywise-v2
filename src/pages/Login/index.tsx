@@ -7,15 +7,7 @@ import { LoginForm } from "../../components/LoginForm";
 export default function Login() {
   const { value, setUserStore } = useUserStore();
   const handleSuccess = async (user: User) => {
-    const existingUser = await getUser(user.id);
-    if (existingUser == null) {
-      await setUser(user);
-      setUserStore(user);
-    }else{
-      setUserStore(existingUser);
-      console.log(existingUser);
-      console.log(user);
-    }
+    setUserStore(user);
   };
 
   return (

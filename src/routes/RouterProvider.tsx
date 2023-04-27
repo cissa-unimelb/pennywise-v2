@@ -30,8 +30,15 @@ function RouterProvider() {
           />
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
-          <Route path="invoice" element={<InvoiceGeneration />} />
-          <Route path="pageone" element={<PageOne/>} />
+          <Route
+            path="invoice"
+            element={
+              <ProtectedRoute>
+                <InvoiceGeneration />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="pageone" element={<PageOne />} />
         </Route>
       </Routes>
     </HashRouter>

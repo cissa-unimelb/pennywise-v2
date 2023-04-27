@@ -31,7 +31,7 @@ export function googleSignIn(onSuccess: AuthCallback, onError: Function): void {
           isAuthorizer: false,
           isTreasurer: false,
           photoURL: result.user.photoURL ?? "",
-          token: token,
+          token: token ?? "",
         });
       } else {
         throw "Please login using CISSA account";
