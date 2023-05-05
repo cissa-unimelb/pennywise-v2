@@ -3,17 +3,21 @@ import Link from "@mui/joy/Link";
 import Card from "@mui/joy/Card";
 
 import Add from "@mui/icons-material/Add";
-export default function CreateButton() {
+type Props = {
+  link: string;
+  title: string;
+};
+export default function CreateButton({ link, title }: Props) {
   return (
     <Card variant="outlined" className="Component-createbutton-container">
       <Add />
       <Link
         overlay
         underline="none"
-        href="#interactive-card"
+        href={link}
         sx={{ color: "text.tertiary" }}
       >
-        Add expenses
+        {title}
       </Link>
     </Card>
   );
