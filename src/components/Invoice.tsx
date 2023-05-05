@@ -13,7 +13,6 @@ import {
   pdf,
 } from "@react-pdf/renderer";
 import { uploadFile } from "../utils/upload";
-import { GOOGLE_DRIVE_FOLDER_ID } from "../constants/API";
 import { useUserStore } from "../stores/user";
 import { Button } from "@mui/joy";
 import { ToastContainer, toast } from "react-toastify";
@@ -443,8 +442,9 @@ export function InvoiceDocument(props: InvoiceProps) {
     Logo: const_images.logo,
     Seller: {
       name: "Computing and Information Systems Students Association (CISSA)",
-      abn: "ABN 80 ABN 80 988 105 064",
-      address1: "Level 8, Doug McDonell Building",
+      abn: "ABN 80 988 105 064",
+      address1:
+        "School of Computing and Information Systems Level 3, Melbourne Connect (Building 290)",
       address2: "The University of Melbourne, VIC 3010, Australia",
       // province: 'VIC',
       // postCode: '3010',
@@ -506,8 +506,8 @@ export function InvoiceDocument(props: InvoiceProps) {
     now.getDate() + "/" + (now.getMonth() + 1) + "/" + now.getFullYear();
   invoiceData.InvoiceHeader.issuedTo = props.recipient;
   invoiceData.Buyer.name = props.recipient;
-  invoiceData.Buyer.abn = props.recipient_abn;
-  invoiceData.Buyer.address1 = props.recipient_address;
+  invoiceData.Buyer.abn = props.recipient_abn || "";
+  invoiceData.Buyer.address1 = props.recipient_address || "";
   invoiceData.Details.items.length = 0;
   props.items.forEach((item) => {
     invoiceData.Details.items.push({
@@ -564,8 +564,8 @@ export function InvoiceDocument(props: InvoiceProps) {
               <Text>{invoiceData.Buyer.name}</Text>
               <Text style={styles.sectionInvoiceHeader_value_text_italic}>
                 {invoiceData.Buyer.address1}&nbsp;
-                {invoiceData.Buyer.address2}&nbsp;(ABN &nbsp;
-                {invoiceData.Buyer.abn} )
+                {invoiceData.Buyer.address2}&nbsp;
+                {invoiceData.Buyer.abn && `(ABN ${invoiceData.Buyer.abn}`}
               </Text>
             </View>
           </View>

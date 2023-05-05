@@ -24,6 +24,7 @@ export function googleSignIn(onSuccess: AuthCallback, onError: Function): void {
       console.log(credential);
       const token = credential?.accessToken;
       if (isEmailValid(result.user.email)) {
+        console.log(result.user);
         onSuccess({
           id: result.user.uid,
           name: result.user.displayName ?? "",
