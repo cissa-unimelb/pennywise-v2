@@ -5,8 +5,9 @@ import Card from "@mui/joy/Card";
 import Add from "@mui/icons-material/Add";
 type Props = {
   link: string;
+  title: string;
 };
-export default function CreateButton({ link }: Props) {
+export default function CreateButton({ link, title }: Props) {
   return (
     <Card variant="outlined" className="Component-createbutton-container">
       <Add />
@@ -16,7 +17,7 @@ export default function CreateButton({ link }: Props) {
         href={link}
         sx={{ color: "text.tertiary" }}
       >
-        Add expenses
+        {title}
       </Link>
     </Card>
   );

@@ -24,7 +24,10 @@ export default function Dashboard() {
         <Box className="App-dashboard-container">
           <Grid container spacing={2}>
             <Grid xs={12} md={3}>
-              <CreateButton link="#/invoice"></CreateButton>
+              <CreateButton
+                link="#/invoice"
+                title="Create invoice"
+              ></CreateButton>
             </Grid>
             <Grid xs={12} md={3}>
               <ExpenseCard
