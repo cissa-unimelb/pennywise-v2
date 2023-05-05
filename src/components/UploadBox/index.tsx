@@ -1,6 +1,3 @@
-import { useState } from "react";
-import { storage } from "../../storage";
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import Button from "@mui/joy/Button";
 import LinearProgress from "@mui/joy/LinearProgress";

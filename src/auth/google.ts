@@ -35,7 +35,7 @@ export function googleSignIn(onSuccess: AuthCallback, onError: Function): void {
           token: token ?? "",
         });
       } else {
-        throw "Please login using CISSA account";
+        throw new Error("Please login using CISSA account");
       }
     })
     .catch((error) => {

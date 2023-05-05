@@ -2,20 +2,16 @@ import { useUserStore } from "../../stores/user";
 import Box from "@mui/material/Box";
 import UploadBox from "../../components/UploadBox/";
 import { uploadFile } from "../../utils/upload";
-import { GOOGLE_DRIVE_FOLDER_ID } from "../../constants/API";
 import { useState } from "react";
 export default function Dashboard() {
   const { value } = useUserStore();
   console.log(value);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadProgress] = useState(0);
   const onUploadFile = (file: any) => {
     uploadFile(file, value.token, onCompleteUploadFile);
   };
   const onCompleteUploadFile = (url: string) => {
     alert("successfully uploaded the doc. URL:" + url);
-  };
-  const onUpdateProgress = (percentage: number) => {
-    setUploadProgress(percentage);
   };
   return (
     <>
