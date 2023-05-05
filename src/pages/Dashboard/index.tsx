@@ -13,9 +13,6 @@ export default function Dashboard() {
     console.log("logout");
     navigate("/login");
   };
-  const generateInvoice = () => {
-    navigate("/invoice");
-  };
 
   return (
     <>
