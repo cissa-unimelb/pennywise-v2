@@ -55,20 +55,8 @@ export const PdfGenerator = () => {
       amount: "",
       abn: "",
     },
-    validate(values) {},
     enableReinitialize: true,
-    validationSchema: Yup.object({
-      abn: Yup.string()
-        .matches(/^[0-9]+$/, "Must be only digits")
-        .min(11, "Must be exactly 11 digits")
-        .max(11, "Must be exactly 11 digits"),
-
-      invoice_id: Yup.string().required("Must enter invoice id/number"),
-      recipient: Yup.string(),
-      recipientAddress: Yup.string(),
-    }),
-
-    onSubmit: async (values) => {
+    onSubmit: (values) => {
       const { invoice_id, recipient, recipientAddress, abn } = values;
       setValueInvoiceId(invoice_id);
       setValueRecipient(recipient);
@@ -175,13 +163,14 @@ export const PdfGenerator = () => {
       }
     }
   };
-  if (!(value.email === "treasurer@cissa.org.au"))
-    return <p>You are not treasurer!</p>;
 
   return (
     <>
       {!isSubmit && (
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={() => {
+          formik.handleSubmit();
+        }
+        }>
           <div style={{ backgroundColor: "#fff" }}>
             <ToastContainer />
 
@@ -608,8 +597,6 @@ export const PdfGenerator = () => {
                 </div>
                 <Button
                   type="submit"
-                  id="btnLogin"
-                  // className="solid-buttton"
                   loading={isUploading}
                   color="primary"
                   variant="solid"
