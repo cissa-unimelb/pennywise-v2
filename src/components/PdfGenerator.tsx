@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 // import ReactPDF from '@react-pdf/renderer';
 // import { useUserStore } from "../stores/user";
 import { useFormik } from "formik";
-import * as Yup from "yup";
+// import * as Yup from "yup";
 
 import Button from "@mui/joy/Button";
 import Typography from "@mui/joy/Typography";
@@ -34,7 +34,7 @@ export const PdfGenerator = () => {
   const [isUploading] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [valueInvoiceId, setValueInvoiceId] = useState("");
-  const { value } = useUserStore();
+  // const { value } = useUserStore();
   const [valueRecipient, setValueRecipient] = useState("");
   const [valueRecipientAddress, setValueRecipientAddress] = useState("");
   const [valueTotalAmount, setValueTotalAmount] = useState("0.00");
