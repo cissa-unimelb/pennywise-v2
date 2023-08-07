@@ -298,14 +298,14 @@ export const PdfGenerator = () => {
                     className=""
                     style={{ width: "130px", lineHeight: "38px" }}
                   >
-                    Recipient ABN (optional)
+                    Recipient ABN
                   </FormLabel>
                   <Input
                     type="text"
                     name="abn"
                     value={formik.values.abn}
                     onChange={formik.handleChange}
-                    placeholder="Enter a recipient ABN (optional)"
+                    placeholder="Enter a recipient ABN"
                     className="input-box-container input-reset"
                     style={{ width: "300px" }}
                   />
@@ -327,7 +327,7 @@ export const PdfGenerator = () => {
                     className=""
                     style={{ width: "130px", lineHeight: "38px" }}
                   >
-                    Recipient (optional)
+                    Recipient
                   </FormLabel>
                   <Input
                     type="text"
@@ -358,7 +358,7 @@ export const PdfGenerator = () => {
                     className=""
                     style={{ width: "130px", lineHeight: "38px" }}
                   >
-                    Recipient Address (optional)
+                    Recipient Address
                   </FormLabel>
                   <Input
                     type="text"
