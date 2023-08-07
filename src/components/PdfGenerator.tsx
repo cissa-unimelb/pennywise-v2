@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 // import ReactPDF from '@react-pdf/renderer';
 // import { useUserStore } from "../stores/user";
 import { useFormik } from "formik";
-// import * as Yup from "yup";
+import * as Yup from "yup";
 
 import Button from "@mui/joy/Button";
 import Typography from "@mui/joy/Typography";
@@ -55,8 +55,23 @@ export const PdfGenerator = () => {
       amount: "",
       abn: "",
     },
+    validate(values) {},
     enableReinitialize: true,
-    onSubmit: (values) => {
+    validationSchema: Yup.object({
+      abn: Yup.string()
+        .required("Must enter ABN")
+        .matches(/^[0-9]+$/, "Must be only digits")
+        .min(11, "Must be exactly 11 digits")
+        .max(11, "Must be exactly 11 digits"),
+
+      invoice_id: Yup.string().required("Must enter invoice id/number"),
+      recipient: Yup.string().required("Must enter invoice recipient"),
+      recipientAddress: Yup.string().required(
+        "Must enter invoice recipient address"
+      ),
+    }),
+
+    onSubmit: async (values) => {
       const { invoice_id, recipient, recipientAddress, abn } = values;
       setValueInvoiceId(invoice_id);
       setValueRecipient(recipient);
@@ -167,10 +182,7 @@ export const PdfGenerator = () => {
   return (
     <>
       {!isSubmit && (
-        <form onSubmit={() => {
-          formik.handleSubmit();
-        }
-        }>
+        <form onSubmit={formik.handleSubmit}>
           <div style={{ backgroundColor: "#fff" }}>
             <ToastContainer />
 
@@ -286,14 +298,14 @@ export const PdfGenerator = () => {
                     className=""
                     style={{ width: "130px", lineHeight: "38px" }}
                   >
-                    Recipient ABN (optional)
+                    Recipient ABN
                   </FormLabel>
                   <Input
                     type="text"
                     name="abn"
                     value={formik.values.abn}
                     onChange={formik.handleChange}
-                    placeholder="Enter a recipient ABN (optional)"
+                    placeholder="Enter a recipient ABN"
                     className="input-box-container input-reset"
                     style={{ width: "300px" }}
                   />
@@ -315,7 +327,7 @@ export const PdfGenerator = () => {
                     className=""
                     style={{ width: "130px", lineHeight: "38px" }}
                   >
-                    Recipient (optional)
+                    Recipient
                   </FormLabel>
                   <Input
                     type="text"
@@ -346,7 +358,7 @@ export const PdfGenerator = () => {
                     className=""
                     style={{ width: "130px", lineHeight: "38px" }}
                   >
-                    Recipient Address (optional)
+                    Recipient Address
                   </FormLabel>
                   <Input
                     type="text"
