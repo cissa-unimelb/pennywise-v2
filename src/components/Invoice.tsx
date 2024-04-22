@@ -487,16 +487,16 @@ export function InvoiceDocument(props: InvoiceProps) {
     ContactInfo: {
       tips: "if you have any questions/concerns regarding this invoice, please contact:",
       contact1: {
-        name: "Jian Pan",
+        name: "Cinque Howells",
         title: "President",
         email: "president@cissa.org.au",
-        worktel: "+61 422 556 845",
+        worktel: "+61 435 087 999",
       },
       contact2: {
-        name: "Selena Lee",
+        name: "Jennifer Soo",
         title: "Treasurer",
         email: "treasurer@cissa.org.au",
-        worktel: "+61 405 290 939",
+        worktel: "+61 405 553 549",
       },
     },
   };
