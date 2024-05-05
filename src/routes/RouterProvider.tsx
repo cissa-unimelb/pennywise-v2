@@ -7,6 +7,8 @@ import Upload from "../pages/Upload/";
 import ProtectedRoute from "../components/ProtectedRoute";
 import PageOne from "../pages/PageOne";
 import InvoiceGeneration from "../pages/InvoiceGeneration";
+import ReimbursementGeneration from "../pages/ReimbursementGeneration";
+
 function RouterProvider() {
   return (
     <HashRouter>
@@ -35,6 +37,14 @@ function RouterProvider() {
             element={
               <ProtectedRoute>
                 <InvoiceGeneration />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="reimbursement"
+            element={
+              <ProtectedRoute>
+                <ReimbursementGeneration />
               </ProtectedRoute>
             }
           />

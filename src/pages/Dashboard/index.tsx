@@ -27,6 +27,12 @@ export default function Dashboard() {
               ></CreateButton>
             </Grid>
             <Grid xs={12} md={3}>
+              <CreateButton
+                link="#/reimbursement"
+                title="Create reimbursement"
+              ></CreateButton>
+            </Grid>
+            <Grid xs={12} md={3}>
               <ExpenseCard
                 event="Industry Connect"
                 amount={100}
