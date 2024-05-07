@@ -12,7 +12,7 @@ import {
   Link,
   pdf,
 } from "@react-pdf/renderer";
-import { uploadFile } from "../utils/upload";
+import { uploadFile } from "../services/upload";
 import { useUserStore } from "../stores/user";
 import { Button } from "@mui/joy";
 import { ToastContainer, toast } from "react-toastify";
@@ -409,7 +409,8 @@ export default function Invoice(props: InvoiceProps) {
     var file = new File([blob], props.invoice_id + ".pdf", {
       lastModified: new Date().getTime(),
     });
-    uploadFile(file, value.token, onUploadComplete);
+    uploadFile(file, value.token)
+      .then(onUploadComplete);
   };
   const onUploadComplete = (url: string) => {
     console.log(url);
