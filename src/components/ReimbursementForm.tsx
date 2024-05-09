@@ -134,11 +134,11 @@ export const ReimbursementForm = () => {
       
       await addSubmission({
         // foreign key for the account name, bsb, account number
-        userid: "0",
+        userid: "IdIdcBdMCnRbq7UjbOxAdcc97b53",
         // name of event
         event: event,
         // short description
-        description: purchase_description,
+        description: "",
         // items
         invoices: [{
           description: purchase_description,
