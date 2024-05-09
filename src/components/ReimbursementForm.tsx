@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useState} from "react";
 
 // import { StyleSheet } from '@react-pdf/renderer';
 // import ReactPDF from '@react-pdf/renderer';
@@ -17,6 +16,8 @@ import FormLabel from "@mui/joy/FormLabel";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { addSubmission } from "../database";
+
 interface initialValues {
   name: string,
   bank_name: string,
@@ -25,7 +26,7 @@ interface initialValues {
   amount: number,
   date: string,
   receipt_url: string,
-  note: string,
+  additional: string,
   BSB: string,
   accountNo: string
 };
@@ -37,9 +38,11 @@ type FormControlBlockProps = {
   attribute: initialValuesKey
 }
 
-const FormControlBlock = (props: FormControlBlockProps) => {
+const FormControlBlock = (props: FormControlBlockProps):JSX.Element => {
   const formik = props.formik;
   const attribute = props.attribute;
+  let name = attribute.split("_").join(" ");
+  name = name.charAt(0).toUpperCase() + name.slice(1);
 
   return(
     <FormControl
@@ -54,9 +57,9 @@ const FormControlBlock = (props: FormControlBlockProps) => {
       >
         <FormLabel
           className=""
-          style={{ width: "80px", lineHeight: "38px" }}
+          style={{ width: "200px", lineHeight: "38px" }}
         >
-          {attribute}
+          {name}
         </FormLabel>
         <Input
           id={`text_item_${attribute}`}
@@ -76,6 +79,8 @@ const FormControlBlock = (props: FormControlBlockProps) => {
 }
 
 
+
+
 // import { useUserStore } from "../stores/user";
 export const ReimbursementForm = () => {
   const [isSubmit, setIsSubmit] = useState(false);
@@ -89,16 +94,17 @@ export const ReimbursementForm = () => {
       amount: 0,
       date: "",
       receipt_url: "",
-      note: "",
+      additional: "",
       BSB: "",
       accountNo: ""
     },
+    validate(values) {},
     enableReinitialize: true,
     validationSchema: Yup.object({
       name: Yup.string()
         .required("Name is required"),
       bank_name: Yup.string()
-        .required("Bank ame is required"),
+        .required("Bank name is required"),
       event: Yup.string()
         .required("Name is required"),
       purchase_description: Yup.string()
@@ -107,10 +113,10 @@ export const ReimbursementForm = () => {
         .required("Amount is required"),
       date: Yup.date()
         .required("Date is required"),
-      recipt_url: Yup.string()
+      receipt_url: Yup.string()
         .required("Receipt url is required"),
-      note: Yup.string()
-        .required("Note is required"),
+      additional: Yup.string()
+        .required("Additional note is required"),
       BSB: Yup.string()
         .required("BSB is required"),
       accountNo: Yup.string()
@@ -118,8 +124,37 @@ export const ReimbursementForm = () => {
     }),
 
     onSubmit: async (values) => {
-
+      const {name, bank_name, event, purchase_description,
+        amount, date, receipt_url, additional, BSB, accountNo} = values;
+      console.log(values);
+      
+      console.log("Start submitting");
+      // Start submitting
       setIsSubmit(true);
+      
+      await addSubmission({
+        // foreign key for the account name, bsb, account number
+        userid: "0",
+        // name of event
+        event: event,
+        // short description
+        description: purchase_description,
+        // items
+        invoices: [{
+          description: purchase_description,
+          amount: amount.toString()
+        }],
+        // time of purchase
+        purchaseDate: new Date(date),
+        // receipt url
+        receiptUrl: receipt_url,
+        // additional information
+        additional: additional
+      });
+
+      console.log("Finish submitting");
+    
+      setIsSubmit(false);
     },
   });
 
@@ -128,7 +163,6 @@ export const ReimbursementForm = () => {
 
   return (
     <>
-      {!isSubmit && (
         <form onSubmit={formik.handleSubmit}>
           <div style={{ backgroundColor: "#fff" }}>
             <ToastContainer />
@@ -169,7 +203,8 @@ export const ReimbursementForm = () => {
                   Reimbursement Form
                 </Typography>
               </div>
-
+              
+              {/* All fields */}
               <FormControlBlock formik={formik} attribute="name" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="bank_name" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="event" ></FormControlBlock>
@@ -177,14 +212,30 @@ export const ReimbursementForm = () => {
               <FormControlBlock formik={formik} attribute="amount" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="date" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="receipt_url" ></FormControlBlock>
-              <FormControlBlock formik={formik} attribute="note" ></FormControlBlock>
+              <FormControlBlock formik={formik} attribute="additional" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="BSB" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="accountNo" ></FormControlBlock>            
               
+              {/* Submit button */}
+              <div
+                style={{
+                  display: "block",
+                  marginLeft: "80%",
+                  width: "100%"
+                }}
+              >
+                <Button
+                    type="submit"
+                    loading={isSubmit}
+                    color="primary"
+                    variant="solid"
+                  >
+                    Submit
+                </Button>
+              </div>
             </Sheet>
           </div>
         </form>
-      )}
     </>
   );
 };
