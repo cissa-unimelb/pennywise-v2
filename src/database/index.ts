@@ -1,2 +1,2 @@
 export {setUser, checkUserExists, getUser} from "./auth";
-export {addSubmission} from "./submission";
+export {addReimbursement} from "./reimbursement";

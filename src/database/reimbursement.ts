@@ -1,17 +1,11 @@
 import {app} from "../config";
-import {getFirestore, doc, setDoc, getDoc, collection} from "firebase/firestore";
+import {getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, orderBy} from "firebase/firestore";
 import {createUser, User} from "../auth/types";
 
 const db = getFirestore(app);
 
-
-interface SubmissionInvoice {
-  description: string;
-  amount: string;
-}
-
 // submission schema
-interface Submission {
+export interface Reimbursement {
   // foreign key for the account name, bsb, account number
   userid: string;
   // name of event
@@ -19,17 +13,19 @@ interface Submission {
   // short description
   description: string;
   // items
-  invoices: SubmissionInvoice[];
+  amount: string;
   // time of purchase
   purchaseDate: Date;
   // receipt url
   receiptUrl: string;
   // additional information
   additional: string;
+  state: "Active" | "Completed";
 }
 
+
 // create a submission for the target user id
-export async function addSubmission(submission: Submission) {
+export async function addReimbursement(submission: Reimbursement) {
   // get user information first
   const userDoc = await getDoc(doc(db, "users", submission.userid));
   if (!userDoc.exists()) {
@@ -45,11 +41,24 @@ export async function addSubmission(submission: Submission) {
   }
 
   // store the document
-  const ref = doc(collection(db, "submissions"));
+  const ref = doc(collection(db, "reimbursement"));
   await setDoc(ref, submission);
 }
 
+// returns the list of all active reimbursements
+export async function getActiveReimbursement(): Promise<Reimbursement[]> {
+  const q = query(
+    collection(db, "reimbursement"),
+    where("state", "==", "Active"),
+    orderBy("purchaseDate", "desc")
+  );
 
-export async function getActiveSubmissions() {
-
+  const snapshot = await getDocs(q);
+  let result: Reimbursement[] = [];
+  snapshot.forEach(res => {
+    let data = res.data();
+    data.purchaseDate = data.purchaseDate.toDate();
+    result.push(data as Reimbursement);
+  })
+  return result;
 }

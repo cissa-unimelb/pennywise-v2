@@ -1,4 +1,5 @@
 import { useState} from "react";
+import { useUserStore } from "../stores/user";
 
 // import { StyleSheet } from '@react-pdf/renderer';
 // import ReactPDF from '@react-pdf/renderer';
@@ -16,7 +17,7 @@ import FormLabel from "@mui/joy/FormLabel";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { addSubmission } from "../database";
+import { addReimbursement } from "../database";
 
 interface initialValues {
   name: string,
@@ -81,9 +82,10 @@ const FormControlBlock = (props: FormControlBlockProps):JSX.Element => {
 
 
 
-// import { useUserStore } from "../stores/user";
 export const ReimbursementForm = () => {
   const [isSubmit, setIsSubmit] = useState(false);
+
+  const {value} = useUserStore();
 
   const formik = useFormik({
     initialValues: {
@@ -101,10 +103,10 @@ export const ReimbursementForm = () => {
     validate(values) {},
     enableReinitialize: true,
     validationSchema: Yup.object({
-      name: Yup.string()
-        .required("Name is required"),
-      bank_name: Yup.string()
-        .required("Bank name is required"),
+      // name: Yup.string()
+      //   .required("Name is required"),
+      // bank_name: Yup.string()
+      //   .required("Bank name is required"),
       event: Yup.string()
         .required("Name is required"),
       purchase_description: Yup.string()
@@ -117,10 +119,10 @@ export const ReimbursementForm = () => {
         .required("Receipt url is required"),
       additional: Yup.string()
         .required("Additional note is required"),
-      BSB: Yup.string()
-        .required("BSB is required"),
-      accountNo: Yup.string()
-        .required("accountNo is required")
+      // BSB: Yup.string()
+      //   .required("BSB is required"),
+      // accountNo: Yup.string()
+      //   .required("accountNo is required")
     }),
 
     onSubmit: async (values) => {
@@ -132,24 +134,22 @@ export const ReimbursementForm = () => {
       // Start submitting
       setIsSubmit(true);
       
-      await addSubmission({
+      await addReimbursement({
         // foreign key for the account name, bsb, account number
-        userid: "IdIdcBdMCnRbq7UjbOxAdcc97b53",
+        userid: value.id,
         // name of event
         event: event,
         // short description
-        description: "",
+        description: purchase_description,
         // items
-        invoices: [{
-          description: purchase_description,
-          amount: amount.toString()
-        }],
+        amount: amount.toString(),
         // time of purchase
         purchaseDate: new Date(date),
         // receipt url
         receiptUrl: receipt_url,
         // additional information
-        additional: additional
+        additional: additional,
+        state: "Active"
       });
 
       console.log("Finish submitting");
@@ -205,16 +205,16 @@ export const ReimbursementForm = () => {
               </div>
               
               {/* All fields */}
-              <FormControlBlock formik={formik} attribute="name" ></FormControlBlock>
-              <FormControlBlock formik={formik} attribute="bank_name" ></FormControlBlock>
+              {/*<FormControlBlock formik={formik} attribute="name" ></FormControlBlock>*/}
+              {/*<FormControlBlock formik={formik} attribute="bank_name" ></FormControlBlock>*/}
               <FormControlBlock formik={formik} attribute="event" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="purchase_description" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="amount" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="date" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="receipt_url" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="additional" ></FormControlBlock>
-              <FormControlBlock formik={formik} attribute="BSB" ></FormControlBlock>
-              <FormControlBlock formik={formik} attribute="accountNo" ></FormControlBlock>            
+              {/*<FormControlBlock formik={formik} attribute="BSB" ></FormControlBlock>*/}
+              {/*<FormControlBlock formik={formik} attribute="accountNo" ></FormControlBlock>            */}
               
               {/* Submit button */}
               <div

@@ -6,6 +6,9 @@ import Grid from "@mui/joy/Grid";
 import CreateButton from "../../components/CreateButton";
 import { useNavigate } from "react-router-dom";
 import { BankForm } from "../../components/BankForm";
+import {useEffect, useState} from "react";
+import {getActiveReimbursement, Reimbursement} from "../../database/reimbursement";
+import ReimbursementCard from "../../components/ReimbursementCard";
 export default function Dashboard() {
   const { value } = useUserStore();
   const navigate = useNavigate();
@@ -13,6 +16,13 @@ export default function Dashboard() {
     console.log("logout");
     navigate("/login");
   };
+
+  const [reimbursement, setReimbursement] = useState<Reimbursement[]>([]);
+
+  useEffect(() => {
+    getActiveReimbursement()
+      .then(setReimbursement);
+  }, []);
 
   return (
     <>
@@ -32,33 +42,14 @@ export default function Dashboard() {
                 title="Create reimbursement"
               ></CreateButton>
             </Grid>
-            <Grid xs={12} md={3}>
-              <ExpenseCard
-                event="Industry Connect"
-                amount={100}
-                date="2021-10-10"
-                description="Annual Industry Connect"
-                onClick={() => {}}
-              />
-            </Grid>
-            <Grid xs={12} md={3}>
-              <ExpenseCard
-                event="Industry Connect"
-                amount={100}
-                date="2021-10-10"
-                description="Annual Industry Connect"
-                onClick={() => {}}
-              />
-            </Grid>
-            <Grid xs={12} md={3}>
-              <ExpenseCard
-                event="Industry Connect"
-                amount={100}
-                date="2021-10-10"
-                description="Annual Industry Connect"
-                onClick={() => {}}
-              />
-            </Grid>
+            {
+              reimbursement.map(reim => (
+                <Grid xs={12} md={3}>
+                  <ReimbursementCard reimbursement={reim} />
+                </Grid>
+              ))
+            }
+
           </Grid>
         </Box>
         <BankForm />
