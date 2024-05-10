@@ -23,7 +23,7 @@ export default function Login() {
   return (
     <>
       <div className="App-login-master-container">
-        {value !== undefined && <Navigate to={"/dashboard"} replace={true}/>}
+        {value.id !== "" && <Navigate to={"/dashboard"} replace={true}/>}
         <LoginForm
           onClickLogin={login}
         />

@@ -6,7 +6,7 @@ type Props = {
 
 export default function ProtectedRoute({ children }: Props) {
   const { value } = useUserStore();
-  if (!value) {
+  if (value.id === "") {
     // user is not authenticated
     return <Navigate to="/login" replace={true} />;
   }
