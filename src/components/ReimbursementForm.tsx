@@ -19,9 +19,9 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { addReimbursement } from "../database";
 import { uploadFile } from "../services/upload";
+import {DepartmentEnum} from "../database/reimbursement";
 
-type departmentEnum = "IT" | "Events" | "Competition" | "Education" | "Industry" | "Project" | "Diversity" | "Publicity" | "Product";
-let ALL_DEPARTMENTS = ["IT", "Events", "Competition", "Education", "Industry", "Project", "Diversity", "Publicity", "Product"];
+let ALL_DEPARTMENTS: DepartmentEnum[] = ["IT", "Events", "Competition", "Education", "Industry", "Project", "Diversity", "Publicity", "Product"];
 
 interface formInitialValues {
   event: string;
@@ -29,7 +29,7 @@ interface formInitialValues {
   amount: number;
   date: string;
   additional: string;
-  department: departmentEnum
+  department: DepartmentEnum
 };
 
 type initialValuesKey = keyof formInitialValues;
@@ -181,7 +181,7 @@ export const ReimbursementForm = () => {
       amount: 0,
       date: "",
       additional: "",
-      department: 'Events' as departmentEnum
+      department: 'Events' as DepartmentEnum
     },
     validate(values) {},
     enableReinitialize: true,
@@ -200,7 +200,7 @@ export const ReimbursementForm = () => {
 
     onSubmit: async (values) => {
       const {event, purchase_description,
-        amount, date, additional} = values;
+        amount, date, additional, department} = values;
       console.log(values);
       
       console.log("Start submitting");
@@ -223,6 +223,7 @@ export const ReimbursementForm = () => {
         receiptUrl: receipt_url,
         // additional information
         additional: additional,
+        department: department,
         state: "Active"
       });
 

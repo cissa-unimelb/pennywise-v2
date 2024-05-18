@@ -37,6 +37,12 @@ export default function ReimbursementCard(
       .then(setUser)
   }, [reimbursement]);
 
+  const handleClick = () => {
+    if (reimbursement.department) {
+      window.open(reimbursement.receiptUrl, '_blank');
+    }
+  }
+
   return (
     <Card className="Component-expense-card-container">
       <CardCover>
@@ -48,9 +54,10 @@ export default function ReimbursementCard(
         />
       </CardCover>
       <CardCover className="Component-expense-cover"/>
-      <CardContent sx={{justifyContent: "flex-end"}}>
+      <CardContent sx={{justifyContent: "flex-end", cursor: 'pointer'}}
+                   onClick={handleClick}>
         <Typography level="h2" fontSize="lg" textColor="#fff" mb={1}>
-          {reimbursement.event}
+          {reimbursement.event} | {reimbursement.department || "unspecified"}
         </Typography>
         <Box
           style={{
