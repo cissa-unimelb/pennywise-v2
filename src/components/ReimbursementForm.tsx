@@ -208,18 +208,34 @@ export const ReimbursementForm = () => {
               <FormControlBlock formik={formik} attribute="purchase_description" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="amount" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="date" ></FormControlBlock>
-              <FormControlBlock formik={formik} attribute="receipt_url" ></FormControlBlock>
+
+              {/* Upload file */}
+              <FormLabel
+                className=""
+                style={{ width: "200px", lineHeight: "38px" }}
+              >
+                Receipt upload
+              </FormLabel>
+              <div 
+                style={{
+                  display: "flex",
+                  alignItems: "left"
+                }}
+              >
+                <input 
+                  type="file"
+                  id="uploadFile"
+                  onChange={(event) => {
+                    if (event.currentTarget.files !== null){
+                      setFile(event.currentTarget.files[0]);
+                    }
+                  }}
+                />
+              </div>
+
               <FormControlBlock formik={formik} attribute="additional" ></FormControlBlock>
 
-              <input 
-                type="file"
-                id="uploadFile"
-                onChange={(event) => {
-                  if (event.currentTarget.files !== null){
-                    setFile(event.currentTarget.files[0]);
-                  }
-                }}
-              />
+              
               
               {/* Submit button */}
               <div
