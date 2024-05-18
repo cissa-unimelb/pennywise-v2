@@ -7,8 +7,9 @@ import CreateButton from "../../components/CreateButton";
 import { useNavigate } from "react-router-dom";
 import { BankForm } from "../../components/BankForm";
 import {useEffect, useState} from "react";
-import {getActiveReimbursement, Reimbursement} from "../../database/reimbursement";
+import {getActiveReimbursement, getMyReimbursement, Reimbursement} from "../../database/reimbursement";
 import ReimbursementCard from "../../components/ReimbursementCard";
+import {User} from "../../auth/types";
 
 export default function Dashboard() {
   const { value } = useUserStore();
@@ -21,9 +22,15 @@ export default function Dashboard() {
   const [reimbursement, setReimbursement] = useState<Reimbursement[]>([]);
 
   useEffect(() => {
-    getActiveReimbursement()
-      .then(setReimbursement);
-  }, []);
+    const user: User = value;
+    if (user.isTreasurer) {
+      getActiveReimbursement()
+        .then(setReimbursement);
+    } else {
+      getMyReimbursement(user)
+        .then(setReimbursement);
+    }
+  }, [value]);
 
   return (
     <>
@@ -44,8 +51,8 @@ export default function Dashboard() {
               ></CreateButton>
             </Grid>
             {
-              reimbursement.map(reim => (
-                <Grid xs={12} md={3}>
+              reimbursement.map((reim, i) => (
+                <Grid xs={12} md={3} key={i}>
                   <ReimbursementCard reimbursement={reim} />
                 </Grid>
               ))

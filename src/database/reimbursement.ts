@@ -62,3 +62,22 @@ export async function getActiveReimbursement(): Promise<Reimbursement[]> {
   })
   return result;
 }
+
+// returns the list of active reimbursements by me
+export async function getMyReimbursement(user: User): Promise<Reimbursement[]> {
+  const q = query(
+    collection(db, "reimbursement"),
+    where("state", "==", "Active"),
+    where("userid", "==", user.id),
+    orderBy("purchaseDate", "desc")
+  );
+
+  const snapshot = await getDocs(q);
+  let result: Reimbursement[] = [];
+  snapshot.forEach(res => {
+    let data = res.data();
+    data.purchaseDate = data.purchaseDate.toDate();
+    result.push(data as Reimbursement);
+  })
+  return result;
+}
