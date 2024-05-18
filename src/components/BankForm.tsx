@@ -34,7 +34,10 @@ export function BankForm(){
     getUser(user.id)
       .then(newUser => {
         // already has the data
-        setUserStore(newUser);
+        setUserStore({
+          ...value,
+          ...newUser
+        });
         setOpen(false);
       })
       .catch(err => {

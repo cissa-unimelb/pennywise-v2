@@ -7,6 +7,8 @@ const db = getFirestore(app);
 
 
 export async function setUser(user: User){
+   // hack to remove the user token
+   user.token = undefined;
    const res = await setDoc(doc(db, "users", user.id), user);
    return res;
 }

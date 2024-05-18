@@ -4,10 +4,13 @@ export interface User {
   email: string;
   isAuthorizer: boolean;
   isTreasurer: boolean;
-  bsb?: string;
-  accountNum?: string;
   photoURL: string;
   token?: string;
+
+  // these are set in bank form
+  bsb?: string;
+  accountNum?: string;
+  // TODO: add an account name
 }
 
 // creates an user instance
@@ -15,11 +18,11 @@ export function createUser(
   obj: any
 ): User {
   if (obj == null){
-    return {id: "",name: "",email: "",isAuthorizer: false,isTreasurer: false,photoURL: "",bsb:"",accountNum:"",token:""};
+    return {id: "",name: "",email: "",isAuthorizer: false,isTreasurer: false,photoURL: "",bsb:"",accountNum:""};
   } 
     
 
-  const {id,name,email,isAuthorizer,isTreasurer,photoURL,bsb,accountNum,token} = obj;
+  const {id,name,email,isAuthorizer,isTreasurer,photoURL,bsb,accountNum} = obj;
   
   return {
     id,
@@ -29,7 +32,6 @@ export function createUser(
     isTreasurer,
     photoURL,
     bsb,
-    accountNum,
-    token
+    accountNum
   };
 }
