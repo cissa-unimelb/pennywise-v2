@@ -20,27 +20,26 @@ import "react-toastify/dist/ReactToastify.css";
 import { addReimbursement } from "../database";
 import { uploadFile } from "../services/upload";
 
-interface initialValues {
-  name: string,
-  bank_name: string,
-  event: string,
-  purchase_description: string,
-  amount: number,
-  date: string,
-  receipt_url: string,
-  additional: string,
-  BSB: string,
-  accountNo: string
+type departmentEnum = "IT" | "Events" | "Competition" | "Education" | "Industry" | "Project" | "Diversity" | "Publicity" | "Product";
+let ALL_DEPARTMENTS = ["IT", "Events", "Competition", "Education", "Industry", "Project", "Diversity", "Publicity", "Product"];
+
+interface formInitialValues {
+  event: string;
+  purchase_description: string;
+  amount: number;
+  date: string;
+  additional: string;
+  department: departmentEnum
 };
 
-type initialValuesKey = keyof initialValues;
+type initialValuesKey = keyof formInitialValues;
 
 type FormControlBlockProps = {
-  formik: FormikProps<initialValues>, 
+  formik: FormikProps<formInitialValues>, 
   attribute: initialValuesKey
 }
 
-const FormControlBlock = (props: FormControlBlockProps):JSX.Element => {
+const InputFormControlBlock = (props: FormControlBlockProps):JSX.Element => {
   const formik = props.formik;
   const attribute = props.attribute;
   let name = attribute.split("_").join(" ");
@@ -80,6 +79,90 @@ const FormControlBlock = (props: FormControlBlockProps):JSX.Element => {
   )
 }
 
+type FileUploadBlockInput = {
+  setFile: Function
+}
+const FileUploadBlock = (props: FileUploadBlockInput) => {
+  return (
+    <div 
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        width: "100%"
+      }}
+    >
+      <FormLabel
+        className=""
+        style={{ width: "200px", lineHeight: "38px" }}
+      >
+        Receipt upload
+      </FormLabel>
+      <div 
+        style={{
+          display: "flex",
+          alignItems: "left",
+          width: "500px"
+        }}
+      >
+        <input 
+          type="file"
+          id="uploadFile"
+          onChange={(event) => {
+            if (event.currentTarget.files !== null){
+              props.setFile(event.currentTarget.files[0]);
+            }
+          }}
+        />
+      </div>
+    </div>
+  )
+}
+
+type SelectFormControlBlockInput = {
+  attribute: initialValuesKey;
+  formik: FormikProps<formInitialValues>;
+  fields: string[];
+}
+
+const SelectFormControlBlock = (props: SelectFormControlBlockInput) => {
+  let formik = props.formik;
+  let name = props.attribute.split("_").join(" ");
+  name = name.charAt(0).toUpperCase() + name.slice(1);
+  return(
+    <div 
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        width: "100%"
+      }}
+    >
+      <FormLabel
+        className=""
+        style={{ width: "200px", lineHeight: "38px" }}
+      >
+       {name} 
+      </FormLabel>
+      <div 
+        style={{
+          display: "flex",
+          alignItems: "left",
+          width: "500px"
+        }}
+      >
+        <select name={props.attribute} 
+          onChange={formik.handleChange}
+          value={formik.values[props.attribute]}>
+            {props.fields.map((x) => {
+              return(
+                <option value={x}>{x}</option>
+              );
+            })}
+        </select>
+      </div>
+    </div>
+  )
+}
+
 
 
 
@@ -93,16 +176,12 @@ export const ReimbursementForm = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      bank_name: "",
       event: "",
       purchase_description: "",
       amount: 0,
       date: "",
-      receipt_url: "",
       additional: "",
-      BSB: "",
-      accountNo: ""
+      department: 'Events' as departmentEnum
     },
     validate(values) {},
     enableReinitialize: true,
@@ -115,20 +194,19 @@ export const ReimbursementForm = () => {
         .required("Amount is required"),
       date: Yup.date()
         .required("Date is required"),
-      receipt_url: Yup.string()
-        .required("Receipt url is required"),
       additional: Yup.string()
         .required("Additional note is required")
     }),
 
     onSubmit: async (values) => {
-      const {name, bank_name, event, purchase_description,
-        amount, date, receipt_url, additional, BSB, accountNo} = values;
+      const {event, purchase_description,
+        amount, date, additional} = values;
       console.log(values);
       
       console.log("Start submitting");
       // Start submitting
       setIsSubmit(true);
+      let receipt_url = await uploadFile(file, value.token);
       
       await addReimbursement({
         // foreign key for the account name, bsb, account number
@@ -149,7 +227,7 @@ export const ReimbursementForm = () => {
       });
 
       // Upload file to the shared drive
-      await uploadFile(file, value.token);
+      
 
       console.log("Finish submitting");
     
@@ -204,36 +282,19 @@ export const ReimbursementForm = () => {
               </div>
               
               {/* All fields */}
-              <FormControlBlock formik={formik} attribute="event" ></FormControlBlock>
-              <FormControlBlock formik={formik} attribute="purchase_description" ></FormControlBlock>
-              <FormControlBlock formik={formik} attribute="amount" ></FormControlBlock>
-              <FormControlBlock formik={formik} attribute="date" ></FormControlBlock>
+              <InputFormControlBlock formik={formik} attribute="event" ></InputFormControlBlock>
+              <InputFormControlBlock formik={formik} attribute="purchase_description" ></InputFormControlBlock>
+              <InputFormControlBlock formik={formik} attribute="amount" ></InputFormControlBlock>
+              <InputFormControlBlock formik={formik} attribute="date" ></InputFormControlBlock>
 
               {/* Upload file */}
-              <FormLabel
-                className=""
-                style={{ width: "200px", lineHeight: "38px" }}
-              >
-                Receipt upload
-              </FormLabel>
-              <div 
-                style={{
-                  display: "flex",
-                  alignItems: "left"
-                }}
-              >
-                <input 
-                  type="file"
-                  id="uploadFile"
-                  onChange={(event) => {
-                    if (event.currentTarget.files !== null){
-                      setFile(event.currentTarget.files[0]);
-                    }
-                  }}
-                />
-              </div>
+              <FileUploadBlock setFile={setFile}></FileUploadBlock>
 
-              <FormControlBlock formik={formik} attribute="additional" ></FormControlBlock>
+              {/* Select department */}
+              <SelectFormControlBlock formik={formik} fields={ALL_DEPARTMENTS} attribute="department"></SelectFormControlBlock>
+              
+
+              <InputFormControlBlock formik={formik} attribute="additional" ></InputFormControlBlock>
 
               
               
