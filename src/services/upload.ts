@@ -15,7 +15,6 @@ export async function uploadFile(
     parents: [GOOGLE_DRIVE_FOLDER_ID], // Folder ID at Google Drive
   };
 
-  // var accessToken = gapi.auth.getToken().access_token; // Here gapi is used for retrieving the access token.
   const form = new FormData();
   form.append(
     "metadata",

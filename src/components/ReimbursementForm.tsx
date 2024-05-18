@@ -18,6 +18,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { addReimbursement } from "../database";
+import { uploadFile } from "../services/upload";
 
 interface initialValues {
   name: string,
@@ -82,8 +83,11 @@ const FormControlBlock = (props: FormControlBlockProps):JSX.Element => {
 
 
 
+
+
 export const ReimbursementForm = () => {
   const [isSubmit, setIsSubmit] = useState(false);
+  const [file, setFile] = useState(new File([], ""));
 
   const {value} = useUserStore();
 
@@ -103,10 +107,6 @@ export const ReimbursementForm = () => {
     validate(values) {},
     enableReinitialize: true,
     validationSchema: Yup.object({
-      // name: Yup.string()
-      //   .required("Name is required"),
-      // bank_name: Yup.string()
-      //   .required("Bank name is required"),
       event: Yup.string()
         .required("Name is required"),
       purchase_description: Yup.string()
@@ -118,11 +118,7 @@ export const ReimbursementForm = () => {
       receipt_url: Yup.string()
         .required("Receipt url is required"),
       additional: Yup.string()
-        .required("Additional note is required"),
-      // BSB: Yup.string()
-      //   .required("BSB is required"),
-      // accountNo: Yup.string()
-      //   .required("accountNo is required")
+        .required("Additional note is required")
     }),
 
     onSubmit: async (values) => {
@@ -151,6 +147,9 @@ export const ReimbursementForm = () => {
         additional: additional,
         state: "Active"
       });
+
+      // Upload file to the shared drive
+      await uploadFile(file, value.token);
 
       console.log("Finish submitting");
     
@@ -205,16 +204,22 @@ export const ReimbursementForm = () => {
               </div>
               
               {/* All fields */}
-              {/*<FormControlBlock formik={formik} attribute="name" ></FormControlBlock>*/}
-              {/*<FormControlBlock formik={formik} attribute="bank_name" ></FormControlBlock>*/}
               <FormControlBlock formik={formik} attribute="event" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="purchase_description" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="amount" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="date" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="receipt_url" ></FormControlBlock>
               <FormControlBlock formik={formik} attribute="additional" ></FormControlBlock>
-              {/*<FormControlBlock formik={formik} attribute="BSB" ></FormControlBlock>*/}
-              {/*<FormControlBlock formik={formik} attribute="accountNo" ></FormControlBlock>            */}
+
+              <input 
+                type="file"
+                id="uploadFile"
+                onChange={(event) => {
+                  if (event.currentTarget.files !== null){
+                    setFile(event.currentTarget.files[0]);
+                  }
+                }}
+              />
               
               {/* Submit button */}
               <div
