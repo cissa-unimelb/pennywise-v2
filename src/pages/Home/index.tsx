@@ -5,9 +5,9 @@ export default function Login() {
 
   return (
     <>
-      {value !== undefined && <Navigate to={"/dashboard"} replace={true} />}
+      {value.id !== "" && <Navigate to={"/dashboard"} replace={true} />}
 
-      {value === undefined && <Navigate to={"/login"} replace={true} />}
+      {value.id === "" && <Navigate to={"/login"} replace={true} />}
     </>
   );
 }

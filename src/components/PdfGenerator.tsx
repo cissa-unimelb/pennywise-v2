@@ -55,7 +55,7 @@ export const PdfGenerator = () => {
       amount: "",
       abn: "",
     },
-    validate(values) {},
+    // validate(values) {},
     enableReinitialize: true,
     validationSchema: Yup.object({
       abn: Yup.string()

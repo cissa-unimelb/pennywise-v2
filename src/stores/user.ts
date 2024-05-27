@@ -1,9 +1,9 @@
 import {createStore} from "../store-lib";
-import {User} from "../auth/types"
+import {User, createUser} from "../auth/types"
 
-export const useUserStore = createStore<User | undefined>((get, set) => {
+export const useUserStore = createStore<User>((get, set) => {
     return {
-        value: undefined,
+        value: createUser(null),
         getUserStore: () => get(),
         setUserStore: (newStore: User) => set(newStore)
     }

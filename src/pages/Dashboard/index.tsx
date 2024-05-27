@@ -6,6 +6,11 @@ import Grid from "@mui/joy/Grid";
 import CreateButton from "../../components/CreateButton";
 import { useNavigate } from "react-router-dom";
 import { BankForm } from "../../components/BankForm";
+import {useEffect, useState} from "react";
+import {getActiveReimbursement, getMyReimbursement, Reimbursement} from "../../database/reimbursement";
+import ReimbursementCard from "../../components/ReimbursementCard";
+import {User} from "../../auth/types";
+
 export default function Dashboard() {
   const { value } = useUserStore();
   const navigate = useNavigate();
@@ -13,6 +18,19 @@ export default function Dashboard() {
     console.log("logout");
     navigate("/login");
   };
+
+  const [reimbursement, setReimbursement] = useState<Reimbursement[]>([]);
+
+  useEffect(() => {
+    const user: User = value;
+    if (user.isTreasurer) {
+      getActiveReimbursement()
+        .then(setReimbursement);
+    } else {
+      getMyReimbursement(user)
+        .then(setReimbursement);
+    }
+  }, [value]);
 
   return (
     <>
@@ -27,32 +45,19 @@ export default function Dashboard() {
               ></CreateButton>
             </Grid>
             <Grid xs={12} md={3}>
-              <ExpenseCard
-                event="Industry Connect"
-                amount={100}
-                date="2021-10-10"
-                description="Annual Industry Connect"
-                onClick={() => {}}
-              />
+              <CreateButton
+                link="#/reimbursement"
+                title="Create reimbursement"
+              ></CreateButton>
             </Grid>
-            <Grid xs={12} md={3}>
-              <ExpenseCard
-                event="Industry Connect"
-                amount={100}
-                date="2021-10-10"
-                description="Annual Industry Connect"
-                onClick={() => {}}
-              />
-            </Grid>
-            <Grid xs={12} md={3}>
-              <ExpenseCard
-                event="Industry Connect"
-                amount={100}
-                date="2021-10-10"
-                description="Annual Industry Connect"
-                onClick={() => {}}
-              />
-            </Grid>
+            {
+              reimbursement.map((reim, i) => (
+                <Grid xs={12} md={3} key={i}>
+                  <ReimbursementCard reimbursement={reim} />
+                </Grid>
+              ))
+            }
+
           </Grid>
         </Box>
         <BankForm />

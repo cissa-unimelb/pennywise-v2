@@ -1,29 +1,31 @@
 import {app} from "../config";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
-import {User} from "../auth/types";
+import {createUser, User} from "../auth/types";
 
 
 const db = getFirestore(app);
 
 
 export async function setUser(user: User){
+   // hack to remove the user token
+   user.token = undefined;
    const res = await setDoc(doc(db, "users", user.id), user);
    return res;
 }
 
 
-export async function getUser(userId: string){
+export async function getUser(userId: string): Promise<User> {
 
   const docRef = doc(db, "users", userId);
   const docSnap = await getDoc(docRef);
   
   if (docSnap.exists()) {
     console.log("Document data:", docSnap.data());
-    return docSnap.data();
+    return createUser(docSnap.data());
   } else {
     // doc.data() will be undefined in this case
     console.log("No such document!");
-    return null;
+    throw new Error("no user found");
   }
 }
 
