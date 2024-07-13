@@ -2,15 +2,19 @@ import * as React from "react";
 import Card from "@mui/joy/Card";
 import CardCover from "@mui/joy/CardCover";
 import CardContent from "@mui/joy/CardContent";
+import { Button } from "@mui/material";
+import {Person, SupervisedUserCircle, VerifiedUserOutlined} from "@mui/icons-material";
 import Typography from "@mui/joy/Typography";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import Box from "@mui/joy/Box";
+
 import {Reimbursement} from "../database/reimbursement";
 import {useEffect, useMemo, useState} from "react";
 import {getUser} from "../database";
 import {User} from "../auth/types";
-import {Person, SupervisedUserCircle, VerifiedUserOutlined} from "@mui/icons-material";
+import { ACCEPT_HEADER, ACCEPT_BODY, REJECT_HEADER, REJECT_BODY } from "../emailTemplate/emailTemplate";
+
 
 type Props = {
   reimbursement: Reimbursement
@@ -54,6 +58,34 @@ export default function ReimbursementCard(
         />
       </CardCover>
       <CardCover className="Component-expense-cover"/>
+      
+      <div>
+        <Button variant="contained" 
+        size="small"
+        style={{
+          margin: "10px",
+          backgroundColor: "green"
+        }}
+        onClick={() => {
+          window.open(`mailto:${user?.email}?subject=${ACCEPT_HEADER}&body=${ACCEPT_BODY}`);
+        }}>
+          <b>Approve</b>
+        </Button>
+
+        <Button variant="contained"
+        size="small"
+        style={{
+          margin: "10px",
+          backgroundColor: "red"
+        }} 
+        onClick={() => {
+          window.open(`mailto:${user?.email}?subject=${REJECT_HEADER}&body=${REJECT_BODY}`);
+        }}>
+          <b>Reject</b>
+        </Button>
+
+      </div>
+
       <CardContent sx={{justifyContent: "flex-end", cursor: 'pointer'}}
                    onClick={handleClick}>
         <Typography level="h2" fontSize="lg" textColor="#fff" mb={1}>
