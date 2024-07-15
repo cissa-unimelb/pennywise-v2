@@ -20,7 +20,6 @@ export function createUser(
   if (obj == null){
     return {id: "",name: "",email: "",isAuthorizer: false,isTreasurer: false,photoURL: "",bsb:"",accountNum:""};
   } 
-    
 
   const {id,name,email,isAuthorizer,isTreasurer,photoURL,bsb,accountNum} = obj;
   

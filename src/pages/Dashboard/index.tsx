@@ -9,13 +9,17 @@ import { BankForm } from "../../components/BankForm";
 import {useEffect, useState} from "react";
 import {getActiveReimbursement, getMyReimbursement, Reimbursement} from "../../database/reimbursement";
 import ReimbursementCard from "../../components/ReimbursementCard";
-import {User} from "../../auth/types";
+import {createUser, User} from "../../auth/types";
+import {logoutSession} from "../../auth/session";
 
 export default function Dashboard() {
-  const { value } = useUserStore();
+  const { value, setUserStore } = useUserStore();
   const navigate = useNavigate();
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log("logout");
+
+    setUserStore(createUser(null));
+    await logoutSession();
     navigate("/login");
   };
 

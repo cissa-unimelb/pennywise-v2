@@ -8,6 +8,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import PageOne from "../pages/PageOne";
 import InvoiceGeneration from "../pages/InvoiceGeneration";
 import ReimbursementGeneration from "../pages/ReimbursementGeneration";
+import {Analytics} from "../pages/Analytics";
 
 function RouterProvider() {
   return (
@@ -19,6 +20,14 @@ function RouterProvider() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="analytics"
+            element={
+              <ProtectedRoute treasurerOnly>
+                <Analytics />
               </ProtectedRoute>
             }
           />
@@ -49,7 +58,9 @@ function RouterProvider() {
             }
           />
           <Route path="pageone" element={<PageOne />} />
+
         </Route>
+        <Route path="*" element={<Home />}/>
       </Routes>
     </HashRouter>
   );
