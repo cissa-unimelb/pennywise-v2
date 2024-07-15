@@ -5,7 +5,7 @@ import {createUser, User} from "../auth/types";
 const db = getFirestore(app);
 
 export type DepartmentEnum = "IT" | "Events" | "Competition" | "Education" | "Industry" | "Project" | "Diversity" | "Publicity" | "Product";
-
+export const DEPARTMENTS = ["IT", "Events", "Competition", "Education", "Industry", "Project", "Diversity", "Publicity", "Product"];
 
 // submission schema
 export interface Reimbursement {

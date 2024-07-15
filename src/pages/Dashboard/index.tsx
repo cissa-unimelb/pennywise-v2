@@ -15,6 +15,7 @@ import {logoutSession} from "../../auth/session";
 export default function Dashboard() {
   const { value, setUserStore } = useUserStore();
   const navigate = useNavigate();
+
   const handleLogout = async () => {
     console.log("logout");
 
@@ -22,6 +23,10 @@ export default function Dashboard() {
     await logoutSession();
     navigate("/login");
   };
+
+  const handleAnalytics = () => {
+    navigate("/analytics");
+  }
 
   const [reimbursement, setReimbursement] = useState<Reimbursement[]>([]);
 
@@ -39,7 +44,7 @@ export default function Dashboard() {
   return (
     <>
       <div className="App-master-container">
-        <Header user={value} onClickLogout={() => handleLogout()} />
+        <Header user={value} onLogout={handleLogout} onAnalytics={handleAnalytics}/>
         <Box className="App-dashboard-container">
           <Grid container spacing={2}>
             <Grid xs={12} md={3}>
