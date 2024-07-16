@@ -66,11 +66,10 @@ export async function getActiveReimbursement(): Promise<Reimbursement[]> {
   );
 
   const snapshot = await getDocs(q);
-  let result: Reimbursement[] = [];
-  snapshot.forEach(res => {
+  let result: Reimbursement[] = snapshot.docs.map(res => {
     let data = res.data();
     data.purchaseDate = data.purchaseDate.toDate();
-    result.push(data as Reimbursement);
+    return (data as Reimbursement);
   })
   return result;
 }
