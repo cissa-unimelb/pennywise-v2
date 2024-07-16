@@ -20,7 +20,7 @@ const auth = getAuth(app);
 export async function googleSignIn(): Promise<User> {
   const result: UserCredential = await signInWithPopup(auth, provider);
   const credential = GoogleAuthProvider.credentialFromResult(result);
-  console.log(credential);
+  
   const token = credential?.accessToken;
   if (isEmailValid(result.user.email)) {
     console.log(result.user);

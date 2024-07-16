@@ -48,7 +48,13 @@ export async function addReimbursement(submission: Reimbursement) {
 
   // store the document
   const ref = doc(collection(db, "reimbursement"));
-  await setDoc(ref, submission);
+  try {
+    await setDoc(ref, submission);
+  } catch (e){
+    console.log((e as Error).message);
+    throw new Error("Error while uploading the submission to DB");
+  }
+  
 }
 
 // returns the list of all active reimbursements
@@ -79,11 +85,10 @@ export async function getMyReimbursement(user: User): Promise<Reimbursement[]> {
   );
 
   const snapshot = await getDocs(q);
-  let result: Reimbursement[] = [];
-  snapshot.forEach(res => {
+  let result: Reimbursement[] = snapshot.docs.map(res => {
     let data = res.data();
     data.purchaseDate = data.purchaseDate.toDate();
-    result.push(data as Reimbursement);
-  })
+    return (data as Reimbursement);
+  });
   return result;
 }

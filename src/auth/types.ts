@@ -17,7 +17,7 @@ export interface User {
 export function createUser(
   obj: any
 ): User {
-  if (obj == null){
+  if (obj === null){
     return {id: "",name: "",email: "",isAuthorizer: false,isTreasurer: false,photoURL: "",bsb:"",accountNum:""};
   } 
 
