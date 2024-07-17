@@ -5,7 +5,6 @@ import Typography from "@mui/joy/Typography";
 import Avatar from "@mui/joy/Avatar";
 import Button from "@mui/joy/Button";
 import {useUserStore} from "../stores/user";
-import {ButtonGroup} from "@mui/material";
 
 type Props = {
   user: User | undefined;

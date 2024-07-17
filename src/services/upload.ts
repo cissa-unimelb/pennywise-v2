@@ -3,7 +3,6 @@ import {
   GOOGLE_DRIVE_FOLDER_ID,
   GOOGLE_DRIVE_FILE_URL,
 } from "../constants/API";
-import {User} from "../auth/types";
 
 export async function uploadFile(
   file: any,

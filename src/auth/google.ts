@@ -7,9 +7,9 @@ import {
 import {User} from "./types";
 import {app} from "../config";
 
-interface AuthCallback {
-  (user: User): void;
-}
+// interface AuthCallback {
+//   (user: User): void;
+// }
 
 const provider = new GoogleAuthProvider();
 provider.addScope("https://www.googleapis.com/auth/drive");
