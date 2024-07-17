@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
 import Button from '@mui/joy/Button';
 import Modal from '@mui/joy/Modal';
@@ -13,10 +13,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-import { setUser } from "../database";
+import {getUser, setUser} from "../database";
 import { useUserStore } from "../stores/user";
 
 import './bankform.css'
+import {User} from "../auth/types";
 
 
 
@@ -24,12 +25,26 @@ export function BankForm(){
   const [error, setError] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const { value, setUserStore } = useUserStore();
-  const user = value;
+  const user: User = value;
 
-  const [open, setOpen] = React.useState<boolean>(!user.hasOwnProperty('accountNum'));
+  const [open, setOpen] = React.useState<boolean>(false);
 
-  // console.log(user);
-  // console.log(value);
+  useEffect(() => {
+    // retrieve user information
+    getUser(user.id)
+      .then(newUser => {
+        // already has the data
+        setUserStore({
+          ...value,
+          ...newUser
+        });
+        setOpen(false);
+      })
+      .catch(err => {
+        // no user found
+        setOpen(true);
+      })
+  }, []);
 
 
   const formik = useFormik({
@@ -71,8 +86,6 @@ export function BankForm(){
       // call update user bank details api and handle error here
       ///
       setIsUploading(false);
-      
-
     }
   });
     return (
