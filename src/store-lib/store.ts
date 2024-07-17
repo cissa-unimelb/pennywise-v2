@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Type } from "react-toastify/dist/utils";
 
 interface State<Type> {
     value: Type;

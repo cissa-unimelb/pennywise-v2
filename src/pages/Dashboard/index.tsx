@@ -1,6 +1,5 @@
 import { useUserStore } from "../../stores/user";
 import { Header } from "../../components/Header";
-import ExpenseCard from "../../components/ExpenseCard";
 import Box from "@mui/material/Box";
 import Grid from "@mui/joy/Grid";
 import CreateButton from "../../components/CreateButton";

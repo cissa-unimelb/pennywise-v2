@@ -3,7 +3,7 @@ import Card from "@mui/joy/Card";
 import CardCover from "@mui/joy/CardCover";
 import CardContent from "@mui/joy/CardContent";
 import { Button } from "@mui/material";
-import {Person, SupervisedUserCircle, VerifiedUserOutlined} from "@mui/icons-material";
+import {Person} from "@mui/icons-material";
 import Typography from "@mui/joy/Typography";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
