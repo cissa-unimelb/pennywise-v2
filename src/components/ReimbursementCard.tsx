@@ -17,12 +17,14 @@ import { ACCEPT_HEADER, ACCEPT_BODY, REJECT_HEADER, REJECT_BODY } from "../email
 
 
 type Props = {
-  reimbursement: Reimbursement
+  reimbursement: Reimbursement,
+  isTreasurer: boolean
 };
 
 export default function ReimbursementCard(
   {
-    reimbursement
+    reimbursement,
+    isTreasurer
   }: Props) {
 
 
@@ -59,7 +61,7 @@ export default function ReimbursementCard(
       </CardCover>
       <CardCover className="Component-expense-cover"/>
       
-      {user?.isTreasurer?
+      {isTreasurer?
         <div>
           <Button variant="contained" 
           size="small"

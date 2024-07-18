@@ -61,7 +61,7 @@ export default function Dashboard() {
             {
               reimbursement.map((reim, i) => (
                 <Grid xs={12} md={3} key={i}>
-                  <ReimbursementCard reimbursement={reim} />
+                  <ReimbursementCard reimbursement={reim} isTreasurer={value.isTreasurer}/>
                 </Grid>
               ))
             }
