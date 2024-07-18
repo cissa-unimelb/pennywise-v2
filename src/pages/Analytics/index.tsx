@@ -16,7 +16,8 @@ export function Analytics() {
     (async () => {
       setStats(await activeReimbursementDepartmentStatistics());
     })();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return <div className={styles.page}>
     <div className={styles.header}>
