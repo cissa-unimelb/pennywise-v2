@@ -44,7 +44,8 @@ export function BankForm(){
         // no user found
         setOpen(true);
       })
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   const formik = useFormik({
