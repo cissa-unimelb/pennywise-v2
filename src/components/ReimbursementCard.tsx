@@ -59,32 +59,34 @@ export default function ReimbursementCard(
       </CardCover>
       <CardCover className="Component-expense-cover"/>
       
-      <div>
-        <Button variant="contained" 
-        size="small"
-        style={{
-          margin: "10px",
-          backgroundColor: "green"
-        }}
-        onClick={() => {
-          window.open(`mailto:${user?.email}?subject=${ACCEPT_HEADER}&body=${ACCEPT_BODY}`);
-        }}>
-          <b>Approve</b>
-        </Button>
+      {user?.isTreasurer?
+        <div>
+          <Button variant="contained" 
+          size="small"
+          style={{
+            margin: "10px",
+            backgroundColor: "green"
+          }}
+          onClick={() => {
+            window.open(`mailto:${user?.email}?subject=${ACCEPT_HEADER}&body=${ACCEPT_BODY}`);
+          }}>
+            <b>Approve</b>
+          </Button>
 
-        <Button variant="contained"
-        size="small"
-        style={{
-          margin: "10px",
-          backgroundColor: "red"
-        }} 
-        onClick={() => {
-          window.open(`mailto:${user?.email}?subject=${REJECT_HEADER}&body=${REJECT_BODY}`);
-        }}>
-          <b>Reject</b>
-        </Button>
+          <Button variant="contained"
+          size="small"
+          style={{
+            margin: "10px",
+            backgroundColor: "red"
+          }} 
+          onClick={() => {
+            window.open(`mailto:${user?.email}?subject=${REJECT_HEADER}&body=${REJECT_BODY}`);
+          }}>
+            <b>Reject</b>
+          </Button>
 
-      </div>
+        </div>
+      : <></>}
 
       <CardContent sx={{justifyContent: "flex-end", cursor: 'pointer'}}
                    onClick={handleClick}>
