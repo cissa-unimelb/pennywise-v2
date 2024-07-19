@@ -13,7 +13,7 @@ export default function Login() {
   const {value, setUserStore} = useUserStore();
   const handleSuccess = useCallback(async (user: User) => {
     setUserStore(user);
-  }, []);
+  }, [setUserStore]);
 
   const login = () => {
     googleSignIn()
@@ -36,7 +36,7 @@ export default function Login() {
       .finally(() => {
         setLoading(false);
       })
-  }, []);
+  }, [handleSuccess]);
 
   return (
     <>
