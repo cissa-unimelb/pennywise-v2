@@ -3,7 +3,7 @@ import {User} from "../../auth/types";
 import {useUserStore} from "../../stores/user";
 import {Navigate} from "react-router-dom";
 import {LoginForm} from "../../components/LoginForm";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {retainSession} from "../../auth/session";
 
 export default function Login() {
@@ -11,9 +11,9 @@ export default function Login() {
 
   // TODO: refactor to react context please
   const {value, setUserStore} = useUserStore();
-  const handleSuccess = async (user: User) => {
+  const handleSuccess = useCallback(async (user: User) => {
     setUserStore(user);
-  };
+  }, []);
 
   const login = () => {
     googleSignIn()
