@@ -16,7 +16,7 @@ export function Analytics() {
     (async () => {
       setStats(await activeReimbursementDepartmentStatistics());
     })();
-  });
+  }, []);
 
   return <div className={styles.page}>
     <div className={styles.header}>

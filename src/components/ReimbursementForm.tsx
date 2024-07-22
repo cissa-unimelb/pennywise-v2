@@ -1,5 +1,6 @@
 import { useState} from "react";
 import { useUserStore } from "../stores/user";
+import { useNavigate } from "react-router-dom";
 
 // import { StyleSheet } from '@react-pdf/renderer';
 // import ReactPDF from '@react-pdf/renderer';
@@ -173,6 +174,7 @@ export const ReimbursementForm = () => {
   const [file, setFile] = useState(new File([], ""));
 
   const {value} = useUserStore();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -281,6 +283,25 @@ export const ReimbursementForm = () => {
                   Reimbursement Form
                 </Typography>
               </div>
+
+              {/* Back button */}
+              <div>
+                <Button
+                    color="info"
+                    variant="solid"
+                    style={{
+                      margin: "10px",
+                      position: "absolute",
+                      top: 0,
+                      right: 0
+                    }}
+                    onClick={() => {
+                      navigate("/dashboard");
+                    }}
+                  >
+                    Back
+                </Button>
+              </div>
               
               {/* All fields */}
               <InputFormControlBlock formik={formik} attribute="event" ></InputFormControlBlock>
@@ -299,7 +320,7 @@ export const ReimbursementForm = () => {
 
               
               
-              {/* Submit button */}
+              {/* Submit and back button */}
               <div
                 style={{
                   display: "block",
