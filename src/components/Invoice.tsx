@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
 
   sectionInvoiceHeader_label: {
     width: "80px",
-    height: "65px",
+    // height: "25px",
     lineHeight: 1.5,
     fontFamily: "Dosis",
     fontSize: "9px",
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   sectionInvoiceHeader_value: {
     width: "150px",
-    height: "65px",
+    // height: "25px",
     marginLeft: "10px",
     lineHeight: 1.5,
     fontFamily: "Times-Roman",
@@ -553,16 +553,39 @@ export function InvoiceDocument(props: InvoiceProps) {
               </Link>
             </View>
           </View>
+
           <View style={styles.sectionInvoiceHeader}>
             <View style={styles.sectionInvoiceHeader_label}>
               <Text>Invoice ID/Number:</Text>
-              <Text>Issued on:</Text>
-              <Text>Issued to:</Text>
             </View>
             <View style={styles.sectionInvoiceHeader_value}>
               <Text>{invoiceData.InvoiceHeader.id}</Text>
+            </View>
+          </View>
+
+          <View style={styles.sectionInvoiceHeader}>
+            <View style={styles.sectionInvoiceHeader_label}>
+              <Text>Issued on:</Text>
+            </View>
+            <View style={styles.sectionInvoiceHeader_value}>
               <Text>{invoiceData.InvoiceHeader.issuedOn}</Text>
+            </View>
+          </View>
+
+          <View style={styles.sectionInvoiceHeader}>
+            <View style={styles.sectionInvoiceHeader_label}>
+              <Text>Issued to:</Text>
+            </View>
+            <View style={styles.sectionInvoiceHeader_value}>
               <Text>{invoiceData.Buyer.name}</Text>
+            </View>
+          </View>
+
+          <View style={styles.sectionInvoiceHeader}>
+            <View style={styles.sectionInvoiceHeader_label}>
+              <Text>Address:</Text>
+            </View>
+            <View style={styles.sectionInvoiceHeader_value}>
               <Text style={styles.sectionInvoiceHeader_value_text_italic}>
                 {invoiceData.Buyer.address1}&nbsp;
                 {invoiceData.Buyer.address2}&nbsp;
@@ -570,6 +593,9 @@ export function InvoiceDocument(props: InvoiceProps) {
               </Text>
             </View>
           </View>
+
+          
+
           <View style={[styles.sectionItems]}>
             <View style={styles.sectionItemsLableBox}>
               <Text style={styles.itemDescriptionLabel}>Description</Text>
