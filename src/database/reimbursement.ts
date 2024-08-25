@@ -26,7 +26,7 @@ export interface Reimbursement {
 
   department: DepartmentEnum
 
-  state: "Active" | "Reviewed" | "Completed";
+  state: "Pending" | "Approve" | "Reject";
 }
 
 

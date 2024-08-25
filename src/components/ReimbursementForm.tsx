@@ -226,7 +226,7 @@ export const ReimbursementForm = () => {
         // additional information
         additional: additional,
         department: department,
-        state: "Active"
+        state: "Pending"
       });
 
       // Upload file to the shared drive

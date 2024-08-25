@@ -13,7 +13,7 @@ import {Reimbursement} from "../database/reimbursement";
 import {useEffect, useMemo, useState} from "react";
 import {getUser} from "../database";
 import {User} from "../auth/types";
-import { ACCEPT_HEADER, ACCEPT_BODY, REJECT_HEADER, REJECT_BODY } from "../emailTemplate/emailTemplate";
+import ReimbursementPopupButton from "./ReimbursementPopup";
 
 
 type Props = {
@@ -63,30 +63,8 @@ export default function ReimbursementCard(
       
       {isTreasurer?
         <div>
-          <Button variant="contained" 
-          size="small"
-          style={{
-            margin: "10px",
-            backgroundColor: "green"
-          }}
-          onClick={() => {
-            window.open(`mailto:${user?.email}?subject=${ACCEPT_HEADER}&body=${ACCEPT_BODY}`);
-          }}>
-            <b>Approve</b>
-          </Button>
-
-          <Button variant="contained"
-          size="small"
-          style={{
-            margin: "10px",
-            backgroundColor: "red"
-          }} 
-          onClick={() => {
-            window.open(`mailto:${user?.email}?subject=${REJECT_HEADER}&body=${REJECT_BODY}`);
-          }}>
-            <b>Reject</b>
-          </Button>
-
+          <ReimbursementPopupButton user={user} approve={true}/>
+          <ReimbursementPopupButton user={user} approve={false}/>
         </div>
       : <></>}
 
