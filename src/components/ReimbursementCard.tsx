@@ -7,9 +7,10 @@ import {Person} from "@mui/icons-material";
 import Typography from "@mui/joy/Typography";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import Casino from "@mui/icons-material/Casino";
 import Box from "@mui/joy/Box";
 
-import {Reimbursement} from "../database/reimbursement";
+import {Reimbursement, ReimbursementRead} from "../database/reimbursement";
 import {useEffect, useMemo, useState} from "react";
 import {getUser} from "../database";
 import {User} from "../auth/types";
@@ -17,7 +18,7 @@ import ReimbursementPopupButton from "./ReimbursementPopup";
 
 
 type Props = {
-  reimbursement: Reimbursement,
+  reimbursement: ReimbursementRead,
   isTreasurer: boolean
 };
 
@@ -48,6 +49,8 @@ export default function ReimbursementCard(
       window.open(reimbursement.receiptUrl, '_blank');
     }
   }
+
+  // console.log(reimbursement.docId);
 
   return (
     <Card className="Component-expense-card-container">
@@ -95,6 +98,12 @@ export default function ReimbursementCard(
             textColor="neutral.300"
           >
             {reimbursement.amount}
+          </Typography>
+          <Typography
+            startDecorator={<Casino/>}
+            textColor="neutral.300"
+          >
+            {reimbursement.state}
           </Typography>
         </Box>
       </CardContent>
