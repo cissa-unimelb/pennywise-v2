@@ -2,7 +2,6 @@ import * as React from "react";
 import Card from "@mui/joy/Card";
 import CardCover from "@mui/joy/CardCover";
 import CardContent from "@mui/joy/CardContent";
-import { Button } from "@mui/material";
 import {Person} from "@mui/icons-material";
 import Typography from "@mui/joy/Typography";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -10,7 +9,7 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import Casino from "@mui/icons-material/Casino";
 import Box from "@mui/joy/Box";
 
-import {Reimbursement, ReimbursementRead} from "../database/reimbursement";
+import {ReimbursementRead} from "../database/reimbursement";
 import {useEffect, useMemo, useState} from "react";
 import {getUser} from "../database";
 import {User} from "../auth/types";
@@ -66,8 +65,8 @@ export default function ReimbursementCard(
       
       {isTreasurer?
         <div>
-          <ReimbursementPopupButton user={user} approve={true}/>
-          <ReimbursementPopupButton user={user} approve={false}/>
+          <ReimbursementPopupButton user={user} approve={true} reimbursement={reimbursement}/>
+          <ReimbursementPopupButton user={user} approve={false} reimbursement={reimbursement}/>
         </div>
       : <></>}
 

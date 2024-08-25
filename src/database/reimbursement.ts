@@ -5,7 +5,9 @@ import {createUser, User} from "../auth/types";
 const db = getFirestore(app);
 
 export type DepartmentEnum = "IT" | "Events" | "Competition" | "Education" | "Industry" | "Project" | "Diversity" | "Publicity" | "Product";
+export type StatusEnum = "Active" | "Approve" | "Reject";
 export const DEPARTMENTS = ["IT", "Events", "Competition", "Education", "Industry", "Project", "Diversity", "Publicity", "Product"];
+
 
 // submission schema
 export interface Reimbursement {
@@ -26,7 +28,7 @@ export interface Reimbursement {
 
   department: DepartmentEnum;
 
-  state: "Active" | "Approve" | "Reject";
+  state: StatusEnum;
 }
 
 // Used for reading, since require the unique doc id to update
@@ -99,6 +101,6 @@ export async function getMyReimbursement(user: User): Promise<ReimbursementRead[
   return result;
 }
 
-export async function updateReimbursementStatus(docId: string, updateData: Partial<Reimbursement>){
+export async function updateReimbursement(docId: string, updateData: Partial<Reimbursement>){
   await updateDoc(doc(db, "reimbursement", docId), {...updateData});
 }
