@@ -110,8 +110,8 @@ export async function getSpreadSheetExport(): Promise<string> {
    * account no
    * initiated?
    */
-
-    // fetch all receipts, fetch all users, join here in js
+    // TODO: fix the missing fields
+  // fetch all receipts, fetch all users, join here in js
   const reimbursementQuery = query(
       collection(db, 'reimbursement')
     );

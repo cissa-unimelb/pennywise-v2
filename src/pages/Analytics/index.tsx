@@ -72,6 +72,7 @@ export function Analytics() {
   }, []);
 
   const generateSpreadSheet = async () => {
+    // TODO: add a loading indicator
     const spreadsheet = await getSpreadSheetExport();
     downloadCSV('reimbursements.csv', new Blob([spreadsheet], {type: 'text/csv'}));
   };

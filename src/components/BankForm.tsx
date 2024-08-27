@@ -30,6 +30,7 @@ export function BankForm(){
   const [open, setOpen] = React.useState<boolean>(false);
 
   useEffect(() => {
+    // TODO: Move this elsewhere so we don't need to visit dashboard if the user is already logged in
     // retrieve user information
     getUser(user.id)
       .then(newUser => {
