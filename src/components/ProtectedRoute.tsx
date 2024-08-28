@@ -1,5 +1,6 @@
 import { Navigate } from "react-router-dom";
-import { useUserStore } from "../stores/user";
+import {UserContext} from "../stores/user";
+import {useContext} from "react";
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -7,13 +8,13 @@ type Props = {
 };
 
 export default function ProtectedRoute({ children, treasurerOnly }: Props) {
-  const { value } = useUserStore();
-  if (value.id === "") {
+  const { user} = useContext(UserContext);
+  if (user.id === "") {
     // user is not authenticated
     return <Navigate to="/login" replace={true} />;
   }
 
-  if (treasurerOnly && !value.isTreasurer) {
+  if (treasurerOnly && !user.isTreasurer) {
     return <Navigate to="/dashboard" replace={true} />;
   }
 

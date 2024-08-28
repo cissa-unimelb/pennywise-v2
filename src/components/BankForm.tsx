@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import Button from '@mui/joy/Button';
 import Modal from '@mui/joy/Modal';
@@ -14,18 +14,16 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 import {getUser, setUser} from "../database";
-import { useUserStore } from "../stores/user";
+import {UserContext} from "../stores/user";
 
 import './bankform.css'
-import {User} from "../auth/types";
 
 
 
 export function BankForm(){
   const [error, setError] = useState('');
   const [isUploading, setIsUploading] = useState(false);
-  const { value, setUserStore } = useUserStore();
-  const user: User = value;
+  const { user, setUser: setUserContext } = useContext(UserContext);
 
   const [open, setOpen] = React.useState<boolean>(false);
 
@@ -35,8 +33,8 @@ export function BankForm(){
     getUser(user.id)
       .then(newUser => {
         // already has the data
-        setUserStore({
-          ...value,
+        setUserContext({
+          ...user,
           ...newUser
         });
         setOpen(false);
@@ -71,7 +69,7 @@ export function BankForm(){
         .then(()=>{
 
           setError('');
-          setUserStore(user);
+          setUserContext(user);
           console.log('successful');
           // console.log(user);
           toast("Bank details successfully saved!");

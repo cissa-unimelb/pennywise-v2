@@ -1,16 +1,16 @@
 import {googleSignIn} from "../../auth";
 import {User} from "../../auth/types";
-import {useUserStore} from "../../stores/user";
+import {UserContext} from "../../stores/user";
 import {Navigate} from "react-router-dom";
 import {LoginForm} from "../../components/LoginForm";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import {retainSession} from "../../auth/session";
 
 export default function Login() {
   const [loading, setLoading] = useState(true);
 
   // TODO: refactor to react context please
-  const {value, setUserStore} = useUserStore();
+  const {user, setUser: setUserStore} = useContext(UserContext);
   const handleSuccess = useCallback(async (user: User) => {
     setUserStore(user);
   }, [setUserStore]);
@@ -48,7 +48,7 @@ export default function Login() {
             />
           )
         }
-        {value.id !== "" && <Navigate to={"/dashboard"} replace={true}/>}
+        {user.id !== "" && <Navigate to={"/dashboard"} replace={true}/>}
       </div>
     </>
   );

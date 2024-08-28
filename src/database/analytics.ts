@@ -25,14 +25,15 @@ namespace Finance {
     }
 
     const [left, right] = price.split('.');
-    return parseInt(left, 10) * 100 + parseInt(right, 10);
+    return parseInt(left, 10) * 100 + parseInt(right.slice(0, Math.min(right.length, 2)), 10);
   }
 
   export function numberToPrice(num: number): string {
-    return (num / 100).toString().padStart(1, '0') + '.' + (num % 100).toString().padStart(2, '0');
+    return Math.floor(num / 100).toString().padStart(1, '0') + '.' + (num % 100).toString().padStart(2, '0');
   }
 
   export function addPrice(price1: string, price2: string): string {
+    console.log(price1, price2, priceToNumber(price1) + priceToNumber(price2));
     return numberToPrice(priceToNumber(price1) + priceToNumber(price2));
   }
 

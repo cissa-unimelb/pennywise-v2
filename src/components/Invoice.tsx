@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   PDFViewer,
@@ -13,7 +13,7 @@ import {
   pdf,
 } from "@react-pdf/renderer";
 import { uploadFile } from "../services/upload";
-import { useUserStore } from "../stores/user";
+import {UserContext} from "../stores/user";
 import { Button } from "@mui/joy";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -399,9 +399,9 @@ export default function Invoice(props: InvoiceProps) {
   // const [instance, update] = usePDF({
   //   document: <InvoiceDocument {...props} />,
   // });
-  const { value } = useUserStore();
+  const { user } = useContext(UserContext);
   const [isUploading, setIsUploading] = useState(false);
-  console.log("user:", value);
+  // console.log("user:", user);
   const upload = async () => {
     setIsUploading(true);
     const blob = await pdf(<InvoiceDocument {...props} />).toBlob();
@@ -409,7 +409,7 @@ export default function Invoice(props: InvoiceProps) {
     var file = new File([blob], props.invoice_id + ".pdf", {
       lastModified: new Date().getTime(),
     });
-    uploadFile(file, value.token)
+    uploadFile(file, user.token as string)
       .then(onUploadComplete);
   };
   const onUploadComplete = (url: string) => {

@@ -1,14 +1,13 @@
-import { useUserStore } from "../../stores/user";
+import {UserContext} from "../../stores/user";
 import Box from "@mui/material/Box";
 import UploadBox from "../../components/UploadBox/";
 import { uploadFile } from "../../services/upload";
-import { useState } from "react";
+import {useContext, useState} from "react";
 export default function Dashboard() {
-  const { value } = useUserStore();
-  console.log(value);
+  const { user } = useContext(UserContext);
   const [uploadProgress] = useState(0);
   const onUploadFile = (file: any) => {
-    uploadFile(file, value.token)
+    uploadFile(file, user.token as string)
       .then(onCompleteUploadFile);
   };
   const onCompleteUploadFile = (url: string) => {
@@ -21,7 +20,7 @@ export default function Dashboard() {
           <UploadBox
             progress={uploadProgress}
             onUploadFile={onUploadFile}
-            token={value.token}
+            token={user.token as string}
           />
         </Box>
       </div>
