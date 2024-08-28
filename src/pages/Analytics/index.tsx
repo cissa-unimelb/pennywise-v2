@@ -57,9 +57,9 @@ const analyticsColumns: GridColDef<DepartmentStatistics>[] = [
   }
 ];
 
-
 export function Analytics() {
   const [stats, setStats] = useState<Record<string, DepartmentStatistics>>({});
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -73,9 +73,10 @@ export function Analytics() {
   }, []);
 
   const generateSpreadSheet = async () => {
-    // TODO: add a loading indicator
+    setLoading(true);
     const spreadsheet = await getSpreadSheetExport();
     downloadCSV('reimbursements.csv', new Blob([spreadsheet], {type: 'text/csv'}));
+    setLoading(false);
   };
 
   const departmentCosts = useMemo(()=> {
@@ -98,29 +99,32 @@ export function Analytics() {
     <br/>
 
     <div>
-      <Button onClick={generateSpreadSheet} variant="contained">Generate SpreadSheet</Button>
+      <Button onClick={generateSpreadSheet} variant="contained" disabled={loading}>
+        Generate SpreadSheet
+      </Button>
     </div>
     <br/>
 
-    <Card>
-      <CardContent>
-        <PieChart departmentCosts={departmentCosts}/>
-      </CardContent>
-    </Card>
-
-    <br/>
-
-    <Card>
-      <CardContent>
-        <Typography variant="h4">Active Reimbursements</Typography>
-        <br/>
-        <DataGrid columns={analyticsColumns}
-                  rows={Object.values(stats)}
-                  getRowId={row => row.name}
-                  disableRowSelectionOnClick/>
-      </CardContent>
-    </Card>
-
-
+    <div className={styles.content}>
+      <div style={{flex: '2'}}>
+        <Card>
+          <CardContent>
+            <Typography variant="h4">Active Reimbursements</Typography>
+            <br/>
+            <DataGrid columns={analyticsColumns}
+                      rows={Object.values(stats)}
+                      getRowId={row => row.name}
+                      disableRowSelectionOnClick/>
+          </CardContent>
+        </Card>
+      </div>
+      <div style={{flex: '1'}}>
+        <Card>
+          <CardContent>
+            <PieChart departmentCosts={departmentCosts}/>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   </div>
 }

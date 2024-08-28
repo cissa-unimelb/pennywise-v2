@@ -18,22 +18,11 @@
 }
 
 
-.stats {
-    background-color: white;
-    display: inline-block;
+.content {
+    display: flex;
 }
 
-.stats > h2 {
-    margin: 0;
-    margin-bottom: 1rem;
+.content > *+* {
+    margin-left: 1rem;
 }
 
-.stats table, .stats th, .stats td {
-    border-bottom: 1px solid black;
-    border-collapse: collapse;
-}
-.stats th, .stats td {
-    padding: 0.25rem 1rem;
-    min-width: 7rem;
-    text-align: right;
-}
