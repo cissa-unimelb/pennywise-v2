@@ -13,6 +13,7 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import {PieChart} from "../../components/AnalyticChart";
 
 
 /**
@@ -77,6 +78,14 @@ export function Analytics() {
     downloadCSV('reimbursements.csv', new Blob([spreadsheet], {type: 'text/csv'}));
   };
 
+  const departmentCosts = useMemo(()=> {
+    const costs: any = {};
+    Object.entries(stats).forEach(([name, st]) => {
+      costs[name] = st.totalPrice;
+    })
+    return costs;
+  }, [stats]);
+
   return <div className={styles.page}>
     <Card>
       <CardContent>
@@ -95,6 +104,14 @@ export function Analytics() {
 
     <Card>
       <CardContent>
+        <PieChart departmentCosts={departmentCosts}/>
+      </CardContent>
+    </Card>
+
+    <br/>
+
+    <Card>
+      <CardContent>
         <Typography variant="h4">Active Reimbursements</Typography>
         <br/>
         <DataGrid columns={analyticsColumns}
@@ -103,5 +120,7 @@ export function Analytics() {
                   disableRowSelectionOnClick/>
       </CardContent>
     </Card>
+
+
   </div>
 }
