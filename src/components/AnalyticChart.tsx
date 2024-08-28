@@ -1,10 +1,11 @@
 import {useEffect, useRef, useState} from "react";
-import {Chart, Colors, PieController, ArcElement, Legend, Title} from "chart.js";
+import {Chart, Colors, PieController, ArcElement, Legend, Title, Tooltip} from "chart.js";
 
 Chart.register(PieController);
 Chart.register(ArcElement);
 Chart.register(Legend);
 Chart.register(Title);
+Chart.register(Tooltip);
 Chart.register(Colors);
 
 interface PieChartProps {
@@ -22,9 +23,8 @@ export function PieChart(
     const data = {
       labels: [],
       datasets: [{
-        label: 'Department Costs',
+        label: 'Costs',
         data: [],
-        hoverOffset: 4
       }]
     };
     return new Chart(
@@ -36,6 +36,7 @@ export function PieChart(
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
+            tooltip: {},
             title: {
               display: true,
               text: 'Department Costs',

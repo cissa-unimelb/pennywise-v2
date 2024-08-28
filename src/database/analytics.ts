@@ -91,15 +91,41 @@ export interface SpreadSheetRow {
 }
 
 /**
+ * Cleans the csv text
+ * @param text
+ */
+function escapeCsv(text: string) {
+  // replace " with ""
+  return text.replaceAll("\"", "\"\"");
+}
+
+/**
+ * Stringify a spreadsheet
+ * @param names Column names
+ * @param columns Dictionary names
+ * @param rows List of dictionaries
+ */
+function csvWriter<T extends Record<keyof T, string>>(names: string[], columns: (keyof T)[], rows: T[]) {
+  const spreadsheet = rows.map((data) => {
+    let out = [];
+    for (const col of columns) {
+      out.push(escapeCsv(data[col]));
+    }
+    return out.join(',');
+  }).join('\n');
+  const header = names.map(escapeCsv).join(',');
+  return header + '\n' + spreadsheet;
+}
+
+/**
  * Generates a full excel spreadsheet
  */
 export async function getSpreadSheetExport(): Promise<string> {
   /**
-   * Headers
    * Timestamp (nope),
    * Full name,
    * Bank account name
-   * have you submitted your bank account before
+   * have you submitted your bank account before (nope)
    * what event was with for
    * description of purchase
    * purchase date
@@ -108,10 +134,10 @@ export async function getSpreadSheetExport(): Promise<string> {
    * is there anything you would like me to know
    * bsb
    * account no
-   * initiated?
+   * initiated? (replaced with status)
    */
-    // TODO: fix the missing fields
-  // fetch all receipts, fetch all users, join here in js
+
+    // fetch all receipts, fetch all users, join here in js
   const reimbursementQuery = query(
       collection(db, 'reimbursement')
     );
@@ -153,13 +179,5 @@ export async function getSpreadSheetExport(): Promise<string> {
     'Description of purchase', 'Purchase amount (AUD)', 'Receipt upload (please upload pdf)',
     'Is there anything you would like to let me know?', 'BSB', 'Account No', 'initiated?'
   ];
-  const spreadsheet = rows.map((data) => {
-    let out = [];
-    for (const col of columns) {
-      out.push(data[col]);
-    }
-    return out.join(';');
-  }).join('\n');
-  const header = columnsNames.join(';');
-  return header + '\n' + spreadsheet;
+  return csvWriter(columnsNames, columns, rows);
 }
