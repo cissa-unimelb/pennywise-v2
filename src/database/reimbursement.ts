@@ -1,5 +1,7 @@
 import {app} from "../config";
-import {getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, orderBy, updateDoc} from "firebase/firestore";
+import {getFirestore, doc, setDoc, getDoc, getDocs, 
+  collection, query, where, orderBy, updateDoc, 
+  QuerySnapshot, DocumentData} from "firebase/firestore";
 import {createUser, User} from "../auth/types";
 
 const db = getFirestore(app);
@@ -64,6 +66,17 @@ export async function addReimbursement(submission: Reimbursement) {
   
 }
 
+function snapShotToList(snapshot: QuerySnapshot<DocumentData>): ReimbursementRead[]{
+  let result: ReimbursementRead[] = snapshot.docs.map(res => {
+    let data = res.data();
+    data.docId = res.id;
+    data.purchaseDate = data.purchaseDate.toDate();
+    return (data as ReimbursementRead);
+  })
+
+  return result;
+}
+
 // returns the list of all active reimbursements
 export async function getActiveReimbursement(): Promise<ReimbursementRead[]> {
   const q = query(
@@ -73,13 +86,17 @@ export async function getActiveReimbursement(): Promise<ReimbursementRead[]> {
   );
 
   const snapshot = await getDocs(q);
-  let result: ReimbursementRead[] = snapshot.docs.map(res => {
-    let data = res.data();
-    data.docId = res.id;
-    data.purchaseDate = data.purchaseDate.toDate();
-    return (data as ReimbursementRead);
-  })
-  return result;
+  return snapShotToList(snapshot);
+}
+
+export async function getAllReimbursement(): Promise<ReimbursementRead[]> {
+  const q = query(
+    collection(db, "reimbursement"),
+    orderBy("purchaseDate", "desc")
+  );
+
+  const snapshot = await getDocs(q);
+  return snapShotToList(snapshot);
 }
 
 // returns the list of active reimbursements by me
@@ -92,13 +109,7 @@ export async function getMyReimbursement(user: User): Promise<ReimbursementRead[
   );
 
   const snapshot = await getDocs(q);
-  let result: ReimbursementRead[] = snapshot.docs.map(res => {
-    let data = res.data();
-    data.docId = res.id;
-    data.purchaseDate = data.purchaseDate.toDate();
-    return (data as ReimbursementRead);
-  });
-  return result;
+  return snapShotToList(snapshot);
 }
 
 export async function updateReimbursement(docId: string, updateData: Partial<Reimbursement>){
