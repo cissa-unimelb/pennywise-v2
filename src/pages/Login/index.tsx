@@ -1,54 +1,50 @@
 import {googleSignIn} from "../../auth";
-import {User} from "../../auth/types";
-import {UserContext} from "../../stores/user";
-import {Navigate} from "react-router-dom";
+import {AutoLoginContext, UserContext} from "../../stores/user";
+import {useLocation, useNavigate} from "react-router-dom";
 import {LoginForm} from "../../components/LoginForm";
-import {useCallback, useContext, useEffect, useState} from "react";
-import {retainSession} from "../../auth/session";
+import {useContext, useEffect, useState} from "react";
 
 export default function Login() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const {user, setUser} = useContext(UserContext);
+  const {loading: loginLoading} = useContext(AutoLoginContext);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // TODO: refactor to react context please
-  const {user, setUser: setUserStore} = useContext(UserContext);
-  const handleSuccess = useCallback(async (user: User) => {
-    setUserStore(user);
-  }, [setUserStore]);
-
-  const login = () => {
-    googleSignIn()
-      .then(handleSuccess)
-      .catch(err => {
-        alert(err);
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      })
+  // Login the user, only sets the basic user details, the bank acc is set by bankform
+  const login = async () => {
+    setLoading(true);
+    try {
+      const result = await googleSignIn();
+      setUser(result);
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Automatically redirect when user is logged in
   useEffect(() => {
-    retainSession()
-      .then(handleSuccess)
-      .catch(() => {
-        console.log('failed to automatically sign in');
-      })
-      .finally(() => {
-        setLoading(false);
-      })
-  }, [handleSuccess]);
+    if (user.id !== "") {
+      if (location.state && location.state.login && user.bsb != null) {
+        // if redirected to login and we have a bank acc already, we go back
+        navigate(-1);
+      } else {
+        // else go to dashboard
+        navigate('/dashboard');
+      }
+    }
+  }, [user, navigate, location]);
 
   return (
     <>
       <div className="App-login-master-container">
-        {
-          !loading && (
-            <LoginForm
-              onClickLogin={login}
-            />
-          )
-        }
-        {user.id !== "" && <Navigate to={"/dashboard"} replace={true}/>}
+        <LoginForm
+          onClickLogin={login}
+          loading={loading || loginLoading}
+        />
       </div>
     </>
   );

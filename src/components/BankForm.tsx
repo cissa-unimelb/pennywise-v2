@@ -27,24 +27,26 @@ export function BankForm(){
 
   const [open, setOpen] = React.useState<boolean>(false);
 
+  // Try to retrieve bank account if first login
   useEffect(() => {
-    // TODO: Move this elsewhere so we don't need to visit dashboard if the user is already logged in
-    // retrieve user information
-    getUser(user.id)
-      .then(newUser => {
-        // already has the data
-        setUserContext({
-          ...user,
-          ...newUser
-        });
-        setOpen(false);
-      })
-      .catch(err => {
-        // no user found
-        setOpen(true);
-      })
+    // this is only going to be empty if we've first logged in
+    if (user.bsb == null) {
+      getUser(user.id)
+        .then(newUser => {
+          // already has the data, we are done
+          setUserContext({
+            ...user,
+            ...newUser
+          });
+          setOpen(false);
+        })
+        .catch(err => {
+          // no user found
+          setOpen(true);
+        })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [setUserContext]);
 
 
   const formik = useFormik({

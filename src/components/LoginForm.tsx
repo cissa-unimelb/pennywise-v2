@@ -6,8 +6,9 @@ import Typography from "@mui/joy/Typography";
 import GoogleIcon from "@mui/icons-material/Google";
 type Props = {
   onClickLogin: () => void;
+  loading: boolean;
 };
-export function LoginForm({ onClickLogin }: Props) {
+export function LoginForm({ onClickLogin, loading }: Props) {
   return (
     <Card variant="outlined" className="Componnet-login-container">
       <Box style={{}}>
@@ -18,18 +19,13 @@ export function LoginForm({ onClickLogin }: Props) {
         <Typography level="body2">Log in to continue</Typography>
       </Box>
       <Box>
-        {/* <div>
-          <Typography level="body3">Total price:</Typography>
-          <Typography fontSize="lg" fontWeight="lg">
-            $2,900
-          </Typography>
-        </div> */}
         <Button
           variant="solid"
           color="primary"
           startDecorator={<GoogleIcon />}
           sx={{ ml: "auto", fontWeight: 600 }}
           onClick={onClickLogin}
+          disabled={loading}
         >
           Login with Google
         </Button>

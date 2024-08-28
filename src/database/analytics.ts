@@ -33,7 +33,6 @@ namespace Finance {
   }
 
   export function addPrice(price1: string, price2: string): string {
-    console.log(price1, price2, priceToNumber(price1) + priceToNumber(price2));
     return numberToPrice(priceToNumber(price1) + priceToNumber(price2));
   }
 
