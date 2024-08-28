@@ -6,7 +6,7 @@ import CreateButton from "../../components/CreateButton";
 import { useNavigate } from "react-router-dom";
 import { BankForm } from "../../components/BankForm";
 import {useEffect, useState} from "react";
-import {getActiveReimbursement, getMyReimbursement, Reimbursement, ReimbursementRead} from "../../database/reimbursement";
+import {getActiveReimbursement, getMyReimbursement, ReimbursementRead} from "../../database/reimbursement";
 import ReimbursementCard from "../../components/ReimbursementCard";
 import {createUser, User} from "../../auth/types";
 import {logoutSession} from "../../auth/session";

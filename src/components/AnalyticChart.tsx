@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useRef} from "react";
 import {Chart, Colors, PieController, ArcElement, Legend, Title, Tooltip} from "chart.js";
 
 Chart.register(PieController);
