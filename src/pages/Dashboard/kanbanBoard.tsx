@@ -41,19 +41,19 @@ export function KanbanBoard(props: KanbanBoardProps){
                 </Grid>
             </Grid>
             <Grid container spacing={2}>
-                <Grid item xs={4} spacing={2} sx={{height: "700px", overflowY: 'scroll'}}>
+                <Grid item xs={4} sx={{height: "700px", overflowY: 'scroll'}}>
                 {
                     active.map((reim, i) => (
-                    <div className="Component-kanban-card-row">
+                    <div className="Component-kanban-card-row" key={i}>
                         <ReimbursementCard reimbursement={reim} isTreasurer={user.isTreasurer}/>
                     </div>
                     ))
                 }
                 </Grid>
-                <Grid item xs={4} spacing={2} sx={{height: "700px", overflowY: 'scroll'}}>
+                <Grid item xs={4} sx={{height: "700px", overflowY: 'scroll'}}>
                 {
                     approve.map((reim, i) => (
-                    <div className="Component-kanban-card-row">
+                    <div className="Component-kanban-card-row" key={i}>
                         <ReimbursementCard reimbursement={reim} isTreasurer={user.isTreasurer}/>
                     </div>
                     ))
@@ -61,11 +61,10 @@ export function KanbanBoard(props: KanbanBoardProps){
                 </Grid>
 
                 <Grid item xs={4} 
-                    spacing={2}
                     sx={{height: "700px", overflowY: 'scroll'}}>
                 {
                     reject.map((reim, i) => (
-                    <div className="Component-kanban-card-row">
+                    <div className="Component-kanban-card-row" key={i}>
                         <ReimbursementCard reimbursement={reim} isTreasurer={user.isTreasurer}/>
                     </div>
                     ))
