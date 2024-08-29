@@ -8,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import {User} from "../auth/types";
 import { ACCEPT_HEADER, ACCEPT_BODY, REJECT_HEADER, REJECT_BODY } from "../emailTemplate/emailTemplate";
+import {EXEC_EMAILS} from "../emailTemplate/execEmails";
 import {ReimbursementRead, StatusEnum, updateReimbursement} from "../database/reimbursement";
 
 type ReimbursementPopupProps = {
@@ -34,6 +35,9 @@ export default function ReimbursementPopupButton(props: ReimbursementPopupProps)
     newState = "Approve";
   }
 
+  let mailTo = `${user?.email},`;
+  mailTo += EXEC_EMAILS.join(',');
+
 
   return (
     <React.Fragment>
@@ -44,7 +48,7 @@ export default function ReimbursementPopupButton(props: ReimbursementPopupProps)
             backgroundColor: color
         }}
         onClick={() => {
-            window.open(`mailto:${user?.email}?subject=${subject}&body=${body}`);
+            window.open(`mailto:${mailTo}?subject=${subject}&body=${encodeURIComponent(body)}`);
             setOpen(true);
         }}>
 
