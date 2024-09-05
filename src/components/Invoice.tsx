@@ -18,6 +18,8 @@ import { Button } from "@mui/joy";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
+import {InvoiceSchema} from "../database/invoice";
+
 const const_images = {
   logo: "/cissa.png",
   club: "/cissa-affiliated-club.jpg",
@@ -384,15 +386,7 @@ const styles = StyleSheet.create({
   },
 });
 
-interface InvoiceProps {
-  invoice_id: string;
-  recipient: string;
-  recipient_abn: string;
-  recipient_address: string;
-  items: {
-    description: string;
-    amount: string;
-  }[];
+interface InvoiceProps extends InvoiceSchema{
   total_amount: string;
 }
 export default function Invoice(props: InvoiceProps) {
