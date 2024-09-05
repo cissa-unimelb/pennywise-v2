@@ -1,11 +1,15 @@
 import {app} from "../config";
-import {getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, orderBy} from "firebase/firestore";
+import {getFirestore, doc, setDoc, getDoc, getDocs, 
+  collection, query, where, orderBy, updateDoc, 
+  QuerySnapshot, DocumentData} from "firebase/firestore";
 import {createUser, User} from "../auth/types";
 
 const db = getFirestore(app);
 
 export type DepartmentEnum = "IT" | "Events" | "Competition" | "Education" | "Industry" | "Project" | "Diversity" | "Publicity" | "Product";
+export type StatusEnum = "Active" | "Approve" | "Reject";
 export const DEPARTMENTS = ["IT", "Events", "Competition", "Education", "Industry", "Project", "Diversity", "Publicity", "Product"];
+
 
 // submission schema
 export interface Reimbursement {
@@ -24,9 +28,14 @@ export interface Reimbursement {
   // additional information
   additional: string;
 
-  department: DepartmentEnum
+  department: DepartmentEnum;
 
-  state: "Active" | "Reviewed" | "Completed";
+  state: StatusEnum;
+}
+
+// Used for reading, since require the unique doc id to update
+export interface ReimbursementRead extends Reimbursement {
+  docId: string
 }
 
 
@@ -57,8 +66,19 @@ export async function addReimbursement(submission: Reimbursement) {
   
 }
 
+function snapShotToList(snapshot: QuerySnapshot<DocumentData>): ReimbursementRead[]{
+  let result: ReimbursementRead[] = snapshot.docs.map(res => {
+    let data = res.data();
+    data.docId = res.id;
+    data.purchaseDate = data.purchaseDate.toDate();
+    return (data as ReimbursementRead);
+  })
+
+  return result;
+}
+
 // returns the list of all active reimbursements
-export async function getActiveReimbursement(): Promise<Reimbursement[]> {
+export async function getActiveReimbursement(): Promise<ReimbursementRead[]> {
   const q = query(
     collection(db, "reimbursement"),
     where("state", "==", "Active"),
@@ -66,16 +86,21 @@ export async function getActiveReimbursement(): Promise<Reimbursement[]> {
   );
 
   const snapshot = await getDocs(q);
-  let result: Reimbursement[] = snapshot.docs.map(res => {
-    let data = res.data();
-    data.purchaseDate = data.purchaseDate.toDate();
-    return (data as Reimbursement);
-  })
-  return result;
+  return snapShotToList(snapshot);
+}
+
+export async function getAllReimbursement(): Promise<ReimbursementRead[]> {
+  const q = query(
+    collection(db, "reimbursement"),
+    orderBy("purchaseDate", "desc")
+  );
+
+  const snapshot = await getDocs(q);
+  return snapShotToList(snapshot);
 }
 
 // returns the list of active reimbursements by me
-export async function getMyReimbursement(user: User): Promise<Reimbursement[]> {
+export async function getMyReimbursement(user: User): Promise<ReimbursementRead[]> {
   const q = query(
     collection(db, "reimbursement"),
     where("state", "==", "Active"),
@@ -84,10 +109,9 @@ export async function getMyReimbursement(user: User): Promise<Reimbursement[]> {
   );
 
   const snapshot = await getDocs(q);
-  let result: Reimbursement[] = snapshot.docs.map(res => {
-    let data = res.data();
-    data.purchaseDate = data.purchaseDate.toDate();
-    return (data as Reimbursement);
-  });
-  return result;
+  return snapShotToList(snapshot);
+}
+
+export async function updateReimbursement(docId: string, updateData: Partial<Reimbursement>){
+  await updateDoc(doc(db, "reimbursement", docId), {...updateData});
 }

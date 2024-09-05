@@ -1,5 +1,5 @@
-import { useState} from "react";
-import { useUserStore } from "../stores/user";
+import {useContext, useState} from "react";
+import {UserContext} from "../stores/user";
 import { useNavigate } from "react-router-dom";
 
 // import { StyleSheet } from '@react-pdf/renderer';
@@ -173,7 +173,7 @@ export const ReimbursementForm = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [file, setFile] = useState(new File([], ""));
 
-  const {value} = useUserStore();
+  const {user} = useContext(UserContext);
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -208,11 +208,11 @@ export const ReimbursementForm = () => {
       console.log("Start submitting");
       // Start submitting
       setIsSubmit(true);
-      let receipt_url = await uploadFile(file, value.token);
+      let receipt_url = await uploadFile(file, user.token as string);
       
       await addReimbursement({
         // foreign key for the account name, bsb, account number
-        userid: value.id,
+        userid: user.id,
         // name of event
         event: event,
         // short description

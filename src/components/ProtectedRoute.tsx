@@ -1,5 +1,6 @@
-import { Navigate } from "react-router-dom";
-import { useUserStore } from "../stores/user";
+import {useNavigate} from "react-router-dom";
+import {UserContext} from "../stores/user";
+import {useContext, useEffect} from "react";
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -7,15 +8,20 @@ type Props = {
 };
 
 export default function ProtectedRoute({ children, treasurerOnly }: Props) {
-  const { value } = useUserStore();
-  if (value.id === "") {
-    // user is not authenticated
-    return <Navigate to="/login" replace={true} />;
-  }
+  const { user} = useContext(UserContext);
+  const navigate = useNavigate();
 
-  if (treasurerOnly && !value.isTreasurer) {
-    return <Navigate to="/dashboard" replace={true} />;
-  }
+  useEffect(() => {
+    if (user.id === "") {
+      // user is not authenticated
+      navigate('/login', {state:{login: true}});
+    } else if (treasurerOnly && !user.isTreasurer) {
+      // user is not treasurer
+      navigate('/dashboard');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
 
   return <>{children}</>;
 }

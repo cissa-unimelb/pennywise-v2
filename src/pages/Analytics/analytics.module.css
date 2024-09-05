@@ -6,44 +6,23 @@
 }
 
 .header {
-    padding: 1rem;
     background-color: white;
-    border-radius: 0.25rem;
-    box-shadow: 2px 2px 5px -2px black;
-
-    margin-bottom: 2rem;
-
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.header > h1 {
+.header > *:first-child {
     margin: 0;
     flex: auto;
 }
 
 
-.stats {
-    padding: 1rem;
-    background-color: white;
-    border-radius: 0.25rem;
-    box-shadow: 2px 2px 5px -2px black;
-
-    display: inline-block;
+.content {
+    display: flex;
 }
 
-.stats > h2 {
-    margin: 0;
-    margin-bottom: 1rem;
+.content > *+* {
+    margin-left: 1rem;
 }
 
-.stats table, .stats th, .stats td {
-    border-bottom: 1px solid black;
-    border-collapse: collapse;
-}
-.stats th, .stats td {
-    padding: 0.25rem 1rem;
-    min-width: 7rem;
-    text-align: right;
-}

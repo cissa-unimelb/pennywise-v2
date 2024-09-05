@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import Button from '@mui/joy/Button';
 import Modal from '@mui/joy/Modal';
@@ -14,38 +14,39 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 import {getUser, setUser} from "../database";
-import { useUserStore } from "../stores/user";
+import {UserContext} from "../stores/user";
 
 import './bankform.css'
-import {User} from "../auth/types";
 
 
 
 export function BankForm(){
   const [error, setError] = useState('');
   const [isUploading, setIsUploading] = useState(false);
-  const { value, setUserStore } = useUserStore();
-  const user: User = value;
+  const { user, setUser: setUserContext } = useContext(UserContext);
 
   const [open, setOpen] = React.useState<boolean>(false);
 
+  // Try to retrieve bank account if first login
   useEffect(() => {
-    // retrieve user information
-    getUser(user.id)
-      .then(newUser => {
-        // already has the data
-        setUserStore({
-          ...value,
-          ...newUser
-        });
-        setOpen(false);
-      })
-      .catch(err => {
-        // no user found
-        setOpen(true);
-      })
+    // this is only going to be empty if we've first logged in
+    if (user.bsb == null) {
+      getUser(user.id)
+        .then(newUser => {
+          // already has the data, we are done
+          setUserContext({
+            ...user,
+            ...newUser
+          });
+          setOpen(false);
+        })
+        .catch(err => {
+          // no user found
+          setOpen(true);
+        })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [setUserContext]);
 
 
   const formik = useFormik({
@@ -70,7 +71,7 @@ export function BankForm(){
         .then(()=>{
 
           setError('');
-          setUserStore(user);
+          setUserContext(user);
           console.log('successful');
           // console.log(user);
           toast("Bank details successfully saved!");

@@ -1,13 +1,14 @@
-import { useUserStore } from "../../stores/user";
+import {UserContext} from "../../stores/user";
 import { Navigate } from "react-router-dom";
+import {useContext} from "react";
 export default function Login() {
-  const { value } = useUserStore();
+  const { user } = useContext(UserContext);
 
   return (
     <>
-      {value.id !== "" && <Navigate to={"/dashboard"} replace={true} />}
+      {user.id !== "" && <Navigate to={"/dashboard"} replace={true} />}
 
-      {value.id === "" && <Navigate to={"/login"} replace={true} />}
+      {user.id === "" && <Navigate to={"/login"} replace={true} />}
     </>
   );
 }
