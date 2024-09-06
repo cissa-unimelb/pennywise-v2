@@ -14,6 +14,7 @@ import Card from '@mui/material/Card';
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import {PieChart} from "../../components/AnalyticChart";
+import {Header} from "../../components/Header";
 
 
 /**
@@ -88,16 +89,6 @@ export function Analytics() {
   }, [stats]);
 
   return <div className={styles.page}>
-    <Card>
-      <CardContent>
-        <div className={styles.header}>
-          <Typography variant="h3">Analytics</Typography>
-          <Button onClick={handleBack} variant="contained">Back</Button>
-        </div>
-      </CardContent>
-    </Card>
-    <br/>
-
     <div>
       <Button onClick={generateSpreadSheet} variant="contained" disabled={loading}>
         Generate SpreadSheet

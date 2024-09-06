@@ -44,7 +44,6 @@ export default function Dashboard() {
   return (
     <>
       <div className="App-master-container">
-        <Header user={user} onLogout={handleLogout} onAnalytics={handleAnalytics}/>
         <Box className="App-dashboard-container">
           <Grid container spacing={2}>
             <Grid item xs={12} md={3}>

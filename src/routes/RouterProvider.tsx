@@ -9,10 +9,12 @@ import PageOne from "../pages/PageOne";
 import InvoiceGeneration from "../pages/InvoiceGeneration";
 import ReimbursementGeneration from "../pages/ReimbursementGeneration";
 import {Analytics} from "../pages/Analytics";
+import {Header} from "../components/Header";
 
 function RouterProvider() {
-  return (
+  return <>
     <HashRouter>
+      <Header />
       <Routes>
         <Route path="/">
           <Route
@@ -63,7 +65,7 @@ function RouterProvider() {
         <Route path="*" element={<Home />}/>
       </Routes>
     </HashRouter>
-  );
+  </>;
 }
 
 export default RouterProvider;

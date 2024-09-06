@@ -1,31 +1,53 @@
+import styles from './header.module.css';
+import Casino from "@mui/icons-material/Casino";
 import * as React from "react";
-import type { User } from "../auth/types";
-import Card from "@mui/joy/Card";
-import Typography from "@mui/joy/Typography";
-import Avatar from "@mui/joy/Avatar";
-import Button from "@mui/joy/Button";
+import Typography from "@mui/material/Typography";
+import {Link} from 'react-router-dom';
+import {useContext, useMemo} from "react";
+import {UserContext} from "../stores/user";
+import {logoutSession} from "../auth/session";
 
-type Props = {
-  user: User;
-  onLogout: () => void;
-  onAnalytics: () => void;
-};
-export function Header({ user, onLogout, onAnalytics }: Props) {
+export function Header() {
+
+  const {user} = useContext(UserContext);
+  const isAuthed = useMemo(() => {
+    return user.id !== "";
+  }, [user]);
+
   return (
-    <Card variant="outlined" className="Component-header-container">
-      <Avatar
-        alt={user?.name}
-        src={user?.photoURL}
-        className="Component-header-avatar"
-      />
-      <Typography level="h3" fontSize="md" sx={{ mb: 0.5 }}>
-        Hello {user?.name}, Welcome to Pennywise!
-      </Typography>
-
-      <div style={{position: "absolute", top: 0, right: 0}}>
-          {user.isTreasurer && <Button onClick={onAnalytics}>Analytics</Button>}
-          <Button onClick={onLogout}>Logout</Button>
+    <div className={styles.header}>
+      <div>
+        <Casino sx={{color: "white"}} fontSize='large'/>
       </div>
-    </Card>
+      <div>
+        <Typography color="white" variant="h4">
+          Pennywise
+        </Typography>
+      </div>
+      <div className={styles.spacer}></div>
+      <div className={styles.links}>
+        <Link to="/">
+          <Typography color="white" style={{textDecoration: "underline"}}>
+            Dashboard
+          </Typography>
+        </Link>
+        <Link to="/analytics">
+          <Typography color="white" style={{textDecoration: "underline"}}>
+            Analytics
+          </Typography>
+        </Link>
+        {
+          isAuthed && (
+            <a onClick={logoutSession} style={{cursor: "pointer"}}>
+              <Typography
+                color="white" style={{textDecoration: "underline"}}>
+                Log Out
+              </Typography>
+            </a>
+          )
+        }
+
+      </div>
+    </div>
   );
 }
