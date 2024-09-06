@@ -1,7 +1,19 @@
 import {app} from "../config";
-import {getFirestore, doc, setDoc, getDoc, getDocs, 
-  collection, query, where, orderBy, updateDoc, 
-  QuerySnapshot, DocumentData} from "firebase/firestore";
+import {
+  collection,
+  doc,
+  DocumentData,
+  getDoc,
+  getDocs,
+  getFirestore,
+  orderBy,
+  query,
+  QuerySnapshot,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  where
+} from "firebase/firestore";
 import {createUser, User} from "../auth/types";
 
 const db = getFirestore(app);
@@ -13,6 +25,8 @@ export const DEPARTMENTS = ["IT", "Events", "Competition", "Education", "Industr
 
 // submission schema
 export interface Reimbursement {
+  // created at
+  timestamp?: Date;
   // foreign key for the account name, bsb, account number
   userid: string;
   // name of event
@@ -58,23 +72,24 @@ export async function addReimbursement(submission: Reimbursement) {
   // store the document
   const ref = doc(collection(db, "reimbursement"));
   try {
-    await setDoc(ref, submission);
+    await setDoc(ref, {
+      ...submission,
+      timestamp: serverTimestamp()
+    });
   } catch (e){
     console.log((e as Error).message);
     throw new Error("Error while uploading the submission to DB");
   }
-  
 }
 
-function snapShotToList(snapshot: QuerySnapshot<DocumentData>): ReimbursementRead[]{
-  let result: ReimbursementRead[] = snapshot.docs.map(res => {
+export function snapShotToList(snapshot: QuerySnapshot<DocumentData>): ReimbursementRead[]{
+  return snapshot.docs.map(res => {
     let data = res.data();
     data.docId = res.id;
     data.purchaseDate = data.purchaseDate.toDate();
+    data.timestamp = data.timestamp.toDate();
     return (data as ReimbursementRead);
-  })
-
-  return result;
+  });
 }
 
 // returns the list of all active reimbursements
@@ -82,7 +97,7 @@ export async function getActiveReimbursement(): Promise<ReimbursementRead[]> {
   const q = query(
     collection(db, "reimbursement"),
     where("state", "==", "Active"),
-    orderBy("purchaseDate", "desc")
+    orderBy("timestamp", "desc")
   );
 
   const snapshot = await getDocs(q);
@@ -92,7 +107,7 @@ export async function getActiveReimbursement(): Promise<ReimbursementRead[]> {
 export async function getAllReimbursement(): Promise<ReimbursementRead[]> {
   const q = query(
     collection(db, "reimbursement"),
-    orderBy("purchaseDate", "desc")
+    orderBy("timestamp", "desc")
   );
 
   const snapshot = await getDocs(q);
@@ -105,7 +120,7 @@ export async function getMyReimbursement(user: User): Promise<ReimbursementRead[
     collection(db, "reimbursement"),
     where("state", "==", "Active"),
     where("userid", "==", user.id),
-    orderBy("purchaseDate", "desc")
+    orderBy("timestamp", "desc")
   );
 
   const snapshot = await getDocs(q);

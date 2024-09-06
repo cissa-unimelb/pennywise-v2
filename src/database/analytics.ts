@@ -1,4 +1,4 @@
-import {DEPARTMENTS, getActiveReimbursement, ReimbursementRead} from "./reimbursement";
+import {DEPARTMENTS, getActiveReimbursement, snapShotToList} from "./reimbursement";
 import {app} from "../config";
 import {
   getFirestore,
@@ -77,6 +77,7 @@ export async function activeReimbursementDepartmentStatistics(): Promise<Record<
 
 
 export interface SpreadSheetRow {
+  timestamp: string;
   fullname: string;
   accountName: string;
   accountNumber: string;
@@ -122,7 +123,7 @@ function csvWriter<T extends Record<keyof T, string>>(names: string[], columns: 
  */
 export async function getSpreadSheetExport(): Promise<string> {
   /**
-   * Timestamp (nope),
+   * Timestamp,
    * Full name,
    * Bank account name
    * have you submitted your bank account before (nope)
@@ -141,12 +142,8 @@ export async function getSpreadSheetExport(): Promise<string> {
   const reimbursementQuery = query(
       collection(db, 'reimbursement')
     );
-  const reimbursements = (await getDocs(reimbursementQuery)).docs.map(res => {
-    let data = res.data();
-    data.docId = res.id;
-    data.purchaseDate = data.purchaseDate.toDate();
-    return (data as ReimbursementRead);
-  });
+  const docs = await getDocs(reimbursementQuery);
+  const reimbursements = await snapShotToList(docs)
 
   const users: Record<string, User> = {};
   const rows: SpreadSheetRow[] = [];
@@ -156,6 +153,7 @@ export async function getSpreadSheetExport(): Promise<string> {
     }
     const user = users[row.userid];
     rows.push({
+      timestamp: row.timestamp?.toLocaleDateString() ?? "",
       purchaseDate: row.purchaseDate.toLocaleDateString(),
       fullname: user.name,
       accountName: user.name,
@@ -171,10 +169,12 @@ export async function getSpreadSheetExport(): Promise<string> {
   }
 
   const columns: (keyof SpreadSheetRow)[] = [
+    'timestamp',
     'purchaseDate', 'fullname', 'accountName', 'event', 'description',
     'amount', 'receipt', 'additional', 'bsb', 'accountNumber', 'status'
   ];
   const columnsNames: string[] = [
+    'Timestamp',
     'Purchase Date', 'Full Name', 'Bank account name (the name that your account is under)', 'What event was with for?',
     'Description of purchase', 'Purchase amount (AUD)', 'Receipt upload (please upload pdf)',
     'Is there anything you would like to let me know?', 'BSB', 'Account No', 'initiated?'

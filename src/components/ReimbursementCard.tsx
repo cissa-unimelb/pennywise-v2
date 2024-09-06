@@ -29,7 +29,7 @@ export default function ReimbursementCard(
 
 
   const time = useMemo(() => {
-    return reimbursement.purchaseDate.toLocaleString(undefined, {
+    return (reimbursement.purchaseDate as Date).toLocaleString(undefined, {
       weekday: 'short',
       year: 'numeric',
       month: 'long',
