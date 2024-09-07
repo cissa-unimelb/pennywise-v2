@@ -63,10 +63,6 @@ export function Analytics() {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const handleBack = () => {
-    navigate(-1);
-  }
-
   useEffect(() => {
     (async () => {
       setStats(await activeReimbursementDepartmentStatistics());

@@ -48,7 +48,6 @@ export const PdfGenerator = () => {
   const [valueAbn, setValueAbn] = useState("");
   const formik = useFormik({
     initialValues: {
-      invoice_id: "",
       recipient: "",
       recipientAddress: "",
       description: "",
@@ -73,8 +72,7 @@ export const PdfGenerator = () => {
     }),
 
     onSubmit: async (values) => {
-      const { invoice_id, recipient, recipientAddress, abn } = values;
-      setValueInvoiceId(invoice_id);
+      const { recipient, recipientAddress, abn } = values;
       setValueRecipient(recipient);
       setValueRecipientAddress(recipientAddress);
       setValueAbn(abn);
@@ -235,35 +233,6 @@ export const PdfGenerator = () => {
                   gap: 2,
                 }}
               >
-                <FormControl
-                  className=""
-                  style={{
-                    width: "800px",
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <FormLabel
-                    className=""
-                    style={{ width: "130px", lineHeight: "38px" }}
-                  >
-                    Invoice ID/Number
-                  </FormLabel>
-                  <Input
-                    type="text"
-                    name="invoice_id"
-                    value={formik.values.invoice_id}
-                    onChange={formik.handleChange}
-                    placeholder="Enter the ID of the invoice"
-                    className="input-box-container input-reset"
-                    style={{ width: "300px" }}
-                  />
-                  {formik.errors.invoice_id && formik.touched.invoice_id && (
-                    <p className="input-error">{formik.errors.invoice_id}</p>
-                  )}
-                </FormControl>
                 <div
                   style={{
                     width: "100vw",
@@ -623,12 +592,15 @@ export const PdfGenerator = () => {
       )}
       {isSubmit && (
         <Invoice
-          invoice_id={valueInvoiceId}
           recipient={valueRecipient}
           recipient_abn={valueAbn}
           recipient_address={valueRecipientAddress}
           items={valueItems}
           total_amount={valueTotalAmount}
+          invoice_id=""
+          driveUrl=""
+          timestamp={new Date()}
+          status="Pending"
         />
       )}
     </>

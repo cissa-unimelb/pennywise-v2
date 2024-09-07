@@ -10,6 +10,7 @@ import InvoiceGeneration from "../pages/InvoiceGeneration";
 import ReimbursementGeneration from "../pages/ReimbursementGeneration";
 import {Analytics} from "../pages/Analytics";
 import {Header} from "../components/Header";
+import {Invoices} from "../pages/Invoices";
 
 function RouterProvider() {
   return <>
@@ -30,6 +31,14 @@ function RouterProvider() {
             element={
               <ProtectedRoute treasurerOnly>
                 <Analytics />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="invoices"
+            element={
+              <ProtectedRoute treasurerOnly>
+                <Invoices />
               </ProtectedRoute>
             }
           />

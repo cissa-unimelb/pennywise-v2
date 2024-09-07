@@ -14,6 +14,10 @@ export function Header() {
     return user.id !== "";
   }, [user]);
 
+  const isTreasurer = useMemo(() => {
+    return user.isTreasurer;
+  }, [user]);
+
   return (
     <div className={styles.header}>
       <div>
@@ -27,21 +31,37 @@ export function Header() {
       <div className={styles.spacer}></div>
       <div className={styles.links}>
         <Link to="/">
-          <Typography color="white" style={{textDecoration: "underline"}}>
-            Dashboard
+          <Typography color="white" >
+            DASHBOARD
           </Typography>
         </Link>
-        <Link to="/analytics">
-          <Typography color="white" style={{textDecoration: "underline"}}>
-            Analytics
-          </Typography>
-        </Link>
+        {
+          isTreasurer && (
+            <>
+              <Link to="/invoices">
+                <Typography color="white">
+                  INVOICES
+                </Typography>
+              </Link>
+              <Link to="/">
+                <Typography color="white">
+                  REIMBURSEMENTS
+                </Typography>
+              </Link>
+              <Link to="/analytics">
+                <Typography color="white">
+                  ANALYTICS
+                </Typography>
+              </Link>
+            </>
+          )
+        }
         {
           isAuthed && (
             <a onClick={logoutSession} style={{cursor: "pointer"}}>
               <Typography
-                color="white" style={{textDecoration: "underline"}}>
-                Log Out
+                color="white">
+                LOG OUT
               </Typography>
             </a>
           )

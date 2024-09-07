@@ -407,6 +407,9 @@ export default function Invoice(props: InvoiceProps) {
       .then(onUploadComplete);
   };
   const onUploadComplete = (url: string) => {
+
+    // also 
+
     console.log(url);
     toast("Successfully uploaded to Google Drive!");
     window.open(url, "file");
