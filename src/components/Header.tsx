@@ -2,13 +2,12 @@ import styles from './header.module.css';
 import Casino from "@mui/icons-material/Casino";
 import * as React from "react";
 import Typography from "@mui/material/Typography";
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {useContext, useMemo} from "react";
 import {UserContext} from "../stores/user";
 import {logoutSession} from "../auth/session";
 
 export function Header() {
-
   const {user} = useContext(UserContext);
   const isAuthed = useMemo(() => {
     return user.id !== "";
@@ -17,6 +16,11 @@ export function Header() {
   const isTreasurer = useMemo(() => {
     return user.isTreasurer;
   }, [user]);
+
+  const logout = async () => {
+    await logoutSession();
+    window.location.reload();
+  }
 
   return (
     <div className={styles.header}>
@@ -58,7 +62,7 @@ export function Header() {
         }
         {
           isAuthed && (
-            <a onClick={logoutSession} style={{cursor: "pointer"}}>
+            <a onClick={logout} style={{cursor: "pointer"}}>
               <Typography
                 color="white">
                 LOG OUT
