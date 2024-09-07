@@ -2,19 +2,18 @@ import {useEffect, useMemo, useState} from "react";
 import {
   activeReimbursementDepartmentStatistics,
   DepartmentStatistics,
-  getSpreadSheetExport
+  getSpreadSheetExport, getSpreadSheetExportInvoices
 } from "../../database/analytics";
 
 import styles from './analytics.module.css';
-import {useNavigate} from "react-router-dom";
 import {DataGrid, GridColDef} from '@mui/x-data-grid';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import {PieChart} from "../../components/AnalyticChart";
-import {Header} from "../../components/Header";
+import {BarChart, PieChart} from "../../components/AnalyticChart";
+import {ButtonGroup} from "@mui/material";
 
 
 /**
@@ -61,7 +60,6 @@ const analyticsColumns: GridColDef<DepartmentStatistics>[] = [
 export function Analytics() {
   const [stats, setStats] = useState<Record<string, DepartmentStatistics>>({});
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -76,6 +74,13 @@ export function Analytics() {
     setLoading(false);
   };
 
+  const generateSpreadSheetInvoices = async () => {
+    setLoading(true);
+    const spreadsheet = await getSpreadSheetExportInvoices();
+    downloadCSV('invoices.csv', new Blob([spreadsheet], {type: 'text/csv'}));
+    setLoading(false);
+  };
+
   const departmentCosts = useMemo(()=> {
     const costs: any = {};
     Object.entries(stats).forEach(([name, st]) => {
@@ -86,9 +91,16 @@ export function Analytics() {
 
   return <div className={styles.page}>
     <div>
-      <Button onClick={generateSpreadSheet} variant="contained" disabled={loading}>
-        Generate SpreadSheet
-      </Button>
+      <Typography variant="h6">Generate Spreadsheets</Typography>
+      <ButtonGroup>
+        <Button onClick={generateSpreadSheet} variant="contained" disabled={loading}>
+          Reimbursement
+        </Button>
+        <br/>
+        <Button onClick={generateSpreadSheetInvoices} variant="contained" disabled={loading}>
+          Invoice
+        </Button>
+      </ButtonGroup>
     </div>
     <br/>
 
@@ -109,6 +121,7 @@ export function Analytics() {
         <Card>
           <CardContent>
             <PieChart departmentCosts={departmentCosts}/>
+            <BarChart/>
           </CardContent>
         </Card>
       </div>

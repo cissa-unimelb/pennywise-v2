@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import {User} from "../auth/types";
 import {getUser} from "./auth";
+import {GetInvoices, InvoiceSchema} from "./invoice";
 
 const db = getFirestore(app);
 
@@ -18,7 +19,7 @@ export interface DepartmentStatistics {
   highestPrice: string;
 }
 
-namespace Finance {
+export namespace Finance {
   export function priceToNumber(price: string): number {
     if (!price.includes('.')) {
       return parseInt(price, 10) * 100;
@@ -97,7 +98,7 @@ export interface SpreadSheetRow {
  */
 function escapeCsv(text: string) {
   // replace " with ""
-  return text.replaceAll("\"", "\"\"");
+  return '"' + text.replaceAll("\"", "\"\"") + '"';
 }
 
 /**
@@ -181,3 +182,52 @@ export async function getSpreadSheetExport(): Promise<string> {
   ];
   return csvWriter(columnsNames, columns, rows);
 }
+
+/**
+ * Generates a full excel spreadsheet for invoices
+ */
+export async function getSpreadSheetExportInvoices(): Promise<string> {
+  /**
+   * Timestamp,
+   * invoice id
+   * recipient
+   * abn
+   * address
+   * items { description, amount }
+   * driveurl
+   * status
+   */
+
+    // fetch all receipts, fetch all users, join here in js
+  const invoices = await GetInvoices();
+
+  const columns: (keyof InvoiceSchema)[] = [
+    'timestamp',
+    'invoice_id', 'recipient', 'recipient_abn', 'recipient_address', 'driveUrl',
+    'status'
+  ];
+  const columnsNames: string[] = [
+    'Timestamp',
+    'Invoice Id', 'Recipient', 'Recipient ABN', 'Recipient Address', 'Drive URL', 'Status'
+  ];
+
+  let out = [];
+  for (const invoice of invoices) {
+    let line = [];
+    for (const col of columns) {
+      line.push(escapeCsv(invoice[col].toString()));
+    }
+    out.push(line.join(','));
+
+    const length = line.length;
+    for (const {description, amount} of invoice.items) {
+      line = Array(length).fill("");
+      line[0] = escapeCsv(description);
+      line[1] = escapeCsv(amount);
+      out.push(line.join(','));
+    }
+  }
+
+  return columnsNames.join(',') + '\n' + out.join('\n');
+}
+

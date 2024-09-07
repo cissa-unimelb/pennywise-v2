@@ -125,3 +125,42 @@ export async function GetPendingInvoices() {
   });
   return result;
 }
+
+/**
+ * Returns all the invoices
+ */
+export async function GetInvoices() {
+  const q = query(
+    collection(db, "invoice"),
+    orderBy("timestamp", "desc")
+  );
+
+  const snapshot = await getDocs(q);
+  const result: InvoiceSchema[] = snapshot.docs.map(doc => {
+    const data = doc.data();
+    data.timestamp = data.timestamp.toDate();
+    return data as InvoiceSchema;
+  });
+  return result;
+}
+
+/**
+ * Returns all the invoices
+ */
+export async function GetInvoicesByTime(starting: Date) {
+  const q = query(
+    collection(db, "invoice"),
+    where("timestamp", ">=", starting),
+    orderBy("timestamp", "desc")
+  );
+
+  const snapshot = await getDocs(q);
+  const result: InvoiceSchema[] = snapshot.docs.map(doc => {
+    const data = doc.data();
+    data.timestamp = data.timestamp.toDate();
+    return data as InvoiceSchema;
+  });
+  return result;
+}
+
+
