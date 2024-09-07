@@ -165,7 +165,7 @@ export async function getSpreadSheetExport(): Promise<string> {
       amount: row.amount,
       additional: row.additional,
       receipt: row.receiptUrl,
-      status: row.state,
+      status: row.status,
     });
   }
 

@@ -1,55 +1,56 @@
-import * as React from "react";
 import Card from "@mui/joy/Card";
 import CardCover from "@mui/joy/CardCover";
 import CardContent from "@mui/joy/CardContent";
 import {Person} from "@mui/icons-material";
 import Typography from "@mui/joy/Typography";
+
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import Casino from "@mui/icons-material/Casino";
 import Box from "@mui/joy/Box";
 
-import {ReimbursementRead} from "../database/reimbursement";
+import {ReimbursementRead} from "../../database/reimbursement";
 import {useEffect, useMemo, useState} from "react";
-import {getUser} from "../database";
-import {User} from "../auth/types";
+import {getUser} from "../../database";
+import {User} from "../../auth/types";
 import ReimbursementPopupButton from "./ReimbursementPopup";
+import { KanbanCardProps } from "./KanbanCardProps";
 
 
-type Props = {
-  reimbursement: ReimbursementRead,
-  isTreasurer: boolean
-};
 
 export default function ReimbursementCard(
   {
-    reimbursement,
-    isTreasurer
-  }: Props) {
+    info,
+    isTreasurer,
+    isExec
+  }: KanbanCardProps) {
+
+  
+  const reimbursementInfo = info as ReimbursementRead;
 
 
   const time = useMemo(() => {
-    return (reimbursement.purchaseDate as Date).toLocaleString(undefined, {
+    return (reimbursementInfo.purchaseDate as Date).toLocaleString(undefined, {
       weekday: 'short',
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
-  }, [reimbursement]);
+  }, [reimbursementInfo]);
 
   const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
-    getUser(reimbursement.userid)
+    getUser(reimbursementInfo.userid)
       .then(setUser)
-  }, [reimbursement]);
+  }, [reimbursementInfo]);
 
   const handleClick = () => {
-    if (reimbursement.department) {
-      window.open(reimbursement.receiptUrl, '_blank');
+    if (reimbursementInfo.department) {
+      window.open(reimbursementInfo.receiptUrl, '_blank');
     }
   }
 
-  // console.log(reimbursement.docId);
+  // console.log(reimbursementInfo.docId);
 
   return (
     <Card className="Component-expense-card-container">
@@ -65,15 +66,15 @@ export default function ReimbursementCard(
       
       {isTreasurer?
         <div>
-          <ReimbursementPopupButton user={user} approve={true} reimbursement={reimbursement}/>
-          <ReimbursementPopupButton user={user} approve={false} reimbursement={reimbursement}/>
+          <ReimbursementPopupButton user={user} approve={true} reimbursement={reimbursementInfo}/>
+          <ReimbursementPopupButton user={user} approve={false} reimbursement={reimbursementInfo}/>
         </div>
       : <></>}
 
       <CardContent sx={{justifyContent: "flex-end", cursor: 'pointer'}}
                    onClick={handleClick}>
         <Typography level="h2" fontSize="lg" textColor="#fff" mb={1}>
-          {reimbursement.event} | {reimbursement.department || "unspecified"}
+          {reimbursementInfo.event} | {reimbursementInfo.department || "unspecified"}
         </Typography>
         <Box
           style={{
@@ -96,13 +97,13 @@ export default function ReimbursementCard(
             startDecorator={<AttachMoneyIcon/>}
             textColor="neutral.300"
           >
-            {reimbursement.amount}
+            {reimbursementInfo.amount}
           </Typography>
           <Typography
             startDecorator={<Casino/>}
             textColor="neutral.300"
           >
-            {reimbursement.state}
+            {reimbursementInfo.status}
           </Typography>
         </Box>
       </CardContent>

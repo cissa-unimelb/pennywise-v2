@@ -9,7 +9,8 @@ import {useContext, useEffect, useState} from "react";
 import {getAllReimbursement, getMyReimbursement, ReimbursementRead} from "../../database/reimbursement";
 import {createUser} from "../../auth/types";
 import {logoutSession} from "../../auth/session";
-import { KanbanBoard } from "./kanbanBoard";
+import { KanbanBoard } from "../../components/KanbanBoard";
+import ReimbursementCard from "../../components/Card/ReimbursementCard";
 
 // TODO: Update Grid to Grid2. Check why can't import it.
 
@@ -60,7 +61,7 @@ export default function Dashboard() {
             </Grid>
           </Grid>
         </Box>
-        <KanbanBoard user={user} reimbursement={reimbursement}/>
+        <KanbanBoard user={user} statusContainers={reimbursement}  Card={ReimbursementCard}/>
         <BankForm />
       </div>
     </>

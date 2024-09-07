@@ -600,7 +600,7 @@ export const PdfGenerator = () => {
           invoice_id=""
           driveUrl=""
           timestamp={new Date()}
-          status="Pending"
+          status="Active"
         />
       )}
     </>

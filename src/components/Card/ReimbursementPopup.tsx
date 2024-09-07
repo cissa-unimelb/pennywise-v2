@@ -6,10 +6,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import {User} from "../auth/types";
-import { ACCEPT_HEADER, ACCEPT_BODY, REJECT_HEADER, REJECT_BODY } from "../emailTemplate/emailTemplate";
-import {EXEC_EMAILS} from "../emailTemplate/execEmails";
-import {ReimbursementRead, StatusEnum, updateReimbursement} from "../database/reimbursement";
+import {User} from "../../auth/types";
+import { ACCEPT_HEADER, ACCEPT_BODY, REJECT_HEADER, REJECT_BODY } from "../../emailTemplate/emailTemplate";
+import {EXEC_EMAILS} from "../../emailTemplate/execEmails";
+import {ReimbursementRead, StatusEnum, updateReimbursement} from "../../database/reimbursement";
 
 type ReimbursementPopupProps = {
     reimbursement: ReimbursementRead,
@@ -73,7 +73,7 @@ export default function ReimbursementPopupButton(props: ReimbursementPopupProps)
         </DialogContent>
         <DialogActions>
           <Button onClick={async () => {
-            await updateReimbursement(reimbursement.docId, {state: newState})
+            await updateReimbursement(reimbursement.docId, {status: newState})
             setOpen(false);
           }} autoFocus>
             Update

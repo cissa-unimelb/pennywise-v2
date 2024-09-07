@@ -22,7 +22,7 @@ export interface InvoiceSchema {
     amount: string;
   }[];
   driveUrl: string;
-  status: "Pending" | "Approved" | "Rejected"
+  status: "Active" | "Approve" | "Reject"
 }
 
 export interface Incrementor {
@@ -41,7 +41,7 @@ export function NewInvoice(invoice: Partial<InvoiceSchema>) : InvoiceSchema {
     recipient_address: "",
     timestamp: new Date(),
     driveUrl: "",
-    status: "Pending",
+    status: "Active",
     ...invoice
   };
 }
@@ -113,7 +113,7 @@ export async function CreateInvoice(invoice: InvoiceSchema) {
 export async function GetPendingInvoices() {
   const q = query(
     collection(db, "invoice"),
-    where("status", "==", "Pending"),
+    where("status", "==", "Active"),
     orderBy("timestamp", "desc")
   );
 

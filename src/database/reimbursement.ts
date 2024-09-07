@@ -19,7 +19,7 @@ import {createUser, User} from "../auth/types";
 const db = getFirestore(app);
 
 export type DepartmentEnum = "IT" | "Events" | "Competition" | "Education" | "Industry" | "Project" | "Diversity" | "Publicity" | "Product";
-export type StatusEnum = "Active" | "Approve" | "Reject";
+export type StatusEnum = "Active" | "Approve" | "Paid" | "Reject" ;
 export const DEPARTMENTS = ["IT", "Events", "Competition", "Education", "Industry", "Project", "Diversity", "Publicity", "Product"];
 
 
@@ -44,7 +44,7 @@ export interface Reimbursement {
 
   department: DepartmentEnum;
 
-  state: StatusEnum;
+  status: StatusEnum;
 }
 
 // Used for reading, since require the unique doc id to update
@@ -96,7 +96,7 @@ export function snapShotToList(snapshot: QuerySnapshot<DocumentData>): Reimburse
 export async function getActiveReimbursement(): Promise<ReimbursementRead[]> {
   const q = query(
     collection(db, "reimbursement"),
-    where("state", "==", "Active"),
+    where("status", "==", "Active"),
     orderBy("timestamp", "desc")
   );
 
@@ -118,7 +118,7 @@ export async function getAllReimbursement(): Promise<ReimbursementRead[]> {
 export async function getMyReimbursement(user: User): Promise<ReimbursementRead[]> {
   const q = query(
     collection(db, "reimbursement"),
-    where("state", "==", "Active"),
+    where("status", "==", "Active"),
     where("userid", "==", user.id),
     orderBy("timestamp", "desc")
   );

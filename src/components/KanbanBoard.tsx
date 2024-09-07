@@ -1,31 +1,35 @@
 import { Box, Grid } from "@mui/material";
-import { ReimbursementRead } from "../../database/reimbursement";
-import ReimbursementCard from "../../components/ReimbursementCard";
-import { User } from "../../auth/types";
+import { ReimbursementRead } from "../database/reimbursement";
+import ReimbursementCard from "./Card/ReimbursementCard";
+import InvoiceCard from "./Card/InvoiceCard";
+import { User } from "../auth/types";
+import { PropsWithChildren, useMemo } from "react";
 
 type KanbanBoardProps = {
-    reimbursement: ReimbursementRead[],
-    user: User
+    statusContainers: any[],
+    user: User,
+    Card: typeof ReimbursementCard | typeof InvoiceCard
 };
 
-export function KanbanBoard(props: KanbanBoardProps){
-    const reimbursement = props.reimbursement;
-    const user = props.user;
+export function KanbanBoard({
+        statusContainers,
+        user,
+        Card
+    }: KanbanBoardProps){
 
-    let active: ReimbursementRead[] = [];
-    let approve: ReimbursementRead[] = [];
-    let reject: ReimbursementRead[] = [];
+    let active: any[] = [];
+    let approve: any[] = [];
+    let reject: any[] = [];
 
-    reimbursement.map((reim, i) => {
-        if (reim.state === "Active"){
-            active.push(reim);
-        } else if (reim.state === "Approve"){
-            approve.push(reim);
-        } else if (reim.state === "Reject"){
-            reject.push(reim);
+    useMemo(() => {for (let statusContainer of statusContainers) {
+        if (statusContainer.status === "Active"){
+            active.push(statusContainer);
+        } else if (statusContainer.status === "Approve"){
+            approve.push(statusContainer);
+        } else if (statusContainer.status === "Reject"){
+            reject.push(statusContainer);
         }
-        return null;
-    });
+    }}, [statusContainers]);
 
     return (
         <Box className="App-dashboard-container" sx={{marginTop: "100px", marginBottom: "100px"}}>
@@ -43,18 +47,18 @@ export function KanbanBoard(props: KanbanBoardProps){
             <Grid container spacing={2}>
                 <Grid item xs={4} sx={{height: "700px", overflowY: 'scroll'}}>
                 {
-                    active.map((reim, i) => (
+                    active.map((info, i) => (
                     <div className="Component-kanban-card-row" key={i}>
-                        <ReimbursementCard reimbursement={reim} isTreasurer={user.isTreasurer}/>
+                        <Card info={info} isTreasurer={user.isTreasurer}/>
                     </div>
                     ))
                 }
                 </Grid>
                 <Grid item xs={4} sx={{height: "700px", overflowY: 'scroll'}}>
                 {
-                    approve.map((reim, i) => (
+                    approve.map((info, i) => (
                     <div className="Component-kanban-card-row" key={i}>
-                        <ReimbursementCard reimbursement={reim} isTreasurer={user.isTreasurer}/>
+                        <Card info={info} isTreasurer={user.isTreasurer}/>
                     </div>
                     ))
                 }
@@ -63,9 +67,9 @@ export function KanbanBoard(props: KanbanBoardProps){
                 <Grid item xs={4} 
                     sx={{height: "700px", overflowY: 'scroll'}}>
                 {
-                    reject.map((reim, i) => (
+                    reject.map((info, i) => (
                     <div className="Component-kanban-card-row" key={i}>
-                        <ReimbursementCard reimbursement={reim} isTreasurer={user.isTreasurer}/>
+                        <Card info={info} isTreasurer={user.isTreasurer}/>
                     </div>
                     ))
                 }
