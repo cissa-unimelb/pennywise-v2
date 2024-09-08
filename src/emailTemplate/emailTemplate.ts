@@ -30,3 +30,10 @@ If you have any questions or need further information, feel free to reach out to
 \nBest regards,\n
 [Treasurer’s Name]`
 
+export const PAID_HEADER = "Reimbursement Fully Approved" 
+export const PAID_BODY = `Hi [Name],
+We’re excited to inform you that your reimbursement has been approved by the executive team! You can expect the funds to be deposited into your account within 1-5 business days.
+If you have any questions or need further assistance, please don’t hesitate to contact me at [Treasurer’s email].
+Best regards,
+[Treasurer’s Name]`
+

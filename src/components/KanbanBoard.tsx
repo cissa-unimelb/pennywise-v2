@@ -1,9 +1,8 @@
 import { Box, Grid } from "@mui/material";
-import { ReimbursementRead } from "../database/reimbursement";
 import ReimbursementCard from "./Card/ReimbursementCard";
 import InvoiceCard from "./Card/InvoiceCard";
 import { User } from "../auth/types";
-import { PropsWithChildren, useMemo } from "react";
+import {useMemo } from "react";
 
 type KanbanBoardProps = {
     statusContainers: any[],
@@ -17,19 +16,17 @@ export function KanbanBoard({
         Card
     }: KanbanBoardProps){
 
-    let active: any[] = [];
-    let approve: any[] = [];
-    let reject: any[] = [];
+    let active: any[] = useMemo(
+        () => statusContainers.filter((statusContainer) => statusContainer.status === "Active")
+        , [statusContainers]);
+    let approve: any[] = useMemo(
+        () => statusContainers.filter((statusContainer) => statusContainer.status === "Approve" || statusContainer.status === "Paid")
+        , [statusContainers]);
+    let reject: any[] = useMemo(
+        () => statusContainers.filter((statusContainer) => statusContainer.status === "Reject")
+        , [statusContainers]);
 
-    useMemo(() => {for (let statusContainer of statusContainers) {
-        if (statusContainer.status === "Active"){
-            active.push(statusContainer);
-        } else if (statusContainer.status === "Approve"){
-            approve.push(statusContainer);
-        } else if (statusContainer.status === "Reject"){
-            reject.push(statusContainer);
-        }
-    }}, [statusContainers]);
+    
 
     return (
         <Box sx={{marginTop: "100px", marginBottom: "100px", width: "100%"}}>
@@ -49,7 +46,7 @@ export function KanbanBoard({
                 {
                     active.map((info, i) => (
                     <div className="Component-kanban-card-row" key={i}>
-                        <Card info={info} isTreasurer={user.isTreasurer}/>
+                        <Card info={info} isTreasurer={user.isTreasurer} isAuthorizer={user.isAuthorizer}/>
                     </div>
                     ))
                 }
@@ -58,7 +55,7 @@ export function KanbanBoard({
                 {
                     approve.map((info, i) => (
                     <div className="Component-kanban-card-row" key={i}>
-                        <Card info={info} isTreasurer={user.isTreasurer}/>
+                        <Card info={info} isTreasurer={user.isTreasurer} isAuthorizer={user.isAuthorizer}/>
                     </div>
                     ))
                 }
@@ -69,7 +66,7 @@ export function KanbanBoard({
                 {
                     reject.map((info, i) => (
                     <div className="Component-kanban-card-row" key={i}>
-                        <Card info={info} isTreasurer={user.isTreasurer}/>
+                        <Card info={info} isTreasurer={user.isTreasurer} isAuthorizer={user.isAuthorizer}/>
                     </div>
                     ))
                 }

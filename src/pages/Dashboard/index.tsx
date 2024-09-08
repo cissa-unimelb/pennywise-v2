@@ -15,7 +15,7 @@ export default function Dashboard() {
   const [reimbursement, setReimbursement] = useState<ReimbursementRead[]>([]);
 
   useEffect(() => {
-    if (user.isTreasurer) {
+    if (user.isTreasurer || user.isAuthorizer) {
       getAllReimbursement()
         .then(setReimbursement);
     } else {
@@ -23,6 +23,7 @@ export default function Dashboard() {
         .then(setReimbursement);
     }
   }, [user]);
+
 
   return (
     <>

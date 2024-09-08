@@ -22,7 +22,7 @@ export default function ReimbursementCard(
   {
     info,
     isTreasurer,
-    isExec
+    isAuthorizer
   }: KanbanCardProps) {
 
   
@@ -57,10 +57,17 @@ export default function ReimbursementCard(
       
       {isTreasurer?
         <div>
-          <ReimbursementPopupButton user={user} approve={true} reimbursement={reimbursementInfo}/>
-          <ReimbursementPopupButton user={user} approve={false} reimbursement={reimbursementInfo}/>
+          <ReimbursementPopupButton user={user} status={"Approve"} reimbursement={reimbursementInfo}/>
+          <ReimbursementPopupButton user={user} status={"Reject"} reimbursement={reimbursementInfo}/>
         </div>
       : <></>}
+
+      {reimbursementInfo.status === "Approve" && isAuthorizer?
+        <div>
+          <ReimbursementPopupButton user={user} status={"Paid"} reimbursement={reimbursementInfo}/>
+        </div>
+        :<></>
+      }
 
       <CardContent sx={{justifyContent: "flex-end", cursor: 'pointer'}}
                    onClick={handleClick}>

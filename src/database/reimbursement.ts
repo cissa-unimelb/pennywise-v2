@@ -114,11 +114,11 @@ export async function getAllReimbursement(): Promise<ReimbursementRead[]> {
   return snapShotToList(snapshot);
 }
 
-// returns the list of active reimbursements by me
+// returns the list of all reimbursements by me
 export async function getMyReimbursement(user: User): Promise<ReimbursementRead[]> {
   const q = query(
     collection(db, "reimbursement"),
-    where("status", "==", "Active"),
+    // where("status", "==", "Active"),
     where("userid", "==", user.id),
     orderBy("timestamp", "desc")
   );

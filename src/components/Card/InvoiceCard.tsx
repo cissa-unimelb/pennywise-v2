@@ -16,7 +16,7 @@ import { InvoiceSchema } from "../../database/invoice";
 export default function InvoiceCard({
     info,
     isTreasurer,
-    isExec
+    isAuthorizer
   }: KanbanCardProps){
     
     const invoiceInfo = info as InvoiceSchema;
