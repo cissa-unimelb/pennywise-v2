@@ -28,8 +28,10 @@ import ListItemButton from "@mui/joy/ListItemButton";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Invoice from "./Invoice";
+import { useNavigate } from "react-router-dom";
 // import { useUserStore } from "../stores/user";
 export const PdfGenerator = () => {
+  const navigate = useNavigate();
   const [error] = useState("");
   const [isUploading] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
@@ -203,9 +205,27 @@ export const PdfGenerator = () => {
                 boxShadow: "md",
               }}
             >
+              {/* Back button */}
+              <div>
+                <Button
+                    color="info"
+                    variant="solid"
+                    style={{
+                      margin: "10px",
+                      position: "absolute",
+                      top: 0,
+                      right: 0
+                    }}
+                    onClick={() => {
+                      navigate("/invoices");
+                    }}
+                  >
+                    Back
+                </Button>
+              </div>
               <div
                 style={{
-                  width: "100vw",
+                  width: "100%",
                   marginBottom: "20px",
                 }}
               >
@@ -224,7 +244,7 @@ export const PdfGenerator = () => {
 
               <div
                 style={{
-                  width: "800px",
+                  // width: "800px",
                   // backgroundColor: '#eee',
                   display: "flex",
                   flexDirection: "row",
@@ -235,7 +255,7 @@ export const PdfGenerator = () => {
               >
                 <div
                   style={{
-                    width: "100vw",
+                    width: "100%",
                     marginBottom: "20px",
                     borderBottomWidth: "1px",
                     borderBottomColor: "#ddd",
@@ -257,7 +277,8 @@ export const PdfGenerator = () => {
                 <FormControl
                   className=""
                   style={{
-                    width: "800px",
+                    width: "100%",
+                    minWidth: "600px",
                     display: "flex",
                     flexDirection: "row",
                     alignItems: "center",
@@ -286,7 +307,7 @@ export const PdfGenerator = () => {
                 <FormControl
                   className=""
                   style={{
-                    width: "100vw",
+                    width: "100%",
                     display: "flex",
                     flexDirection: "row",
                     alignItems: "center",
@@ -316,7 +337,7 @@ export const PdfGenerator = () => {
                 <FormControl
                   className=""
                   style={{
-                    width: "100vw",
+                    width: "100%",
                     display: "flex",
                     flexDirection: "row",
                     flexWrap: "wrap",
@@ -343,7 +364,7 @@ export const PdfGenerator = () => {
                     formik.touched.recipientAddress && (
                       <p
                         className="input-error"
-                        style={{ width: "100vw", paddingLeft: "140px" }}
+                        style={{ width: "100%", paddingLeft: "140px" }}
                       >
                         {formik.errors.recipientAddress}
                       </p>
@@ -371,7 +392,7 @@ export const PdfGenerator = () => {
               >
                 <div
                   style={{
-                    width: "100vw",
+                    width: "100%",
                     marginBottom: "20px",
                     borderBottomWidth: "1px",
                     borderBottomColor: "#ddd",
@@ -393,7 +414,7 @@ export const PdfGenerator = () => {
                 <FormControl
                   className=""
                   style={{
-                    width: "100vw",
+                    width: "100%",
                     display: "flex",
                     flexDirection: "row",
                     alignItems: "center",
@@ -559,7 +580,7 @@ export const PdfGenerator = () => {
                   // paddingRight: '20px',
                   marginTop: "30px",
                   marginBottom: "20px",
-                  width: "100vw",
+                  width: "100%",
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",

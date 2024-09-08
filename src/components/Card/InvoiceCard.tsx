@@ -31,16 +31,7 @@ export default function InvoiceCard({
       // console.log(invoiceInfo.docId);
     
       return (
-        <Card className="Component-expense-card-container">
-          <CardCover>
-            <img
-              src="https://images.unsplash.com/photo-1542773998-9325f0a098d7?auto=format&fit=crop&w=320"
-              srcSet="https://images.unsplash.com/photo-1542773998-9325f0a098d7?auto=format&fit=crop&w=320&dpr=2 2x"
-              loading="lazy"
-              alt=""
-            />
-          </CardCover>
-          <CardCover className="Component-expense-cover"/>
+        <Card className="Component-expense-card-container" sx={{backgroundColor: "black"}}>
           
           {isTreasurer?
             <div>

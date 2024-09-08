@@ -32,7 +32,7 @@ export function KanbanBoard({
     }}, [statusContainers]);
 
     return (
-        <Box className="App-dashboard-container" sx={{marginTop: "100px", marginBottom: "100px"}}>
+        <Box sx={{marginTop: "100px", marginBottom: "100px", width: "100%"}}>
             <Grid container spacing={2}>
                 <Grid item xs={4}>
                     <h1> Active </h1>
