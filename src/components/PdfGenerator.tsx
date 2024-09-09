@@ -65,7 +65,7 @@ export const PdfGenerator = () => {
         .min(11, "Must be exactly 11 digits")
         .max(11, "Must be exactly 11 digits"),
 
-      invoice_id: Yup.string().required("Must enter invoice id/number"),
+      // invoice_id: Yup.string().required("Must enter invoice id/number"),
       recipient: Yup.string().required("Must enter invoice recipient"),
       recipientAddress: Yup.string()
       // .required(
@@ -100,9 +100,6 @@ export const PdfGenerator = () => {
   const addItemHandle = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
-    // alert(123);
-    // formik.validateField('description');
-    // formik.validateField('amount');
     let validatePass = true;
     if (formik.values.amount.trim().length === 0) {
       validatePass = false;

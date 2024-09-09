@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   PDFViewer,
@@ -18,7 +18,7 @@ import { Button } from "@mui/joy";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
-import {InvoiceSchema} from "../database/invoice";
+import {AddInvoice, InvoiceSchema, UseInvoiceId} from "../database/invoice";
 
 const const_images = {
   logo: "/cissa.png",
@@ -390,12 +390,19 @@ interface InvoiceProps extends InvoiceSchema{
   total_amount: string;
 }
 export default function Invoice(props: InvoiceProps) {
-  // const [instance, update] = usePDF({
-  //   document: <InvoiceDocument {...props} />,
-  // });
   const { user } = useContext(UserContext);
   const [isUploading, setIsUploading] = useState(false);
-  // console.log("user:", user);
+  const [invoiceID, setInvoiceID] = useState("");
+
+  // Get invoice id before the pdf is generated
+  useEffect(() => {
+    UseInvoiceId(()=>{})
+      .then((invoiceID) => {
+        props.invoice_id = ""+invoiceID;
+        setInvoiceID(props.invoice_id);
+      })
+  }, [])
+
   const upload = async () => {
     setIsUploading(true);
     const blob = await pdf(<InvoiceDocument {...props} />).toBlob();
@@ -406,17 +413,25 @@ export default function Invoice(props: InvoiceProps) {
     uploadFile(file, user.token as string)
       .then(onUploadComplete);
   };
-  const onUploadComplete = (url: string) => {
 
-    // also 
-
+  // Add the record to db after complete upload
+  const onUploadComplete = async (url: string) => {
     console.log(url);
     toast("Successfully uploaded to Google Drive!");
+
+    // Add record to db
+    props.driveUrl = url;
+    await AddInvoice(props);
+
     window.open(url, "file");
     setIsUploading(false);
   };
+
+
   return (
-    <>
+    invoiceID == "" 
+    ?<></>
+    :<>
       <>
         <div className="Component-pdfupload-container">
           <Button size="lg" loading={isUploading} onClick={upload}>
@@ -433,6 +448,8 @@ export default function Invoice(props: InvoiceProps) {
     </>
   );
 }
+
+
 export function InvoiceDocument(props: InvoiceProps) {
   // const [uploadProgress, setUploadProgress] = useState(0);
 

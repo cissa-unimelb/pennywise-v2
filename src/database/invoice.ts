@@ -78,7 +78,7 @@ async function FindInvoiceId() {
 export async function UseInvoiceId(update: (id: number, transaction: Transaction) => void) {
   // find incrementor id
   const ref = await FindInvoiceId();
-  await runTransaction(db, async (transaction) => {
+  const invoiceID = await runTransaction(db, async (transaction) => {
     // read incrementor using transaction
     const idDoc = await transaction.get(ref);
     const ids = idDoc.data() as Incrementor;
@@ -89,7 +89,9 @@ export async function UseInvoiceId(update: (id: number, transaction: Transaction
 
     // update id
     transaction.set(ref, {type: ids.type, value: ids.value + 1});
+    return invoiceId;
   });
+  return invoiceID;
 }
 
 /**
@@ -178,6 +180,11 @@ export async function UpdateInvoice(invoice_id: string, updateData: Partial<Invo
   for (const doc of snapshot.docs){
     await updateDoc(doc.ref, updateData);
   };
+}
+
+export async function AddInvoice(submission: InvoiceSchema){
+  const ref = doc(collection(db, "invoice"));
+  await setDoc(ref, submission);
 }
 
 
