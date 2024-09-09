@@ -22,6 +22,7 @@ export async function googleSignIn(): Promise<User> {
   const credential = GoogleAuthProvider.credentialFromResult(result);
   
   const token = credential?.accessToken;
+  console.log("Google access token: ", token);
   if (isEmailValid(result.user.email)) {
     console.log(result.user);
   } else {

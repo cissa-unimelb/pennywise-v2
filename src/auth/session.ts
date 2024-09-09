@@ -12,6 +12,7 @@ export async function retainSession(): Promise<User> {
       if (user) {
         // gets user id token
         const token = await user.getIdToken();
+        console.log("User id token: ", token);
 
         // create user
         const result = {

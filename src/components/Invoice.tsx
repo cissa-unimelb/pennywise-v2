@@ -414,6 +414,7 @@ export default function Invoice(props: InvoiceProps) {
     var file = new File([blob], invoiceID + ".pdf", {
       lastModified: new Date().getTime(),
     });
+    console.log(user.token);
     uploadFile(file, user.token as string)
       .then(onUploadComplete);
   };
