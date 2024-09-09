@@ -128,5 +128,5 @@ export async function getMyReimbursement(user: User): Promise<ReimbursementRead[
 }
 
 export async function updateReimbursement(docId: string, updateData: Partial<Reimbursement>){
-  await updateDoc(doc(db, "reimbursement", docId), {...updateData});
+  await updateDoc(doc(db, "reimbursement", docId), updateData);
 }

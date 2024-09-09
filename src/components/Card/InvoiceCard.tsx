@@ -1,17 +1,12 @@
 import Card from "@mui/joy/Card";
-import CardCover from "@mui/joy/CardCover";
 import CardContent from "@mui/joy/CardContent";
-import {Person} from "@mui/icons-material";
 import Typography from "@mui/joy/Typography";
 
-import { useEffect, useMemo, useState } from "react";
 import { KanbanCardProps } from "./KanbanCardProps";
-import { getUser } from "../../database";
-import { User } from "../../auth/types";
 
-import ReimbursementPopupButton from "./ReimbursementPopup";
 import { Box, List, ListItem } from "@mui/material";
 import { InvoiceSchema } from "../../database/invoice";
+import InvoiceButton from "./InvoiceButton";
 
 export default function InvoiceCard({
     info,
@@ -35,6 +30,8 @@ export default function InvoiceCard({
           
           {isTreasurer?
             <div>
+              <InvoiceButton status="Approve" invoice={invoiceInfo}/>
+              <InvoiceButton status="Reject" invoice={invoiceInfo}/>
             </div>
           : <></>}
     

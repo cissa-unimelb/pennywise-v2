@@ -7,9 +7,12 @@ import {
   runTransaction,
   where,
   Transaction,
-  setDoc, orderBy, serverTimestamp
+  setDoc, orderBy, serverTimestamp,
+  updateDoc
 } from 'firebase/firestore';
 import {app} from "../config";
+
+export type StatusEnum = "Active" | "Approve" | "Reject";
 
 export interface InvoiceSchema {
   timestamp: Date;
@@ -22,7 +25,7 @@ export interface InvoiceSchema {
     amount: string;
   }[];
   driveUrl: string;
-  status: "Active" | "Approve" | "Reject"
+  status: StatusEnum
 }
 
 export interface Incrementor {
@@ -161,6 +164,20 @@ export async function GetInvoicesByTime(starting: Date) {
     return data as InvoiceSchema;
   });
   return result;
+}
+
+// TODO: Might as well use the invoice_id as unique id, set it as unique docID during creation
+// Patch: Find the invoice_id, then update it
+export async function UpdateInvoice(invoice_id: string, updateData: Partial<InvoiceSchema>){
+  const q = query(
+    collection(db, "invoice"),
+    where("invoice_id", "==", invoice_id)
+  );
+
+  const snapshot = await getDocs(q);
+  for (const doc of snapshot.docs){
+    await updateDoc(doc.ref, updateData);
+  };
 }
 
 
