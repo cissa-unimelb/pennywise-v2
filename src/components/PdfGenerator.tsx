@@ -35,7 +35,7 @@ export const PdfGenerator = () => {
   const [error] = useState("");
   const [isUploading] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
-  const [valueInvoiceId, setValueInvoiceId] = useState("");
+  // const [valueInvoiceId, setValueInvoiceId] = useState("");
   // const { value } = useUserStore();
   const [valueRecipient, setValueRecipient] = useState("");
   const [valueRecipientAddress, setValueRecipientAddress] = useState("");

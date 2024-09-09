@@ -398,16 +398,20 @@ export default function Invoice(props: InvoiceProps) {
   useEffect(() => {
     UseInvoiceId(()=>{})
       .then((invoiceID) => {
-        props.invoice_id = ""+invoiceID;
-        setInvoiceID(props.invoice_id);
+        setInvoiceID("" + invoiceID);
       })
+  // eslint-disable-next-line
   }, [])
+
+  let newProps = {...props};
+  newProps.invoice_id = invoiceID;
+  console.log(invoiceID);
 
   const upload = async () => {
     setIsUploading(true);
-    const blob = await pdf(<InvoiceDocument {...props} />).toBlob();
+    const blob = await pdf(<InvoiceDocument {...newProps} />).toBlob();
     console.log(blob);
-    var file = new File([blob], props.invoice_id + ".pdf", {
+    var file = new File([blob], invoiceID + ".pdf", {
       lastModified: new Date().getTime(),
     });
     uploadFile(file, user.token as string)
@@ -420,8 +424,9 @@ export default function Invoice(props: InvoiceProps) {
     toast("Successfully uploaded to Google Drive!");
 
     // Add record to db
-    props.driveUrl = url;
-    await AddInvoice(props);
+    let submission = {...newProps};
+    submission.driveUrl = url;
+    await AddInvoice(submission);
 
     window.open(url, "file");
     setIsUploading(false);
@@ -429,7 +434,7 @@ export default function Invoice(props: InvoiceProps) {
 
 
   return (
-    invoiceID == "" 
+    invoiceID === "" 
     ?<></>
     :<>
       <>
@@ -440,7 +445,7 @@ export default function Invoice(props: InvoiceProps) {
         </div>
 
         <PDFViewer style={styles.pdfViewer}>
-          <InvoiceDocument {...props}></InvoiceDocument>
+          <InvoiceDocument {...newProps}></InvoiceDocument>
         </PDFViewer>
       </>
 
