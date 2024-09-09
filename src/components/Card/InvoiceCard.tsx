@@ -66,10 +66,14 @@ export default function InvoiceCard({
                 Address: {invoiceInfo.recipient_address}
               </Typography>
               <div>
-                <Typography>Items</Typography>
+                <Typography level="h2" fontSize="lg" textColor="#fff" mb={1}>Items</Typography>
                 <List>
                     {invoiceInfo.items.map((item, i) => (
-                    <ListItem key={i}>{item.description} | {item.amount}</ListItem>
+                    <ListItem key={i}>
+                      <Typography textColor="neutral.300">
+                        {item.description} | {item.amount}
+                      </Typography>
+                    </ListItem>
                     ))}
                 </List>
               </div>
