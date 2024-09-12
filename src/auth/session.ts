@@ -1,6 +1,36 @@
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  reauthenticateWithPopup,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 import {app} from "../config";
 import {User} from "./types";
+import {isEmailValid, provider} from "./google";
+
+/**
+ * Retrieves the google access token by signing in the user again
+ */
+export async function retrieveToken() {
+  const auth = getAuth(app);
+  if (auth.currentUser == null) {
+    throw new Error("user not signed in");
+  }
+
+  const result = await reauthenticateWithPopup(auth.currentUser, provider);
+  if (result == null || !isEmailValid(result.user.email)) {
+    throw new Error("could not authenticate")
+  }
+
+  const credential = GoogleAuthProvider.credentialFromResult(result);
+  const token = credential?.accessToken;
+  if (token == null) {
+    throw new Error("no access token");
+  }
+
+  return token;
+}
 
 /**
  * Try firebase relogin on a new page refresh by returning the user object if successful
@@ -8,11 +38,8 @@ import {User} from "./types";
 export async function retainSession(): Promise<User> {
   return new Promise((resolve, reject) => {
     const auth = getAuth(app);
-    onAuthStateChanged(auth, async (user) => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // gets user id token
-        const token = await user.getIdToken();
-
         // create user
         const result = {
           id: user.uid,
@@ -20,11 +47,12 @@ export async function retainSession(): Promise<User> {
           email: user.email ?? "",
           isAuthorizer: false,
           isTreasurer: false,
-          photoURL: user.photoURL ?? "",
-          token: token ?? "",
+          photoURL: user.photoURL ?? ""
         };
+        unsub();
         resolve(result);
       } else {
+        unsub();
         reject();
       }
     });

@@ -11,7 +11,7 @@ import {app} from "../config";
 //   (user: User): void;
 // }
 
-const provider = new GoogleAuthProvider();
+export const provider = new GoogleAuthProvider();
 provider.addScope("https://www.googleapis.com/auth/drive");
 provider.addScope("https://www.googleapis.com/auth/drive.file");
 provider.addScope("https://www.googleapis.com/auth/drive.resource");
@@ -20,8 +20,8 @@ const auth = getAuth(app);
 export async function googleSignIn(): Promise<User> {
   const result: UserCredential = await signInWithPopup(auth, provider);
   const credential = GoogleAuthProvider.credentialFromResult(result);
-  
-  const token = credential?.accessToken;
+
+  // const token = credential?.accessToken;
   if (isEmailValid(result.user.email)) {
     console.log(result.user);
   } else {
@@ -35,7 +35,7 @@ export async function googleSignIn(): Promise<User> {
     isAuthorizer: false,
     isTreasurer: false,
     photoURL: result.user.photoURL ?? "",
-    token: token ?? "",
+    // token: token ?? "",
   };
 }
 

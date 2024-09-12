@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   PDFViewer,
@@ -18,6 +18,9 @@ import { Button } from "@mui/joy";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
+import {AddInvoice, InvoiceSchema, UseInvoiceId} from "../database/invoice";
+import {retrieveToken} from "../auth/session";
+
 const const_images = {
   logo: "/cissa.png",
   club: "/cissa-affiliated-club.jpg",
@@ -384,42 +387,66 @@ const styles = StyleSheet.create({
   },
 });
 
-interface InvoiceProps {
-  invoice_id: string;
-  recipient: string;
-  recipient_abn: string;
-  recipient_address: string;
-  items: {
-    description: string;
-    amount: string;
-  }[];
+interface InvoiceProps extends InvoiceSchema{
   total_amount: string;
 }
 export default function Invoice(props: InvoiceProps) {
-  // const [instance, update] = usePDF({
-  //   document: <InvoiceDocument {...props} />,
-  // });
   const { user } = useContext(UserContext);
   const [isUploading, setIsUploading] = useState(false);
-  // console.log("user:", user);
+  const [invoiceID, setInvoiceID] = useState("");
+
+  // Get invoice id before the pdf is generated
+  useEffect(() => {
+    UseInvoiceId(()=>{})
+      .then((invoiceID) => {
+        setInvoiceID("" + invoiceID);
+      })
+  // eslint-disable-next-line
+  }, [])
+
+  let newProps = {...props};
+  newProps.invoice_id = invoiceID;
+  console.log(invoiceID);
+
   const upload = async () => {
     setIsUploading(true);
-    const blob = await pdf(<InvoiceDocument {...props} />).toBlob();
+    const blob = await pdf(<InvoiceDocument {...newProps} />).toBlob();
     console.log(blob);
-    var file = new File([blob], props.invoice_id + ".pdf", {
+    var file = new File([blob], invoiceID + ".pdf", {
       lastModified: new Date().getTime(),
     });
-    uploadFile(file, user.token as string)
-      .then(onUploadComplete);
+
+    // get user token
+    try {
+      const t = await retrieveToken();
+      uploadFile(file, t)
+        .then(onUploadComplete);
+    } catch (e) {
+      alert(e);
+    } finally {
+      setIsUploading(false);
+    }
   };
-  const onUploadComplete = (url: string) => {
+
+  // Add the record to db after complete upload
+  const onUploadComplete = async (url: string) => {
     console.log(url);
     toast("Successfully uploaded to Google Drive!");
+
+    // Add record to db
+    let submission = {...newProps};
+    submission.driveUrl = url;
+    await AddInvoice(submission);
+
     window.open(url, "file");
     setIsUploading(false);
   };
+
+
   return (
-    <>
+    invoiceID === "" 
+    ?<></>
+    :<>
       <>
         <div className="Component-pdfupload-container">
           <Button size="lg" loading={isUploading} onClick={upload}>
@@ -428,7 +455,7 @@ export default function Invoice(props: InvoiceProps) {
         </div>
 
         <PDFViewer style={styles.pdfViewer}>
-          <InvoiceDocument {...props}></InvoiceDocument>
+          <InvoiceDocument {...newProps}></InvoiceDocument>
         </PDFViewer>
       </>
 
@@ -436,6 +463,8 @@ export default function Invoice(props: InvoiceProps) {
     </>
   );
 }
+
+
 export function InvoiceDocument(props: InvoiceProps) {
   // const [uploadProgress, setUploadProgress] = useState(0);
 

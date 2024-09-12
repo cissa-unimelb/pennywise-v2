@@ -1,4 +1,4 @@
-import {DEPARTMENTS, getActiveReimbursement, ReimbursementRead} from "./reimbursement";
+import {DEPARTMENTS, getActiveReimbursement, snapShotToList} from "./reimbursement";
 import {app} from "../config";
 import {
   getFirestore,
@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import {User} from "../auth/types";
 import {getUser} from "./auth";
+import {GetInvoices, InvoiceSchema} from "./invoice";
 
 const db = getFirestore(app);
 
@@ -18,7 +19,7 @@ export interface DepartmentStatistics {
   highestPrice: string;
 }
 
-namespace Finance {
+export namespace Finance {
   export function priceToNumber(price: string): number {
     if (!price.includes('.')) {
       return parseInt(price, 10) * 100;
@@ -77,6 +78,7 @@ export async function activeReimbursementDepartmentStatistics(): Promise<Record<
 
 
 export interface SpreadSheetRow {
+  timestamp: string;
   fullname: string;
   accountName: string;
   accountNumber: string;
@@ -96,7 +98,7 @@ export interface SpreadSheetRow {
  */
 function escapeCsv(text: string) {
   // replace " with ""
-  return text.replaceAll("\"", "\"\"");
+  return '"' + text.replaceAll("\"", "\"\"") + '"';
 }
 
 /**
@@ -122,7 +124,7 @@ function csvWriter<T extends Record<keyof T, string>>(names: string[], columns: 
  */
 export async function getSpreadSheetExport(): Promise<string> {
   /**
-   * Timestamp (nope),
+   * Timestamp,
    * Full name,
    * Bank account name
    * have you submitted your bank account before (nope)
@@ -141,12 +143,8 @@ export async function getSpreadSheetExport(): Promise<string> {
   const reimbursementQuery = query(
       collection(db, 'reimbursement')
     );
-  const reimbursements = (await getDocs(reimbursementQuery)).docs.map(res => {
-    let data = res.data();
-    data.docId = res.id;
-    data.purchaseDate = data.purchaseDate.toDate();
-    return (data as ReimbursementRead);
-  });
+  const docs = await getDocs(reimbursementQuery);
+  const reimbursements = await snapShotToList(docs)
 
   const users: Record<string, User> = {};
   const rows: SpreadSheetRow[] = [];
@@ -156,6 +154,7 @@ export async function getSpreadSheetExport(): Promise<string> {
     }
     const user = users[row.userid];
     rows.push({
+      timestamp: row.timestamp?.toLocaleDateString() ?? "",
       purchaseDate: row.purchaseDate.toLocaleDateString(),
       fullname: user.name,
       accountName: user.name,
@@ -166,18 +165,69 @@ export async function getSpreadSheetExport(): Promise<string> {
       amount: row.amount,
       additional: row.additional,
       receipt: row.receiptUrl,
-      status: row.state,
+      status: row.status,
     });
   }
 
   const columns: (keyof SpreadSheetRow)[] = [
+    'timestamp',
     'purchaseDate', 'fullname', 'accountName', 'event', 'description',
     'amount', 'receipt', 'additional', 'bsb', 'accountNumber', 'status'
   ];
   const columnsNames: string[] = [
+    'Timestamp',
     'Purchase Date', 'Full Name', 'Bank account name (the name that your account is under)', 'What event was with for?',
     'Description of purchase', 'Purchase amount (AUD)', 'Receipt upload (please upload pdf)',
     'Is there anything you would like to let me know?', 'BSB', 'Account No', 'initiated?'
   ];
   return csvWriter(columnsNames, columns, rows);
 }
+
+/**
+ * Generates a full excel spreadsheet for invoices
+ */
+export async function getSpreadSheetExportInvoices(): Promise<string> {
+  /**
+   * Timestamp,
+   * invoice id
+   * recipient
+   * abn
+   * address
+   * items { description, amount }
+   * driveurl
+   * status
+   */
+
+    // fetch all receipts, fetch all users, join here in js
+  const invoices = await GetInvoices();
+
+  const columns: (keyof InvoiceSchema)[] = [
+    'timestamp',
+    'invoice_id', 'recipient', 'recipient_abn', 'recipient_address', 'driveUrl',
+    'status'
+  ];
+  const columnsNames: string[] = [
+    'Timestamp',
+    'Invoice Id', 'Recipient', 'Recipient ABN', 'Recipient Address', 'Drive URL', 'Status'
+  ];
+
+  let out = [];
+  for (const invoice of invoices) {
+    let line = [];
+    for (const col of columns) {
+      line.push(escapeCsv(invoice[col].toString()));
+    }
+    out.push(line.join(','));
+
+    const length = line.length;
+    for (const {description, amount} of invoice.items) {
+      line = Array(length).fill("");
+      line[0] = escapeCsv(description);
+      line[1] = escapeCsv(amount);
+      out.push(line.join(','));
+    }
+  }
+
+  return columnsNames.join(',') + '\n' + out.join('\n');
+}
+

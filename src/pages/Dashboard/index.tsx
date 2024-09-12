@@ -1,38 +1,21 @@
 import {UserContext} from "../../stores/user";
-import { Header } from "../../components/Header";
 import Box from "@mui/material/Box";
 import Grid from '@mui/material/Grid';
 import CreateButton from "../../components/CreateButton";
-import { useNavigate } from "react-router-dom";
 import { BankForm } from "../../components/BankForm";
 import {useContext, useEffect, useState} from "react";
 import {getAllReimbursement, getMyReimbursement, ReimbursementRead} from "../../database/reimbursement";
-import {createUser} from "../../auth/types";
-import {logoutSession} from "../../auth/session";
-import { KanbanBoard } from "./kanbanBoard";
+import { KanbanBoard } from "../../components/KanbanBoard";
+import ReimbursementCard from "../../components/Card/ReimbursementCard";
 
 // TODO: Update Grid to Grid2. Check why can't import it.
 
 export default function Dashboard() {
   const { user, setUser: setUserStore } = useContext(UserContext);
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    console.log("logout");
-
-    setUserStore(createUser(null));
-    await logoutSession();
-    navigate("/login");
-  };
-
-  const handleAnalytics = () => {
-    navigate("/analytics");
-  }
-
   const [reimbursement, setReimbursement] = useState<ReimbursementRead[]>([]);
 
   useEffect(() => {
-    if (user.isTreasurer) {
+    if (user.isTreasurer || user.isAuthorizer) {
       getAllReimbursement()
         .then(setReimbursement);
     } else {
@@ -41,18 +24,12 @@ export default function Dashboard() {
     }
   }, [user]);
 
+
   return (
     <>
       <div className="App-master-container">
-        <Header user={user} onLogout={handleLogout} onAnalytics={handleAnalytics}/>
         <Box className="App-dashboard-container">
           <Grid container spacing={2}>
-            <Grid item xs={12} md={3}>
-              <CreateButton
-                link="#/invoice"
-                title="Create invoice"
-              ></CreateButton>
-            </Grid>
             <Grid item xs={12} md={3}>
               <CreateButton
                 link="#/reimbursement"
@@ -60,8 +37,8 @@ export default function Dashboard() {
               ></CreateButton>
             </Grid>
           </Grid>
+          <KanbanBoard user={user} statusContainers={reimbursement}  Card={ReimbursementCard}/>
         </Box>
-        <KanbanBoard user={user} reimbursement={reimbursement}/>
         <BankForm />
       </div>
     </>

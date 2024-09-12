@@ -6,33 +6,35 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import {User} from "../auth/types";
-import { ACCEPT_HEADER, ACCEPT_BODY, REJECT_HEADER, REJECT_BODY } from "../emailTemplate/emailTemplate";
-import {EXEC_EMAILS} from "../emailTemplate/execEmails";
-import {ReimbursementRead, StatusEnum, updateReimbursement} from "../database/reimbursement";
+import {User} from "../../auth/types";
+import { ACCEPT_HEADER, ACCEPT_BODY, REJECT_HEADER, REJECT_BODY, PAID_HEADER, PAID_BODY, PAYMENT_PENDING_HEADER, PAYMENT_PENDING_BODY } from "../../emailTemplate/emailTemplate";
+import {EXEC_EMAILS} from "../../emailTemplate/execEmails";
+import {ReimbursementRead, StatusEnum, updateReimbursement} from "../../database/reimbursement";
 
 type ReimbursementPopupProps = {
     reimbursement: ReimbursementRead,
     user: User|null,
-    approve: Boolean
+    status: StatusEnum
 }
 
 export default function ReimbursementPopupButton(props: ReimbursementPopupProps) {
   const [open, setOpen] = React.useState(false);
   const user = props.user;
-  const approve = props.approve;
+  const status = props.status;
   const reimbursement = props.reimbursement;
 
   let subject = REJECT_HEADER;
   let body = REJECT_BODY;
   let color = "red";
-  let newState: StatusEnum = "Reject";
 
-  if (approve){
+  if (status === "Approve"){
     subject = ACCEPT_HEADER;
     body = ACCEPT_BODY;
     color = "green";
-    newState = "Approve";
+  } else if (status === "Paid"){
+    subject = PAID_HEADER;
+    body = PAID_BODY;
+    color = "blue";
   }
 
   let mailTo = `${user?.email},`;
@@ -52,7 +54,7 @@ export default function ReimbursementPopupButton(props: ReimbursementPopupProps)
             setOpen(true);
         }}>
 
-        <b>{ approve ? "Approve": "Reject"}</b>
+        <b>{status}</b>
     
       </Button>
       <Dialog
@@ -68,12 +70,23 @@ export default function ReimbursementPopupButton(props: ReimbursementPopupProps)
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Click update to finalize change in reimbursement status
+            Click update to finalize change in reimbursement status.
+            Click send reminders to remind executives (if any).
           </DialogContentText>
         </DialogContent>
         <DialogActions>
+          {
+            status === "Approve" ?
+            <Button onClick={async () => {
+              window.open(`mailto:${EXEC_EMAILS}?subject=${PAYMENT_PENDING_HEADER}&body=${encodeURI(PAYMENT_PENDING_BODY)}`)
+            }} autoFocus>
+              Send reminder
+            </Button>
+            :<></>
+          }
+          
           <Button onClick={async () => {
-            await updateReimbursement(reimbursement.docId, {state: newState})
+            await updateReimbursement(reimbursement.docId, {status: status})
             setOpen(false);
           }} autoFocus>
             Update
