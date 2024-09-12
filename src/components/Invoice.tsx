@@ -19,6 +19,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
 import {AddInvoice, InvoiceSchema, UseInvoiceId} from "../database/invoice";
+import {retrieveToken} from "../auth/session";
 
 const const_images = {
   logo: "/cissa.png",
@@ -414,9 +415,17 @@ export default function Invoice(props: InvoiceProps) {
     var file = new File([blob], invoiceID + ".pdf", {
       lastModified: new Date().getTime(),
     });
-    console.log(user.token);
-    uploadFile(file, user.token as string)
-      .then(onUploadComplete);
+
+    // get user token
+    try {
+      const t = await retrieveToken();
+      uploadFile(file, t)
+        .then(onUploadComplete);
+    } catch (e) {
+      alert(e);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   // Add the record to db after complete upload
