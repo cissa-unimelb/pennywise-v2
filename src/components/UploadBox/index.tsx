@@ -20,6 +20,9 @@ function UploadBox({ onUploadFile, progress, token }: Props) {
         component="label"
         startDecorator={<UploadFileIcon />}
         className="Component-upload-button"
+        variant="solid"
+        color="primary"
+        sx={{borderRadius: 999, px: 3, py: 1.4, color: "#041014"}}
       >
         Upload Files
         <input
@@ -30,11 +33,16 @@ function UploadBox({ onUploadFile, progress, token }: Props) {
           multiple
         />
       </Button>
-      <p>{progress} %</p>
+      <p className="app-muted-text" style={{marginTop: 16, marginBottom: 8}}>{progress} %</p>
       <LinearProgress
         className="Component-upload-progress"
         determinate
         value={progress}
+        sx={{
+          "--LinearProgress-thickness": "10px",
+          borderRadius: 999,
+          backgroundColor: "rgba(8, 145, 178, 0.12)"
+        }}
       />
     </>
   );

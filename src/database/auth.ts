@@ -1,24 +1,20 @@
-import {app} from "../config";
+import { app } from "../config";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
-import {createUser, User} from "../auth/types";
-
+import { createUser, User } from "../auth/types";
 
 const db = getFirestore(app);
 
-
-export async function setUser(user: User){
-   // hack to remove the user token
-   user.token = undefined;
-   const res = await setDoc(doc(db, "users", user.id), user);
-   return res;
+export async function setUser(user: User) {
+  // hack to remove the user token
+  const { token, ...userDoc } = user;
+  const res = await setDoc(doc(db, "users", user.id), user);
+  return res;
 }
 
-
 export async function getUser(userId: string): Promise<User> {
-
   const docRef = doc(db, "users", userId);
   const docSnap = await getDoc(docRef);
-  
+
   if (docSnap.exists()) {
     // console.log("Document data:", docSnap.data());
     return createUser(docSnap.data());
@@ -29,10 +25,9 @@ export async function getUser(userId: string): Promise<User> {
   }
 }
 
+export async function checkUserExists(userId: string): Promise<boolean> {
+  const docRef = doc(db, "users", userId);
+  const docSnap = await getDoc(docRef);
 
-export async function checkUserExists(userId: string): Promise<boolean>{
-    const docRef = doc(db, "users", userId);
-    const docSnap = await getDoc(docRef);
-
-    return docSnap.exists();
+  return docSnap.exists();
 }

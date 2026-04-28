@@ -1,13 +1,11 @@
 import {useEffect, useRef} from "react";
-import {Chart, Colors, PieController, ArcElement, Legend, Title, Tooltip} from "chart.js";
+import {Chart, PieController, ArcElement, Legend, Title, Tooltip} from "chart.js";
 
 Chart.register(PieController);
 Chart.register(ArcElement);
 Chart.register(Legend);
 Chart.register(Title);
 Chart.register(Tooltip);
-Chart.register(Colors);
-
 interface PieChartProps {
   departmentCosts: Record<string, string>
 }
@@ -25,6 +23,19 @@ export function PieChart(
       datasets: [{
         label: 'Costs',
         data: [],
+        backgroundColor: [
+          "#22d3ee",
+          "#06b6d4",
+          "#0891b2",
+          "#0ea5e9",
+          "#38bdf8",
+          "#67e8f9",
+          "#155e75",
+          "#164e63",
+          "#083344",
+        ],
+        borderColor: "#020617",
+        borderWidth: 2,
       }]
     };
     return new Chart(
@@ -45,11 +56,10 @@ export function PieChart(
               }
             },
             legend: {
-              position: 'right'
-            },
-            colors: {
-              // automatic coloring of the slices
-              forceOverride: true
+              position: 'bottom',
+              labels: {
+                color: "#dffcff",
+              }
             }
           }
         }
@@ -78,7 +88,7 @@ export function PieChart(
     chart.current.update();
   }, [props.departmentCosts]);
 
-  return <div>
+  return <div style={{minHeight: 360}}>
     <canvas ref={canvas}></canvas>
   </div>;
 }

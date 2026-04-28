@@ -129,12 +129,15 @@ export function BankForm(){
             level="h4"
             textColor="inherit"
             fontWeight="lg"
-            justifyContent="center"
             mb={1}
+            sx={{textAlign: "center"}}
           >
             Bank Form
           </Typography>
-          <form onSubmit={formik.handleSubmit}>
+          <Typography level="body2" sx={{color: "neutral.300", textAlign: "center", mb: 2.5}}>
+            Add your bank details so reimbursements can keep flowing through the existing process.
+          </Typography>
+          <form onSubmit={formik.handleSubmit} className="bank-form">
             <div className="mt3">
               <label className="black">Name</label>
               <Input
@@ -144,6 +147,7 @@ export function BankForm(){
                 onChange={formik.handleChange}
                 placeholder="Enter the name of the bank account owner"
                 className="input-box-container input-reset"
+                sx={{"--Input-radius": "18px", "--Input-paddingInline": "14px", bgcolor: "rgba(8, 15, 29, 0.82)"}}
               />
               {formik.errors.name && formik.touched.name && (
                 <p className="input-error">{formik.errors.name}</p>
@@ -158,6 +162,7 @@ export function BankForm(){
                 onChange={formik.handleChange}
                 placeholder="Enter a accountNumber"
                 className="input-box-container input-reset"
+                sx={{"--Input-radius": "18px", "--Input-paddingInline": "14px", bgcolor: "rgba(8, 15, 29, 0.82)"}}
               />
               {formik.errors.accountNumber && formik.touched.accountNumber && (
                 <p className="input-error">{formik.errors.accountNumber}</p>
@@ -172,6 +177,7 @@ export function BankForm(){
                 onChange={formik.handleChange}
                 placeholder="Enter BSB"
                 className="input-box-container input-reset"
+                sx={{"--Input-radius": "18px", "--Input-paddingInline": "14px", bgcolor: "rgba(8, 15, 29, 0.82)"}}
               />
               {formik.errors.bsb && formik.touched.bsb && (
                 <p className="input-error">{formik.errors.bsb}</p>
@@ -179,7 +185,13 @@ export function BankForm(){
             </div>
             {error && <p className="submit-error">{error}</p>}
             <div className="button-container">
-              <Button type="submit" id="login" className="solid-buttton" loading = {isUploading}>
+              <Button
+                type="submit"
+                id="login"
+                className="solid-buttton"
+                loading = {isUploading}
+                sx={{borderRadius: 999, px: 2.5, color: "#041014"}}
+              >
                 Submit
               </Button>
               <br />

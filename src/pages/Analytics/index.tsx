@@ -14,6 +14,7 @@ import Card from '@mui/material/Card';
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import {PieChart} from "../../components/AnalyticChart";
+import Box from "@mui/material/Box";
 
 
 /**
@@ -88,38 +89,50 @@ export function Analytics() {
   }, [stats]);
 
   return <div className={styles.page}>
-    <Card>
+    <Card className={styles.heroCard}>
       <CardContent>
         <div className={styles.header}>
-          <Typography variant="h3">Analytics</Typography>
+          <div>
+            <Typography variant="overline" className={styles.kicker}>Treasurer view</Typography>
+            <Typography variant="h3">Analytics</Typography>
+            <Typography variant="body1" className={styles.subcopy}>
+              Export reimbursement data and review active department spending with the same existing data flows.
+            </Typography>
+          </div>
           <Button onClick={handleBack} variant="contained">Back</Button>
         </div>
       </CardContent>
     </Card>
-    <br/>
-
-    <div>
+    <Box className={styles.actions}>
       <Button onClick={generateSpreadSheet} variant="contained" disabled={loading}>
         Generate SpreadSheet
       </Button>
-    </div>
-    <br/>
+    </Box>
 
     <div className={styles.content}>
       <div style={{flex: '2'}}>
-        <Card>
+        <Card className={styles.contentCard}>
           <CardContent>
             <Typography variant="h4">Active Reimbursements</Typography>
+            <Typography variant="body2" className={styles.cardNote}>
+              Current reimbursement volume and amounts by department.
+            </Typography>
             <br/>
             <DataGrid columns={analyticsColumns}
                       rows={Object.values(stats)}
                       getRowId={row => row.name}
-                      disableRowSelectionOnClick/>
+                      disableRowSelectionOnClick
+                      sx={{
+                        minHeight: 420,
+                        "& .MuiDataGrid-cell": {
+                          borderColor: "rgba(103, 232, 249, 0.08)"
+                        }
+                      }}/>
           </CardContent>
         </Card>
       </div>
       <div style={{flex: '1'}}>
-        <Card>
+        <Card className={styles.contentCard}>
           <CardContent>
             <PieChart departmentCosts={departmentCosts}/>
           </CardContent>

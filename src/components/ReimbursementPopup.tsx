@@ -10,6 +10,8 @@ import {User} from "../auth/types";
 import { ACCEPT_HEADER, ACCEPT_BODY, REJECT_HEADER, REJECT_BODY } from "../emailTemplate/emailTemplate";
 import {EXEC_EMAILS} from "../emailTemplate/execEmails";
 import {ReimbursementRead, StatusEnum, updateReimbursement} from "../database/reimbursement";
+import CheckCircleOutline from "@mui/icons-material/CheckCircleOutline";
+import HighlightOff from "@mui/icons-material/HighlightOff";
 
 type ReimbursementPopupProps = {
     reimbursement: ReimbursementRead,
@@ -25,14 +27,16 @@ export default function ReimbursementPopupButton(props: ReimbursementPopupProps)
 
   let subject = REJECT_HEADER;
   let body = REJECT_BODY;
-  let color = "red";
+  let color: "success" | "error" = "error";
   let newState: StatusEnum = "Reject";
+  let icon = <HighlightOff fontSize="small" />;
 
   if (approve){
     subject = ACCEPT_HEADER;
     body = ACCEPT_BODY;
-    color = "green";
+    color = "success";
     newState = "Approve";
+    icon = <CheckCircleOutline fontSize="small" />;
   }
 
   let mailTo = `${user?.email},`;
@@ -43,9 +47,12 @@ export default function ReimbursementPopupButton(props: ReimbursementPopupProps)
     <React.Fragment>
       <Button variant="contained" 
         size="small"
-        style={{
-            margin: "10px",
-            backgroundColor: color
+        color={color}
+        startIcon={icon}
+        sx={{
+            minWidth: 116,
+            borderRadius: 999,
+            boxShadow: "0 12px 32px rgba(2, 8, 23, 0.3)"
         }}
         onClick={() => {
             window.open(`mailto:${mailTo}?subject=${subject}&body=${encodeURIComponent(body)}`);
@@ -64,7 +71,7 @@ export default function ReimbursementPopupButton(props: ReimbursementPopupProps)
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Finish approving and sent email?"}
+          {approve ? "Finish approval and send email?" : "Finish rejection and send email?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">

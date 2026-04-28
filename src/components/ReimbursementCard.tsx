@@ -64,7 +64,7 @@ export default function ReimbursementCard(
       <CardCover className="Component-expense-cover"/>
       
       {isTreasurer?
-        <div>
+        <div style={{position: "absolute", top: 12, right: 12, zIndex: 2, display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end"}}>
           <ReimbursementPopupButton user={user} approve={true} reimbursement={reimbursement}/>
           <ReimbursementPopupButton user={user} approve={false} reimbursement={reimbursement}/>
         </div>
@@ -72,12 +72,18 @@ export default function ReimbursementCard(
 
       <CardContent sx={{justifyContent: "flex-end", cursor: 'pointer'}}
                    onClick={handleClick}>
+        <Typography level="body2" sx={{textTransform: "uppercase", letterSpacing: "0.16em", color: "#67e8f9", mb: 0.75}}>
+          {reimbursement.department || "Unspecified"}
+        </Typography>
         <Typography level="h2" fontSize="lg" textColor="#fff" mb={1}>
-          {reimbursement.event} | {reimbursement.department || "unspecified"}
+          {reimbursement.event}
         </Typography>
         <Box
           style={{
             flexDirection: "row",
+            display: "flex",
+            gap: "12px",
+            flexWrap: "wrap"
           }}
         >
           <Typography

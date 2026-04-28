@@ -1,5 +1,5 @@
-import {useContext, useState} from "react";
-import {UserContext} from "../stores/user";
+import { useContext, useState } from "react";
+import { UserContext } from "../stores/user";
 import { useNavigate } from "react-router-dom";
 
 // import { StyleSheet } from '@react-pdf/renderer';
@@ -14,15 +14,28 @@ import Sheet from "@mui/joy/Sheet";
 import Input from "@mui/joy/Input";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
+import Box from "@mui/joy/Box";
+import IconButton from "@mui/joy/IconButton";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { addReimbursement } from "../database";
 import { uploadFile } from "../services/upload";
-import {DepartmentEnum} from "../database/reimbursement";
+import { DepartmentEnum } from "../database/reimbursement";
 
-let ALL_DEPARTMENTS: DepartmentEnum[] = ["IT", "Events", "Competition", "Education", "Industry", "Project", "Diversity", "Publicity", "Product"];
+let ALL_DEPARTMENTS: DepartmentEnum[] = [
+  "IT",
+  "Events",
+  "Competition",
+  "Education",
+  "Industry",
+  "Project",
+  "Diversity",
+  "Publicity",
+  "Product",
+];
 
 interface formInitialValues {
   event: string;
@@ -30,150 +43,119 @@ interface formInitialValues {
   amount: number;
   date: string;
   additional: string;
-  department: DepartmentEnum
-};
+  department: DepartmentEnum;
+}
 
 type initialValuesKey = keyof formInitialValues;
 
 type FormControlBlockProps = {
-  formik: FormikProps<formInitialValues>, 
-  attribute: initialValuesKey
-}
+  formik: FormikProps<formInitialValues>;
+  attribute: initialValuesKey;
+};
 
-const InputFormControlBlock = (props: FormControlBlockProps):JSX.Element => {
+const InputFormControlBlock = (props: FormControlBlockProps): JSX.Element => {
   const formik = props.formik;
   const attribute = props.attribute;
   let name = attribute.split("_").join(" ");
   name = name.charAt(0).toUpperCase() + name.slice(1);
 
-  return(
-    <FormControl
-        className=""
-        style={{
-          width: "100vw",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          marginBottom: "10px",
+  return (
+    <FormControl className="app-form-row">
+      <FormLabel className="app-form-label" sx={{ color: "#fff" }}>
+        {name}
+      </FormLabel>
+      <Input
+        id={`text_item_${attribute}`}
+        type="text"
+        name={attribute}
+        value={formik.values[attribute]}
+        onChange={formik.handleChange}
+        placeholder={"Enter " + attribute}
+        className="app-form-field input-box-container input-reset"
+        sx={{
+          "--Input-radius": "18px",
+          "--Input-paddingInline": "14px",
+          bgcolor: "rgba(8, 15, 29, 0.78)",
+          color: "#fff",
+          "& input": {
+            color: "#fff",
+            WebkitTextFillColor: "#fff",
+          },
         }}
-      >
-        <FormLabel
-          className=""
-          style={{ width: "200px", lineHeight: "38px" }}
-        >
-          {name}
-        </FormLabel>
-        <Input
-          id={`text_item_${attribute}`}
-          type="text"
-          name={attribute}
-          value={formik.values[attribute]}
-          onChange={formik.handleChange}
-          placeholder={"Enter " + attribute}
-          className="input-box-container input-reset"
-          style={{ width: "500px" }}
-        />
-        {formik.errors[attribute] && formik.touched[attribute] && (
-          <p className="input-error">{formik.errors[attribute]}</p>
-        )}
+      />
+      {formik.errors[attribute] && formik.touched[attribute] && (
+        <p className="input-error">{formik.errors[attribute]}</p>
+      )}
     </FormControl>
-  )
-}
+  );
+};
 
 type FileUploadBlockInput = {
-  setFile: Function
-}
+  setFile: Function;
+};
 const FileUploadBlock = (props: FileUploadBlockInput) => {
   return (
-    <div 
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        width: "100%"
-      }}
-    >
-      <FormLabel
-        className=""
-        style={{ width: "200px", lineHeight: "38px" }}
-      >
+    <div className="app-form-row">
+      <FormLabel className="app-form-label" sx={{ color: "#fff" }}>
         Receipt upload
       </FormLabel>
-      <div 
-        style={{
-          display: "flex",
-          alignItems: "left",
-          width: "500px"
-        }}
-      >
-        <input 
+      <div className="app-form-field">
+        <input
           type="file"
           id="uploadFile"
+          className="app-file-input"
           onChange={(event) => {
-            if (event.currentTarget.files !== null){
+            if (event.currentTarget.files !== null) {
               props.setFile(event.currentTarget.files[0]);
             }
           }}
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 type SelectFormControlBlockInput = {
   attribute: initialValuesKey;
   formik: FormikProps<formInitialValues>;
   fields: string[];
-}
+};
 
 const SelectFormControlBlock = (props: SelectFormControlBlockInput) => {
   let formik = props.formik;
   let name = props.attribute.split("_").join(" ");
   name = name.charAt(0).toUpperCase() + name.slice(1);
-  return(
-    <div 
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        width: "100%"
-      }}
-    >
-      <FormLabel
-        className=""
-        style={{ width: "200px", lineHeight: "38px" }}
-      >
-       {name} 
+  return (
+    <div className="app-form-row">
+      <FormLabel className="app-form-label" sx={{ color: "#fff" }}>
+        {name}
       </FormLabel>
-      <div 
-        style={{
-          display: "flex",
-          alignItems: "left",
-          width: "500px"
-        }}
-      >
-        <select name={props.attribute} 
+      <div className="app-form-field">
+        <select
+          name={props.attribute}
+          className="app-form-select"
           onChange={formik.handleChange}
-          value={formik.values[props.attribute]}>
-            {props.fields.map((x) => {
-              return(
-                <option value={x}>{x}</option>
-              );
-            })}
+          value={formik.values[props.attribute]}
+          style={{ color: "#fff", backgroundColor: "rgba(8, 15, 29, 0.78)" }}
+        >
+          {props.fields.map((x) => {
+            return (
+              <option key={x} value={x}>
+                {x}
+              </option>
+            );
+          })}
         </select>
       </div>
     </div>
-  )
-}
-
-
-
-
-
+  );
+};
 
 export const ReimbursementForm = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [file, setFile] = useState(new File([], ""));
 
-  const {user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -183,33 +165,36 @@ export const ReimbursementForm = () => {
       amount: 0,
       date: "",
       additional: "",
-      department: 'Events' as DepartmentEnum
+      department: "Events" as DepartmentEnum,
     },
     validate(values) {},
     enableReinitialize: true,
     validationSchema: Yup.object({
-      event: Yup.string()
-        .required("Name is required"),
-      purchase_description: Yup.string()
-        .required("Purchase description is required"),
-      amount: Yup.number()
-        .required("Amount is required"),
-      date: Yup.date()
-        .required("Date is required"),
-      additional: Yup.string()
-        .required("Additional note is required")
+      event: Yup.string().required("Name is required"),
+      purchase_description: Yup.string().required(
+        "Purchase description is required",
+      ),
+      amount: Yup.number().required("Amount is required"),
+      date: Yup.date().required("Date is required"),
+      additional: Yup.string().required("Additional note is required"),
     }),
 
     onSubmit: async (values) => {
-      const {event, purchase_description,
-        amount, date, additional, department} = values;
+      const {
+        event,
+        purchase_description,
+        amount,
+        date,
+        additional,
+        department,
+      } = values;
       console.log(values);
-      
+
       console.log("Start submitting");
       // Start submitting
       setIsSubmit(true);
       let receipt_url = await uploadFile(file, user.token as string);
-      
+
       await addReimbursement({
         // foreign key for the account name, bsb, account number
         userid: user.id,
@@ -226,120 +211,127 @@ export const ReimbursementForm = () => {
         // additional information
         additional: additional,
         department: department,
-        state: "Active"
+        state: "Active",
       });
 
       // Upload file to the shared drive
-      
 
       console.log("Finish submitting");
-    
+
       setIsSubmit(false);
     },
   });
 
-
-  
-
   return (
     <>
-        <form onSubmit={formik.handleSubmit}>
-          <div style={{ backgroundColor: "#fff" }}>
-            <ToastContainer />
+      <div
+        className="app-form-page"
+        style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}
+      >
+        <IconButton
+          aria-label="Back to dashboard"
+          variant="soft"
+          color="neutral"
+          onClick={() => {
+            navigate("/dashboard");
+          }}
+          sx={{ mt: 4, flexShrink: 0 }}
+        >
+          <ArrowBack />
+        </IconButton>
 
-            <Sheet
-              variant="outlined"
-              className="sheet"
-              sx={{
-                width: 800,
-                mx: "auto", // margin left & right
-                my: 4, // margin top & bottom
-                py: 4, // padding top & bottom
-                px: 6, // padding left & right
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-                // gap: 2,
-                borderRadius: "sm",
-                boxShadow: "md",
-              }}
-            >
-              <div
-                style={{
-                  width: "100vw",
-                  marginBottom: "20px",
-                }}
-              >
+        <form onSubmit={formik.handleSubmit} style={{ flex: 1 }}>
+          <ToastContainer />
+
+          <Sheet
+            variant="outlined"
+            className="app-form-card"
+            sx={{
+              width: "min(940px, 100%)",
+              mx: "auto", // margin left & right
+              my: 4, // margin top & bottom
+              py: 4, // padding top & bottom
+              px: { xs: 2.5, md: 4 }, // padding left & right
+              display: "flex",
+              flexDirection: "column",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              borderRadius: "28px",
+              boxShadow: "md",
+            }}
+          >
+            <div className="app-form-header">
+              <div>
                 <Typography
                   component="h2"
                   id="modal-title"
-                  level="h4"
-                  textColor="inherit"
-                  fontWeight="lg"
-                  textAlign="center"
-                  mb={1}
+                  level="body2"
+                  sx={{
+                    textTransform: "uppercase",
+                    letterSpacing: "0.18em",
+                    color: "primary.300",
+                    mb: 1,
+                  }}
+                >
+                  Expense claim
+                </Typography>
+                <Typography
+                  level="h2"
+                  className="app-form-title"
+                  sx={{
+                    fontSize: { xs: "1.6rem", md: "2rem" },
+                    color: "#fff",
+                  }}
                 >
                   Reimbursement Form
                 </Typography>
+                <Typography
+                  level="body1"
+                  className="app-form-subtitle"
+                  sx={{ color: "#fff" }}
+                >
+                  Submit your reimbursement claim here
+                </Typography>
               </div>
+            </div>
 
-              {/* Back button */}
-              <div>
-                <Button
-                    color="info"
-                    variant="solid"
-                    style={{
-                      margin: "10px",
-                      position: "absolute",
-                      top: 0,
-                      right: 0
-                    }}
-                    onClick={() => {
-                      navigate("/dashboard");
-                    }}
-                  >
-                    Back
-                </Button>
-              </div>
-              
-              {/* All fields */}
-              <InputFormControlBlock formik={formik} attribute="event" ></InputFormControlBlock>
-              <InputFormControlBlock formik={formik} attribute="purchase_description" ></InputFormControlBlock>
-              <InputFormControlBlock formik={formik} attribute="amount" ></InputFormControlBlock>
-              <InputFormControlBlock formik={formik} attribute="date" ></InputFormControlBlock>
+            {/* All fields */}
+            <Box className="app-form-grid">
+              <InputFormControlBlock formik={formik} attribute="event" />
+              <InputFormControlBlock
+                formik={formik}
+                attribute="purchase_description"
+              />
+              <InputFormControlBlock formik={formik} attribute="amount" />
+              <InputFormControlBlock formik={formik} attribute="date" />
 
               {/* Upload file */}
-              <FileUploadBlock setFile={setFile}></FileUploadBlock>
+              <FileUploadBlock setFile={setFile} />
 
               {/* Select department */}
-              <SelectFormControlBlock formik={formik} fields={ALL_DEPARTMENTS} attribute="department"></SelectFormControlBlock>
-              
+              <SelectFormControlBlock
+                formik={formik}
+                fields={ALL_DEPARTMENTS}
+                attribute="department"
+              />
 
-              <InputFormControlBlock formik={formik} attribute="additional" ></InputFormControlBlock>
+              <InputFormControlBlock formik={formik} attribute="additional" />
+            </Box>
 
-              
-              
-              {/* Submit and back button */}
-              <div
-                style={{
-                  display: "block",
-                  marginLeft: "80%",
-                  width: "100%"
-                }}
+            <div className="app-form-actions">
+              <Button
+                type="submit"
+                loading={isSubmit}
+                color="primary"
+                variant="solid"
+                sx={{ borderRadius: 999, px: 3, color: "#041014" }}
               >
-                <Button
-                    type="submit"
-                    loading={isSubmit}
-                    color="primary"
-                    variant="solid"
-                  >
-                    Submit
-                </Button>
-              </div>
-            </Sheet>
-          </div>
+                Submit
+              </Button>
+            </div>
+          </Sheet>
         </form>
+      </div>
     </>
   );
 };
