@@ -1,9 +1,142 @@
-import { Box, Grid } from "@mui/material";
-import { ReimbursementRead } from "../../database/reimbursement";
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import {
+  DepartmentEnum,
+  ReimbursementRead,
+  StatusEnum,
+} from "../../database/reimbursement";
 import ReimbursementCard from "../../components/ReimbursementCard";
 import { User } from "../../auth/types";
 import Card from "@mui/joy/Card";
 import Typography from "@mui/joy/Typography";
+import { useState } from "react";
+
+const ALL_DEPARTMENTS: DepartmentEnum[] = [
+  "IT",
+  "Events",
+  "Competition",
+  "Education",
+  "Industry",
+  "Project",
+  "Diversity",
+  "Publicity",
+  "Product",
+];
+
+const FILTER_OPTIONS = [
+  { value: "department", label: "Department" },
+  { value: "date", label: "From date" },
+  { value: "amount", label: "Min amount" },
+] as const;
+
+const COLUMN_DETAILS: Array<{ title: StatusEnum; note: string }> = [
+  { title: "Active", note: "Awaiting review" },
+  { title: "Approve", note: "Completed approvals" },
+  { title: "Reject", note: "Returned requests" },
+];
+
+type FilterField = (typeof FILTER_OPTIONS)[number]["value"];
+
+type ColumnFilter = {
+  field: FilterField;
+  value: string;
+};
+
+type ColumnFilters = Record<StatusEnum, ColumnFilter>;
+
+const INITIAL_COLUMN_FILTERS: ColumnFilters = {
+  Active: { field: "department", value: "" },
+  Approve: { field: "department", value: "" },
+  Reject: { field: "department", value: "" },
+};
+
+const filterControlSx = {
+  ".MuiOutlinedInput-notchedOutline": {
+    borderColor: "rgba(103,232,249,0.25)",
+  },
+};
+
+function getColumnSurfaceSx(status: StatusEnum) {
+  if (status === "Approve") {
+    return {
+      borderColor: "rgba(20, 255, 106, 0.34)",
+      background:
+        "radial-gradient(circle at top right, rgba(34, 197, 94, 0.28), transparent 34%), radial-gradient(circle at 20% 18%, rgba(134, 239, 172, 0.14), transparent 30%), radial-gradient(circle at bottom left, rgba(34, 211, 238, 0.08), transparent 42%), linear-gradient(180deg, rgba(8, 30, 24, 0.98), rgba(3, 12, 16, 0.95))",
+    };
+  }
+
+  if (status === "Reject") {
+    return {
+      borderColor: "rgba(251, 113, 133, 0.34)",
+      background:
+        "radial-gradient(circle at top right, rgba(244, 63, 94, 0.28), transparent 34%), radial-gradient(circle at 18% 16%, rgba(253, 164, 175, 0.14), transparent 30%), radial-gradient(circle at bottom left, rgba(34, 211, 238, 0.06), transparent 42%), linear-gradient(180deg, rgba(34, 10, 18, 0.98), rgba(12, 5, 12, 0.95))",
+    };
+  }
+
+  return {
+    borderColor: "rgba(103, 232, 249, 0.14)",
+    background:
+      "radial-gradient(circle at top right, rgba(34, 211, 238, 0.12), transparent 34%), linear-gradient(180deg, rgba(11, 18, 32, 0.96), rgba(4, 8, 19, 0.94))",
+  };
+}
+
+function parseFilterDate(value: string) {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function getPurchaseDate(reimbursement: ReimbursementRead) {
+  if (reimbursement.purchaseDate instanceof Date) {
+    return reimbursement.purchaseDate;
+  }
+
+  const timestamp = reimbursement.purchaseDate as unknown as {
+    seconds?: number;
+  };
+  if (typeof timestamp.seconds === "number") {
+    return new Date(timestamp.seconds * 1000);
+  }
+
+  return new Date(reimbursement.purchaseDate);
+}
+
+function matchesColumnFilter(
+  reimbursement: ReimbursementRead,
+  filter: ColumnFilter,
+) {
+  if (!filter.value) {
+    return true;
+  }
+
+  if (filter.field === "department") {
+    return reimbursement.department === filter.value;
+  }
+
+  if (filter.field === "date") {
+    return getPurchaseDate(reimbursement) >= parseFilterDate(filter.value);
+  }
+
+  const minimumAmount = Number(filter.value);
+  const reimbursementAmount = Number(reimbursement.amount);
+
+  if (Number.isNaN(minimumAmount)) {
+    return true;
+  }
+
+  if (Number.isNaN(reimbursementAmount)) {
+    return false;
+  }
+
+  return reimbursementAmount >= minimumAmount;
+}
 
 type KanbanBoardProps = {
   reimbursement: ReimbursementRead[];
@@ -14,20 +147,33 @@ export function KanbanBoard(props: KanbanBoardProps) {
   const reimbursement = props.reimbursement;
   const user = props.user;
 
-  let active: ReimbursementRead[] = [];
-  let approve: ReimbursementRead[] = [];
-  let reject: ReimbursementRead[] = [];
+  const [columnFilters, setColumnFilters] = useState<ColumnFilters>(
+    INITIAL_COLUMN_FILTERS,
+  );
 
-  reimbursement.map((reim, i) => {
-    if (reim.state === "Active") {
-      active.push(reim);
-    } else if (reim.state === "Approve") {
-      approve.push(reim);
-    } else if (reim.state === "Reject") {
-      reject.push(reim);
-    }
-    return null;
-  });
+  const handleFilterFieldChange = (status: StatusEnum, field: FilterField) => {
+    setColumnFilters((current) => ({
+      ...current,
+      [status]: { field, value: "" },
+    }));
+  };
+
+  const handleFilterValueChange = (status: StatusEnum, value: string) => {
+    setColumnFilters((current) => ({
+      ...current,
+      [status]: { ...current[status], value },
+    }));
+  };
+
+  const columns = COLUMN_DETAILS.map((column) => ({
+    ...column,
+    filter: columnFilters[column.title],
+    items: reimbursement.filter(
+      (reim) =>
+        reim.state === column.title &&
+        matchesColumnFilter(reim, columnFilters[column.title]),
+    ),
+  }));
 
   return (
     <Box
@@ -35,11 +181,7 @@ export function KanbanBoard(props: KanbanBoardProps) {
       sx={{ marginTop: { xs: 1, md: 3 }, marginBottom: { xs: 4, md: 8 } }}
     >
       <Grid container spacing={2.5}>
-        {[
-          { title: "Active", items: active, note: "Awaiting review" },
-          { title: "Approve", items: approve, note: "Completed approvals" },
-          { title: "Reject", items: reject, note: "Returned requests" },
-        ].map((column) => (
+        {columns.map((column) => (
           <Grid item xs={12} md={4} key={column.title}>
             <Card
               variant="outlined"
@@ -51,6 +193,7 @@ export function KanbanBoard(props: KanbanBoardProps) {
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
+                ...getColumnSurfaceSx(column.title),
               }}
             >
               <Box
@@ -73,7 +216,120 @@ export function KanbanBoard(props: KanbanBoardProps) {
                     {column.note}
                   </Typography>
                 </div>
-                <span className="app-stat-chip">{column.items.length}</span>
+                <span className="app-stat-chip" style={{ color: "#fff" }}>
+                  {column.items.length}
+                </span>
+              </Box>
+              <Box sx={{ display: "grid", gap: 1.25, mb: 2 }}>
+                <FormControl size="small" fullWidth>
+                  <InputLabel sx={{ color: "white" }}>Filter by</InputLabel>
+                  <Select
+                    value={column.filter.field}
+                    label="Filter by"
+                    onChange={(e) =>
+                      handleFilterFieldChange(
+                        column.title,
+                        e.target.value as FilterField,
+                      )
+                    }
+                    sx={{
+                      color: "#fff",
+                      "& .MuiSelect-icon": { color: "#fff" },
+                      ...filterControlSx,
+                    }}
+                  >
+                    {FILTER_OPTIONS.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                {column.filter.field === "department" && (
+                  <FormControl size="small" fullWidth>
+                    <InputLabel
+                      sx={{
+                        color: "#fff",
+                        "&.Mui-focused": { color: "#fff" },
+                      }}
+                    >
+                      Department
+                    </InputLabel>
+                    <Select
+                      value={column.filter.value}
+                      label="Department"
+                      onChange={(e) =>
+                        handleFilterValueChange(column.title, e.target.value)
+                      }
+                      sx={{
+                        color: "#fff",
+                        "& .MuiSelect-icon": { color: "#fff" },
+                        ...filterControlSx,
+                      }}
+                    >
+                      <MenuItem value="">All departments</MenuItem>
+                      {ALL_DEPARTMENTS.map((department) => (
+                        <MenuItem key={department} value={department}>
+                          {department}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+
+                {column.filter.field === "date" && (
+                  <TextField
+                    size="small"
+                    label="From date"
+                    type="date"
+                    value={column.filter.value}
+                    onChange={(e) =>
+                      handleFilterValueChange(column.title, e.target.value)
+                    }
+                    InputLabelProps={{
+                      shrink: true,
+                      style: { color: "rgba(255,255,255,0.6)" },
+                    }}
+                    inputProps={{ style: { color: "#fff" } }}
+                    sx={filterControlSx}
+                    fullWidth
+                  />
+                )}
+
+                {column.filter.field === "amount" && (
+                  <TextField
+                    size="small"
+                    label="Min amount ($)"
+                    type="number"
+                    value={column.filter.value}
+                    onChange={(e) =>
+                      handleFilterValueChange(column.title, e.target.value)
+                    }
+                    InputLabelProps={{
+                      style: { color: "rgba(255,255,255,0.6)" },
+                    }}
+                    inputProps={{ min: 0, style: { color: "#fff" } }}
+                    sx={filterControlSx}
+                    fullWidth
+                  />
+                )}
+
+                {column.filter.value && (
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() => handleFilterValueChange(column.title, "")}
+                    sx={{
+                      color: "rgba(103,232,249,0.8)",
+                      borderColor: "rgba(103,232,249,0.3)",
+                      textTransform: "none",
+                      justifySelf: "start",
+                    }}
+                  >
+                    Clear filter
+                  </Button>
+                )}
               </Box>
               <Box
                 sx={{
@@ -97,8 +353,8 @@ export function KanbanBoard(props: KanbanBoardProps) {
                     No reimbursements in this column.
                   </Box>
                 )}
-                {column.items.map((reim, i) => (
-                  <div className="Component-kanban-card-row" key={i}>
+                {column.items.map((reim) => (
+                  <div className="Component-kanban-card-row" key={reim.docId}>
                     <ReimbursementCard
                       reimbursement={reim}
                       isTreasurer={user.isTreasurer}

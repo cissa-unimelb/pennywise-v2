@@ -1,6 +1,4 @@
-import * as React from "react";
 import Card from "@mui/joy/Card";
-import CardCover from "@mui/joy/CardCover";
 import CardContent from "@mui/joy/CardContent";
 import {Person} from "@mui/icons-material";
 import Typography from "@mui/joy/Typography";
@@ -27,6 +25,8 @@ export default function ReimbursementCard(
     isTreasurer
   }: Props) {
 
+  const showApproveButton = reimbursement.state !== "Approve";
+  const showRejectButton = reimbursement.state !== "Reject";
 
   const time = useMemo(() => {
     return reimbursement.purchaseDate.toLocaleString(undefined, {
@@ -52,25 +52,11 @@ export default function ReimbursementCard(
   // console.log(reimbursement.docId);
 
   return (
-    <Card className="Component-expense-card-container">
-      <CardCover>
-        <img
-          src="https://images.unsplash.com/photo-1542773998-9325f0a098d7?auto=format&fit=crop&w=320"
-          srcSet="https://images.unsplash.com/photo-1542773998-9325f0a098d7?auto=format&fit=crop&w=320&dpr=2 2x"
-          loading="lazy"
-          alt=""
-        />
-      </CardCover>
-      <CardCover className="Component-expense-cover"/>
-      
-      {isTreasurer?
-        <div style={{position: "absolute", top: 12, right: 12, zIndex: 2, display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end"}}>
-          <ReimbursementPopupButton user={user} approve={true} reimbursement={reimbursement}/>
-          <ReimbursementPopupButton user={user} approve={false} reimbursement={reimbursement}/>
-        </div>
-      : <></>}
-
-      <CardContent sx={{justifyContent: "flex-end", cursor: 'pointer'}}
+    <Card
+      className="Component-expense-card-container Component-expense-cover"
+      sx={{ display: "flex", flexDirection: "column" }}
+    >
+      <CardContent sx={{justifyContent: "flex-end", cursor: 'pointer', pb: 1}}
                    onClick={handleClick}>
         <Typography level="body2" sx={{textTransform: "uppercase", letterSpacing: "0.16em", color: "#67e8f9", mb: 0.75}}>
           {reimbursement.department || "Unspecified"}
@@ -112,6 +98,28 @@ export default function ReimbursementCard(
           </Typography>
         </Box>
       </CardContent>
+
+      {isTreasurer?
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1,
+            flexWrap: "wrap",
+            justifyContent: "flex-end",
+            px: 2,
+            pt: 1.5,
+            pb: 1,
+            mt: "auto",
+          }}
+        >
+          {showApproveButton && (
+            <ReimbursementPopupButton user={user} approve={true} reimbursement={reimbursement}/>
+          )}
+          {showRejectButton && (
+            <ReimbursementPopupButton user={user} approve={false} reimbursement={reimbursement}/>
+          )}
+        </Box>
+      : <></>}
     </Card>
   );
 }

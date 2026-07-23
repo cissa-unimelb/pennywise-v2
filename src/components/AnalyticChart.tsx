@@ -25,17 +25,17 @@ export function PieChart(
         data: [],
         backgroundColor: [
           "#22d3ee",
-          "#06b6d4",
-          "#0891b2",
-          "#0ea5e9",
-          "#38bdf8",
-          "#67e8f9",
-          "#155e75",
-          "#164e63",
-          "#083344",
+          "#f97316",
+          "#a855f7",
+          "#84cc16",
+          "#f43f5e",
+          "#facc15",
+          "#14b8a6",
+          "#60a5fa",
+          "#fb7185",
         ],
         borderColor: "#020617",
-        borderWidth: 2,
+        borderWidth: 3,
       }]
     };
     return new Chart(
@@ -47,10 +47,17 @@ export function PieChart(
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            tooltip: {},
+            tooltip: {
+              backgroundColor: "rgba(8, 15, 29, 0.95)",
+              titleColor: "#ecfeff",
+              bodyColor: "#dffcff",
+              borderColor: "rgba(103, 232, 249, 0.18)",
+              borderWidth: 1,
+            },
             title: {
               display: true,
               text: 'Department Costs',
+              color: "#ecfeff",
               font: {
                 size: 24,
               }

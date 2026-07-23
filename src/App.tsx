@@ -8,7 +8,9 @@ import {getUser} from "./database";
 
 function App() {
   const [user, setUser] = useState<User>(createUser(null));
-  const [loading, setLoading] = useState<boolean>(false);
+  // Auth restoration is asynchronous. Start in the loading state so routes do
+  // not mistake the initial empty context for a signed-out user.
+  const [loading, setLoading] = useState<boolean>(true);
 
   // Try logging in
   useEffect(() => {
@@ -17,13 +19,17 @@ function App() {
       try {
         // first fetch existing firebase token, then fetch db
         const fetchedUser = await retainSession();
-        const newUser = await getUser(fetchedUser.id);
-
-        // only if both passed we can say success
-        setUser({
-          ...fetchedUser,
-          ...newUser
-        });
+        try {
+          const newUser = await getUser(fetchedUser.id);
+          setUser({
+            ...fetchedUser,
+            ...newUser
+          });
+        } catch (err) {
+          // A Firebase session is still valid when a user profile has not been
+          // created yet. BankForm handles creating the missing profile.
+          setUser(fetchedUser);
+        }
         console.log('automatically logged in');
       } catch (err) {
         console.log('failed to fetch user');

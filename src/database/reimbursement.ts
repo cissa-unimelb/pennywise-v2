@@ -77,11 +77,11 @@ function snapShotToList(snapshot: QuerySnapshot<DocumentData>): ReimbursementRea
   return result;
 }
 
-// returns the list of all active reimbursements
-export async function getActiveReimbursement(): Promise<ReimbursementRead[]> {
+// Returns reimbursements that have been approved by a treasurer.
+export async function getApprovedReimbursement(): Promise<ReimbursementRead[]> {
   const q = query(
     collection(db, "reimbursement"),
-    where("state", "==", "Active"),
+    where("state", "==", "Approve"),
     orderBy("purchaseDate", "desc")
   );
 

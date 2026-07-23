@@ -101,8 +101,8 @@
 .Component-expense-cover,
 .Component-expense-cover:hover {
   background:
-    linear-gradient(180deg, rgba(2, 6, 23, 0.1), rgba(2, 6, 23, 0.34) 45%, rgba(2, 6, 23, 0.88)),
-    linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(0, 0, 0, 0.1));
+    radial-gradient(circle at top right, rgba(34, 211, 238, 0.16), transparent 34%),
+    linear-gradient(180deg, rgba(12, 20, 35, 0.98), rgba(3, 7, 18, 0.95));
 }
 
 .Component-kanban-card-row {
