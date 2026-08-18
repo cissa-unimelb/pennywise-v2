@@ -10,6 +10,7 @@ import {
   getAllReimbursement,
   getMyReimbursement,
   ReimbursementRead,
+  StatusEnum,
 } from "../../database/reimbursement";
 import { createUser } from "../../auth/types";
 import { logoutSession } from "../../auth/session";
@@ -35,6 +36,10 @@ export default function Dashboard() {
     navigate("/analytics");
   };
 
+  const handleHistory = () => {
+    navigate("/history");
+  };
+
   const [reimbursement, setReimbursement] = useState<ReimbursementRead[]>([]);
 
   useEffect(() => {
@@ -45,6 +50,12 @@ export default function Dashboard() {
     }
   }, [user]);
 
+  const handleStatusChange = (docId: string, state: StatusEnum) => {
+    setReimbursement((current) =>
+      current.map((item) => (item.docId === docId ? { ...item, state } : item)),
+    );
+  };
+
   return (
     <>
       <div className="App-master-container">
@@ -52,6 +63,7 @@ export default function Dashboard() {
           user={user}
           onLogout={handleLogout}
           onAnalytics={handleAnalytics}
+          onHistory={handleHistory}
         />
         <Box className="App-dashboard-container">
           <Grid container spacing={2.5}>
@@ -98,7 +110,11 @@ export default function Dashboard() {
             </Grid>
           </Grid>
         </Box>
-        <KanbanBoard user={user} reimbursement={reimbursement} />
+        <KanbanBoard
+          user={user}
+          reimbursement={reimbursement}
+          onStatusChange={handleStatusChange}
+        />
         <BankForm />
       </div>
     </>

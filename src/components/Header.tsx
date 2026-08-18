@@ -10,8 +10,9 @@ type Props = {
   user: User;
   onLogout: () => void;
   onAnalytics: () => void;
+  onHistory: () => void;
 };
-export function Header({ user, onLogout, onAnalytics }: Props) {
+export function Header({ user, onLogout, onAnalytics, onHistory }: Props) {
   return (
     <Card variant="outlined" className="Component-header-container">
       <Avatar
@@ -59,6 +60,14 @@ export function Header({ user, onLogout, onAnalytics }: Props) {
             Analytics
           </Button>
         )}
+        <Button
+          onClick={onHistory}
+          variant="soft"
+          color="primary"
+          sx={{ borderRadius: 999, px: 2 }}
+        >
+          History
+        </Button>
         <Button
           onClick={onLogout}
           variant="solid"

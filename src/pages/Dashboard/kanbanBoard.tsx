@@ -37,7 +37,9 @@ const FILTER_OPTIONS = [
   { value: "amount", label: "Min amount" },
 ] as const;
 
-const COLUMN_DETAILS: Array<{ title: StatusEnum; note: string }> = [
+type KanbanStatus = Exclude<StatusEnum, "Archived">;
+
+const COLUMN_DETAILS: Array<{ title: KanbanStatus; note: string }> = [
   { title: "Active", note: "Awaiting review" },
   { title: "Approve", note: "Completed approvals" },
   { title: "Reject", note: "Returned requests" },
@@ -50,7 +52,7 @@ type ColumnFilter = {
   value: string;
 };
 
-type ColumnFilters = Record<StatusEnum, ColumnFilter>;
+type ColumnFilters = Record<KanbanStatus, ColumnFilter>;
 
 const INITIAL_COLUMN_FILTERS: ColumnFilters = {
   Active: { field: "department", value: "" },
@@ -68,23 +70,20 @@ function getColumnSurfaceSx(status: StatusEnum) {
   if (status === "Approve") {
     return {
       borderColor: "rgba(20, 255, 106, 0.34)",
-      background:
-        "radial-gradient(circle at top right, rgba(34, 197, 94, 0.28), transparent 34%), radial-gradient(circle at 20% 18%, rgba(134, 239, 172, 0.14), transparent 30%), radial-gradient(circle at bottom left, rgba(34, 211, 238, 0.08), transparent 42%), linear-gradient(180deg, rgba(8, 30, 24, 0.98), rgba(3, 12, 16, 0.95))",
+      background: "#0b2a20",
     };
   }
 
   if (status === "Reject") {
     return {
       borderColor: "rgba(251, 113, 133, 0.34)",
-      background:
-        "radial-gradient(circle at top right, rgba(244, 63, 94, 0.28), transparent 34%), radial-gradient(circle at 18% 16%, rgba(253, 164, 175, 0.14), transparent 30%), radial-gradient(circle at bottom left, rgba(34, 211, 238, 0.06), transparent 42%), linear-gradient(180deg, rgba(34, 10, 18, 0.98), rgba(12, 5, 12, 0.95))",
+      background: "#2a121b",
     };
   }
 
   return {
     borderColor: "rgba(103, 232, 249, 0.14)",
-    background:
-      "radial-gradient(circle at top right, rgba(34, 211, 238, 0.12), transparent 34%), linear-gradient(180deg, rgba(11, 18, 32, 0.96), rgba(4, 8, 19, 0.94))",
+    background: "#0b2238",
   };
 }
 
@@ -141,6 +140,7 @@ function matchesColumnFilter(
 type KanbanBoardProps = {
   reimbursement: ReimbursementRead[];
   user: User;
+  onStatusChange: (docId: string, state: StatusEnum) => void;
 };
 
 export function KanbanBoard(props: KanbanBoardProps) {
@@ -151,14 +151,14 @@ export function KanbanBoard(props: KanbanBoardProps) {
     INITIAL_COLUMN_FILTERS,
   );
 
-  const handleFilterFieldChange = (status: StatusEnum, field: FilterField) => {
+  const handleFilterFieldChange = (status: KanbanStatus, field: FilterField) => {
     setColumnFilters((current) => ({
       ...current,
       [status]: { field, value: "" },
     }));
   };
 
-  const handleFilterValueChange = (status: StatusEnum, value: string) => {
+  const handleFilterValueChange = (status: KanbanStatus, value: string) => {
     setColumnFilters((current) => ({
       ...current,
       [status]: { ...current[status], value },
@@ -358,6 +358,7 @@ export function KanbanBoard(props: KanbanBoardProps) {
                     <ReimbursementCard
                       reimbursement={reim}
                       isTreasurer={user.isTreasurer}
+                      onStatusChange={props.onStatusChange}
                     />
                   </div>
                 ))}

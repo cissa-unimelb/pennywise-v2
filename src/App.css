@@ -98,11 +98,13 @@
   box-shadow: 0 20px 56px rgba(2, 8, 23, 0.5);
 }
 
-.Component-expense-cover,
+.Component-expense-cover {
+  /* Keep the same navy surface visible when the card is not hovered. */
+  background: #10233b !important;
+}
+
 .Component-expense-cover:hover {
-  background:
-    radial-gradient(circle at top right, rgba(34, 211, 238, 0.16), transparent 34%),
-    linear-gradient(180deg, rgba(12, 20, 35, 0.98), rgba(3, 7, 18, 0.95));
+  background: #10233b; /* when hovering */
 }
 
 .Component-kanban-card-row {
