@@ -2,10 +2,11 @@ import {
   GoogleAuthProvider,
   getAuth,
   signInWithPopup,
+  reauthenticateWithPopup,
   UserCredential,
 } from "firebase/auth";
-import {User} from "./types";
-import {app} from "../config";
+import { User } from "./types";
+import { app } from "../config";
 
 // interface AuthCallback {
 //   (user: User): void;
@@ -20,7 +21,7 @@ const auth = getAuth(app);
 export async function googleSignIn(): Promise<User> {
   const result: UserCredential = await signInWithPopup(auth, provider);
   const credential = GoogleAuthProvider.credentialFromResult(result);
-  
+
   const token = credential?.accessToken;
   if (isEmailValid(result.user.email)) {
     console.log(result.user);
@@ -37,6 +38,24 @@ export async function googleSignIn(): Promise<User> {
     photoURL: result.user.photoURL ?? "",
     token: token ?? "",
   };
+}
+
+export async function getDriveAccessToken(): Promise<string> {
+  const user = getAuth(app).currentUser;
+
+  if (!user) {
+    throw new Error("You must be signed in to upload a receipt");
+  }
+
+  const result = await reauthenticateWithPopup(user, provider);
+  const credential = GoogleAuthProvider.credentialFromResult(result);
+  const accessToken = credential?.accessToken;
+
+  if (!accessToken) {
+    throw new Error("Could not obtain a Google Drive access token");
+  }
+
+  return accessToken;
 }
 
 export function isEmailValid(email: string | null): boolean {

@@ -25,6 +25,8 @@ import { addReimbursement } from "../database";
 import { uploadFile } from "../services/upload";
 import { DepartmentEnum } from "../database/reimbursement";
 
+import { getDriveAccessToken } from "../auth/google";
+
 let ALL_DEPARTMENTS: DepartmentEnum[] = [
   "IT",
   "Events",
@@ -193,7 +195,8 @@ export const ReimbursementForm = () => {
       console.log("Start submitting");
       // Start submitting
       setIsSubmit(true);
-      let receipt_url = await uploadFile(file, user.token as string);
+      const driveToken = await getDriveAccessToken();
+      let receipt_url = await uploadFile(file, driveToken as string);
 
       await addReimbursement({
         // foreign key for the account name, bsb, account number
