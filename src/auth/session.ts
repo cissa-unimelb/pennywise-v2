@@ -8,24 +8,31 @@ import {User} from "./types";
 export async function retainSession(): Promise<User> {
   return new Promise((resolve, reject) => {
     const auth = getAuth(app);
-    onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // gets user id token
-        const token = await user.getIdToken();
+        try {
+          // gets user id token
+          const token = await user.getIdToken();
 
-        // create user
-        const result = {
-          id: user.uid,
-          name: user.displayName ?? "",
-          email: user.email ?? "",
-          isAuthorizer: false,
-          isTreasurer: false,
-          photoURL: user.photoURL ?? "",
-          token: token ?? "",
-        };
-        resolve(result);
+          // create user
+          const result = {
+            id: user.uid,
+            name: user.displayName ?? "",
+            email: user.email ?? "",
+            isAuthorizer: false,
+            isTreasurer: false,
+            photoURL: user.photoURL ?? "",
+            token: token ?? "",
+          };
+          unsubscribe();
+          resolve(result);
+        } catch (err) {
+          unsubscribe();
+          reject(err);
+        }
       } else {
-        reject();
+        unsubscribe();
+        reject(new Error("No persisted Firebase session"));
       }
     });
   });

@@ -11,19 +11,64 @@ type Props = {
 export function LoginForm({ onClickLogin, loading }: Props) {
   return (
     <Card variant="outlined" className="Componnet-login-container">
-      <Box style={{}}>
-        <Typography level="h2" fontSize="md" sx={{ mb: 0.5 }}>
-          Welcome to Pennywise V2!
-        </Typography>
-
-        <Typography level="body2">Log in to continue</Typography>
-      </Box>
       <Box>
+        <Typography
+          level="body2"
+          sx={{
+            textTransform: "uppercase",
+            letterSpacing: "0.22em",
+            color: "common.white",
+            mb: 1,
+          }}
+        >
+          Cissa finance portal
+        </Typography>
+        <Typography
+          level="h2"
+          sx={{ fontSize: "2rem", mb: 1, color: "common.white" }}
+        >
+          Welcome to Pennywise.
+        </Typography>
+        <Typography level="body1" sx={{ color: "neutral.300" }}>
+          Sign in with Google to continue using the same invoice and
+          reimbursement workflows.
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 2,
+          flexWrap: "wrap",
+        }}
+      >
+        <Typography level="body2" sx={{ color: "neutral.400" }}>
+          Cyan finance workspace
+        </Typography>
         <Button
           variant="solid"
           color="primary"
           startDecorator={<GoogleIcon />}
-          sx={{ ml: "auto", fontWeight: 600 }}
+          sx={{
+            ml: "auto",
+            minWidth: 220,
+            fontWeight: 700,
+            px: 2.5,
+            py: 1.25,
+            borderRadius: 999,
+            color: "#041014",
+            background: "linear-gradient(135deg, #67e8f9, #06b6d4)",
+            boxShadow: "0 16px 36px rgba(6, 182, 212, 0.35)",
+            border: "1px solid rgba(103, 232, 249, 0.4)",
+            "&:hover": {
+              background: "linear-gradient(135deg, #a5f3fc, #22d3ee)",
+            },
+            "&.Mui-disabled": {
+              color: "rgba(4, 16, 20, 0.55)",
+              background: "rgba(103, 232, 249, 0.32)",
+            },
+          }}
           onClick={onClickLogin}
           disabled={loading}
         >

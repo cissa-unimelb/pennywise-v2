@@ -1,4 +1,4 @@
-import {DEPARTMENTS, getActiveReimbursement, ReimbursementRead} from "./reimbursement";
+import {DEPARTMENTS, getApprovedReimbursement, ReimbursementRead} from "./reimbursement";
 import {app} from "../config";
 import {
   getFirestore,
@@ -45,10 +45,10 @@ namespace Finance {
 }
 
 /**
- * Gets the department statistics for all active reimbursements
+ * Gets the department statistics for all approved reimbursements.
  */
-export async function activeReimbursementDepartmentStatistics(): Promise<Record<string, DepartmentStatistics>> {
-  const reimbursements = await getActiveReimbursement();
+export async function approvedReimbursementDepartmentStatistics(): Promise<Record<string, DepartmentStatistics>> {
+  const reimbursements = await getApprovedReimbursement();
 
   let result: Record<string, DepartmentStatistics> = {}
   for (const department of DEPARTMENTS) {

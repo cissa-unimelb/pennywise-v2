@@ -1,6 +1,6 @@
-import {useNavigate} from "react-router-dom";
-import {UserContext} from "../stores/user";
-import {useContext, useEffect} from "react";
+import {Navigate} from "react-router-dom";
+import {AutoLoginContext, UserContext} from "../stores/user";
+import {useContext} from "react";
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -9,19 +9,21 @@ type Props = {
 
 export default function ProtectedRoute({ children, treasurerOnly }: Props) {
   const { user} = useContext(UserContext);
-  const navigate = useNavigate();
+  const {loading} = useContext(AutoLoginContext);
 
-  useEffect(() => {
-    if (user.id === "") {
-      // user is not authenticated
-      navigate('/login', {state:{login: true}});
-    } else if (treasurerOnly && !user.isTreasurer) {
-      // user is not treasurer
-      navigate('/dashboard');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Wait for Firebase to restore its persisted session before making an auth
+  // decision. The user context is intentionally empty during this period.
+  if (loading) {
+    return null;
+  }
 
+  if (user.id === "") {
+    return <Navigate to="/login" state={{login: true}} replace />;
+  }
+
+  if (treasurerOnly && !user.isTreasurer) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return <>{children}</>;
 }

@@ -32,12 +32,18 @@ export default function ExpenseCard({
       </CardCover>
       <CardCover className="Component-expense-cover" />
       <CardContent sx={{ justifyContent: "flex-end" }}>
+        <Typography level="body2" sx={{textTransform: "uppercase", letterSpacing: "0.16em", color: "#67e8f9", mb: 0.75}}>
+          Expense item
+        </Typography>
         <Typography level="h2" fontSize="lg" textColor="#fff" mb={1}>
           {event}
         </Typography>
         <Box
           style={{
             flexDirection: "row",
+            display: "flex",
+            gap: "12px",
+            flexWrap: "wrap"
           }}
         >
           <Typography

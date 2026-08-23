@@ -1,15 +1,22 @@
-import {UserContext} from "../../stores/user";
+import { UserContext } from "../../stores/user";
 import { Header } from "../../components/Header";
 import Box from "@mui/material/Box";
-import Grid from '@mui/material/Grid';
+import Grid from "@mui/material/Grid";
 import CreateButton from "../../components/CreateButton";
 import { useNavigate } from "react-router-dom";
 import { BankForm } from "../../components/BankForm";
-import {useContext, useEffect, useState} from "react";
-import {getAllReimbursement, getMyReimbursement, ReimbursementRead} from "../../database/reimbursement";
-import {createUser} from "../../auth/types";
-import {logoutSession} from "../../auth/session";
+import { useContext, useEffect, useState } from "react";
+import {
+  getAllReimbursement,
+  getMyReimbursement,
+  ReimbursementRead,
+  StatusEnum,
+} from "../../database/reimbursement";
+import { createUser } from "../../auth/types";
+import { logoutSession } from "../../auth/session";
 import { KanbanBoard } from "./kanbanBoard";
+import Typography from "@mui/joy/Typography";
+import Card from "@mui/joy/Card";
 
 // TODO: Update Grid to Grid2. Check why can't import it.
 
@@ -27,26 +34,68 @@ export default function Dashboard() {
 
   const handleAnalytics = () => {
     navigate("/analytics");
-  }
+  };
+
+  const handleHistory = () => {
+    navigate("/history");
+  };
 
   const [reimbursement, setReimbursement] = useState<ReimbursementRead[]>([]);
 
   useEffect(() => {
     if (user.isTreasurer) {
-      getAllReimbursement()
-        .then(setReimbursement);
+      getAllReimbursement().then(setReimbursement);
     } else {
-      getMyReimbursement(user)
-        .then(setReimbursement);
+      getMyReimbursement(user).then(setReimbursement);
     }
   }, [user]);
+
+  const handleStatusChange = (docId: string, state: StatusEnum) => {
+    setReimbursement((current) =>
+      current.map((item) => (item.docId === docId ? { ...item, state } : item)),
+    );
+  };
 
   return (
     <>
       <div className="App-master-container">
-        <Header user={user} onLogout={handleLogout} onAnalytics={handleAnalytics}/>
+        <Header
+          user={user}
+          onLogout={handleLogout}
+          onAnalytics={handleAnalytics}
+          onHistory={handleHistory}
+        />
         <Box className="App-dashboard-container">
-          <Grid container spacing={2}>
+          <Grid container spacing={2.5}>
+            <Grid item xs={12}>
+              <Card
+                variant="outlined"
+                className="app-shell-card"
+                sx={{ p: 3, borderRadius: "28px", width: "100%" }}
+              >
+                <Typography
+                  level="body2"
+                  sx={{
+                    textTransform: "uppercase",
+                    letterSpacing: "0.18em",
+                    color: "primary.300",
+                    mb: 1,
+                  }}
+                >
+                  Quick actions
+                </Typography>
+                <Typography
+                  level="h2"
+                  sx={{
+                    fontSize: { xs: "1.5rem", md: "2rem" },
+                    mb: 0.75,
+                    color: "#fff",
+                  }}
+                >
+                  Start a finance request.
+                </Typography>
+              </Card>
+            </Grid>
             <Grid item xs={12} md={3}>
               <CreateButton
                 link="#/invoice"
@@ -61,7 +110,11 @@ export default function Dashboard() {
             </Grid>
           </Grid>
         </Box>
-        <KanbanBoard user={user} reimbursement={reimbursement}/>
+        <KanbanBoard
+          user={user}
+          reimbursement={reimbursement}
+          onStatusChange={handleStatusChange}
+        />
         <BankForm />
       </div>
     </>

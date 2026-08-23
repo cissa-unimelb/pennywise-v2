@@ -1,116 +1,311 @@
-.App {
-  text-align: center;
+.App-master-container {
+  position: relative;
+  min-height: 100vh;
+  padding: 32px clamp(20px, 4vw, 48px) 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
 }
 
-.App-logo {
-  height: 40vmin;
+.App-master-container::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 320px;
   pointer-events: none;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(34, 211, 238, 0.18), transparent 35%),
+    radial-gradient(circle at 90% 0%, rgba(6, 182, 212, 0.14), transparent 25%);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.App-dashboard-container {
+  width: min(1180px, 100%);
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
-.App-header {
-  background-color: #282c34;
+.App-login-master-container {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+}
+
+.Componnet-login-container {
+  width: min(440px, 100%);
+  min-height: 220px;
+  justify-content: space-between;
+  padding: 28px;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--line-soft);
+  background:
+    linear-gradient(180deg, rgba(12, 20, 35, 0.96), rgba(3, 7, 18, 0.92));
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(18px);
+}
+
+.Component-header-container {
+  width: min(1180px, 100%);
+  min-height: 92px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  margin-top: 0;
+  border-radius: 28px;
+  border: 1px solid var(--line-soft);
+  background:
+    linear-gradient(135deg, rgba(8, 15, 29, 0.95), rgba(10, 24, 39, 0.92));
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(18px);
+}
+
+.Component-header-avatar {
+  margin-right: 4px;
+  border: 2px solid rgba(34, 211, 238, 0.5);
+  box-shadow: 0 0 0 6px rgba(34, 211, 238, 0.08);
+}
+
+.Component-createbutton-container {
+  min-height: 170px;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 12px;
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid var(--line-soft);
+  background:
+    linear-gradient(180deg, rgba(11, 18, 32, 0.96), rgba(4, 8, 19, 0.94));
+  box-shadow: var(--shadow-card);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
-.App-link {
-  color: #61dafb;
+.Component-createbutton-container:hover {
+  transform: translateY(-4px);
+  border-color: var(--line-strong);
+  box-shadow: 0 28px 90px rgba(2, 8, 23, 0.62);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Component-expense-card-container {
+  min-height: 180px;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid rgba(103, 232, 249, 0.16);
+  box-shadow: 0 20px 56px rgba(2, 8, 23, 0.5);
 }
 
-.App-master-container{
+.Component-expense-cover {
+  /* Keep the same navy surface visible when the card is not hovered. */
+  background: #10233b !important;
+}
+
+.Component-expense-cover:hover {
+  background: #10233b; /* when hovering */
+}
+
+.Component-kanban-card-row {
+  margin-top: 18px;
+  margin-left: 0;
+}
+
+.Component-upload-button {
+  min-width: 220px;
+}
+
+.Component-upload-progress {
+  margin-top: 8px;
+}
+
+.Component-pdfupload-container {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+
+.app-shell-card {
+  border: 1px solid var(--line-soft);
+  background:
+    linear-gradient(180deg, rgba(11, 18, 32, 0.96), rgba(4, 8, 19, 0.94));
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(18px);
+}
+
+.app-form-page {
+  min-height: 100vh;
+  padding: 32px 20px 56px;
+  background:
+    radial-gradient(circle at top, rgba(34, 211, 238, 0.12), transparent 32%),
+    transparent;
+}
+
+.app-form-card {
+  width: min(940px, 100%);
+  margin: 0 auto;
+  border-radius: 28px;
+  border: 1px solid var(--line-soft);
+  background:
+    linear-gradient(180deg, rgba(12, 20, 35, 0.98), rgba(3, 7, 18, 0.94));
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(20px);
+}
+
+.app-form-header {
+  width: 100%;
+  margin-bottom: 28px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  flex: 1;
-  /* height: 100vh; */
-  padding: 30;
-  background-color: #F7F7F8;
-  
-}
-.App-dashboard-container{
-  margin-top: 30px;
-flex-direction: row;
-justify-content: flex-start;
-width: 80%;
-
-}
-.App-login-master-container{
-  display: flex;
-justify-content: center;
-align-items: center;
-flex: 1;
-height: 100vh;
-background-color: #F7F7F8;
-padding-bottom: 100px;
-}
-.Component-createbutton-container{
-min-height: 150px;
-align-items: center;
-justify-content: center;
-
-}
-
-.Component-header-container{
-  width: 80%;
-  height: 50px;
   justify-content: space-between;
+  gap: 16px;
+}
+
+.app-form-title {
+  margin: 0;
+}
+
+.app-form-subtitle {
+  margin-top: 6px;
+  color: var(--text-soft);
+}
+
+.app-form-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(150px, 220px) minmax(0, 1fr);
+  gap: 14px 20px;
+  align-items: start;
+}
+
+.app-form-row {
+  display: contents;
+}
+
+.app-form-label {
+  padding-top: 10px;
+  color: var(--text-soft);
+  letter-spacing: 0.04em;
+}
+
+.app-form-field {
+  width: 100%;
+}
+
+.app-form-field .MuiInput-root,
+.app-form-field .MuiInputBase-root,
+.app-form-select,
+.app-file-input {
+  width: 100%;
+  border-radius: 18px;
+  border: 1px solid rgba(103, 232, 249, 0.12);
+  background: rgba(8, 15, 29, 0.78);
+  color: var(--text-main);
+}
+
+.input-box-container {
+  width: 100%;
+  border-radius: 18px;
+  background: rgba(8, 15, 29, 0.78);
+  color: var(--text-main);
+}
+
+.input-error {
+  margin: 6px 0 0;
+  color: #fda4af;
+  font-size: 0.85rem;
+}
+
+.submit-error {
+  margin: 0;
+  color: #fda4af;
+}
+
+.MuiFormLabel-root {
+  color: var(--text-soft);
+}
+
+.app-form-select,
+.app-file-input {
+  padding: 12px 14px;
+}
+
+.app-file-input::file-selector-button {
+  margin-right: 12px;
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 14px;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.22), rgba(8, 145, 178, 0.35));
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.app-form-actions {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.app-section-divider {
+  width: 100%;
+  margin: 16px 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.app-muted-text {
+  color: var(--text-soft);
+}
+
+.app-stat-chip {
+  display: inline-flex;
   align-items: center;
-  flex-direction: row;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin-top: 20px;
-
-  display: "flex";
-  align-items: "center";
-
-}
-.Component-header-avatar{
-
-  margin-right: 15px,
-}
-.Component-expense-cover{
-  background:
-  linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px);
-}
-.Component-expense-cover:hover{
-  background:
-  linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px);
-}
-.Componnet-login-container{
-  width: 320px; height: 120px; justify-content: space-between}
-.Component-expense-card-container{
-  min-height:150px;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(103, 232, 249, 0.14);
+  background: rgba(8, 145, 178, 0.08);
 }
 
-.Component-kanban-card-row{
-  margin-top: 32px;
-  margin-left: 10px;
+@media (max-width: 900px) {
+  .App-master-container {
+    padding-inline: 16px;
+  }
+
+  .Component-header-container {
+    padding: 20px;
+  }
+
+  .app-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-form-label {
+    padding-top: 0;
+  }
 }
-.Component-upload-progress{
-  margin-top: 5px;
-}
-.Component-pdfupload-container{
-  position:absolute;
-  margin-top: 65px;
-  margin-left:10px;
+
+@media (max-width: 640px) {
+  .App-login-master-container {
+    padding: 20px;
+  }
+
+  .Component-header-container {
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .app-form-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .app-form-card {
+    border-radius: 24px;
+  }
 }

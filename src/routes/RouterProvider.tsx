@@ -9,6 +9,7 @@ import PageOne from "../pages/PageOne";
 import InvoiceGeneration from "../pages/InvoiceGeneration";
 import ReimbursementGeneration from "../pages/ReimbursementGeneration";
 import {Analytics} from "../pages/Analytics";
+import History from "../pages/History";
 
 function RouterProvider() {
   return (
@@ -28,6 +29,14 @@ function RouterProvider() {
             element={
               <ProtectedRoute treasurerOnly>
                 <Analytics />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="history"
+            element={
+              <ProtectedRoute>
+                <History />
               </ProtectedRoute>
             }
           />
